@@ -1,0 +1,7 @@
+.errors {
+  color: theme-color("danger");
+}
+
+.ng-invalid.ng-touched:not(form) {
+  border-right: 4px solid theme-color("danger");
+}

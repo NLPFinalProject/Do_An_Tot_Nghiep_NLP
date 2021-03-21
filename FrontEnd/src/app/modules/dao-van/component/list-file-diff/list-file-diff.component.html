@@ -1,0 +1,16 @@
+<nz-alert nzType="error" nzMessage="Tên tệp tin trùng"></nz-alert>
+<nz-table #filterTable [nzData]="displayData" [nzLoading]="loading" nzSize="small" nzBordered>
+  <tbody>
+    <tr *ngFor="let data of filterTable.data">
+      <td>
+        <span class="d-inline-block text-truncate" style="max-width: 190px;" nz-tooltip nzTitle="{{ data.name }}">
+          {{ data.name }}
+        </span>
+      </td>
+      <td>
+        <nz-badge [nzCount]="data.count"></nz-badge>
+        %
+      </td>
+    </tr>
+  </tbody>
+</nz-table>

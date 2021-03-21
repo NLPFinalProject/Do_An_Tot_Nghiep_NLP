@@ -1,0 +1,202 @@
+[
+  {
+    "id": "078fdf78-5148-4e0b-b78d-7115067378bf",
+    "totalFile": 27,
+    "createdBy": "Peterson Floyd",
+    "createdDate": "2016-02-02T01:19:25",
+    "expand": false,
+    "isActive": true,
+    "childReport": [
+      {
+        "id": 0,
+        "name": "Tải lên thất bại",
+        "totalFile": 38
+      },
+      {
+        "id": 1,
+        "name": "Tải lên thành công",
+        "totalFile": 25
+      },
+      {
+        "id": 2,
+        "name": "Đang tải lên",
+        "totalFile": 24
+      }
+    ]
+  },
+  {
+    "id": "0cb9e581-cdf0-44d0-84f7-a08fadfabc17",
+    "totalFile": 20,
+    "createdBy": "Powers Warner",
+    "createdDate": "2016-09-10T04:34:48",
+    "expand": false,
+    "isActive": true,
+    "childReport": [
+      {
+        "id": 0,
+        "name": "Đang tải lên",
+        "totalFile": 23
+      },
+      {
+        "id": 1,
+        "name": "Đang tải lên",
+        "totalFile": 28
+      },
+      {
+        "id": 2,
+        "name": "Tải lên thất bại",
+        "totalFile": 31
+      }
+    ]
+  },
+  {
+    "id": "d16360c1-c8d5-46e5-b8f3-0905f9b79246",
+    "totalFile": 27,
+    "createdBy": "Mcintosh Jordan",
+    "createdDate": "2016-02-14T10:00:15",
+    "expand": false,
+    "isActive": true,
+    "childReport": [
+      {
+        "id": 0,
+        "name": "Đang tải lên",
+        "totalFile": 24
+      },
+      {
+        "id": 1,
+        "name": "Tải lên thất bại",
+        "totalFile": 37
+      },
+      {
+        "id": 2,
+        "name": "Tải lên thành công",
+        "totalFile": 38
+      }
+    ]
+  },
+  {
+    "id": "28e08de1-4e23-4c1d-adb9-4e7d444cd07a",
+    "totalFile": 21,
+    "createdBy": "Emilia Britt",
+    "createdDate": "2014-11-16T08:00:20",
+    "expand": false,
+    "isActive": false,
+    "childReport": [
+      {
+        "id": 0,
+        "name": "Tải lên thành công",
+        "totalFile": 20
+      },
+      {
+        "id": 1,
+        "name": "Tải lên thất bại",
+        "totalFile": 37
+      },
+      {
+        "id": 2,
+        "name": "Tải lên thất bại",
+        "totalFile": 26
+      }
+    ]
+  },
+  {
+    "id": "eb76ee75-6fd1-482d-85b3-f59b45d219bb",
+    "totalFile": 34,
+    "createdBy": "Patricia Day",
+    "createdDate": "2014-10-30T07:40:53",
+    "expand": false,
+    "isActive": true,
+    "childReport": [
+      {
+        "id": 0,
+        "name": "Tải lên thất bại",
+        "totalFile": 34
+      },
+      {
+        "id": 1,
+        "name": "Tải lên thất bại",
+        "totalFile": 34
+      },
+      {
+        "id": 2,
+        "name": "Đang tải lên",
+        "totalFile": 25
+      }
+    ]
+  },
+  {
+    "id": "7e50a3d8-1489-42d3-849a-356b6fa9aee3",
+    "totalFile": 31,
+    "createdBy": "Winters Woods",
+    "createdDate": "2017-04-08T06:05:51",
+    "expand": false,
+    "isActive": false,
+    "childReport": [
+      {
+        "id": 0,
+        "name": "Đang tải lên",
+        "totalFile": 38
+      },
+      {
+        "id": 1,
+        "name": "Tải lên thất bại",
+        "totalFile": 36
+      },
+      {
+        "id": 2,
+        "name": "Đang tải lên",
+        "totalFile": 37
+      }
+    ]
+  },
+  {
+    "id": "4521febe-551d-443b-a3b2-0869d153e841",
+    "totalFile": 27,
+    "createdBy": "Stark Clayton",
+    "createdDate": "2017-12-08T10:25:04",
+    "expand": false,
+    "isActive": true,
+    "childReport": [
+      {
+        "id": 0,
+        "name": "Đang tải lên",
+        "totalFile": 34
+      },
+      {
+        "id": 1,
+        "name": "Đang tải lên",
+        "totalFile": 29
+      },
+      {
+        "id": 2,
+        "name": "Đang tải lên",
+        "totalFile": 38
+      }
+    ]
+  },
+  {
+    "id": "064f0be8-65cd-4642-bf16-c447567c5e45",
+    "totalFile": 28,
+    "createdBy": "Gregory Barlow",
+    "createdDate": "2016-08-08T11:29:25",
+    "expand": false,
+    "isActive": true,
+    "childReport": [
+      {
+        "id": 0,
+        "name": "Tải lên thành công",
+        "totalFile": 21
+      },
+      {
+        "id": 1,
+        "name": "Đang tải lên",
+        "totalFile": 39
+      },
+      {
+        "id": 2,
+        "name": "Tải lên thành công",
+        "totalFile": 23
+      }
+    ]
+  }
+]

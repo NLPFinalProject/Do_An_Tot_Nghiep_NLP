@@ -1,0 +1,32 @@
+<div nz-row>
+  <div nz-col [nzXs]="{ span: 24 }" [nzLg]="{ span: 12, offset: 12 }">
+    <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+      <input type="text" nz-input placeholder="Nhập từ khoá..." />
+    </nz-input-group>
+    <ng-template #suffixIconButton>
+      <button nz-button nzType="primary" nzSearch><i nz-icon type="search"></i>Tìm kiếm</button>
+    </ng-template>
+  </div>
+</div>
+<br />
+<nz-table #nzTable nzSize="small" [nzData]="users">
+  <thead>
+    <tr>
+      <th nzShowSort nzSortKey="name">Name</th>
+      <th nzShowSort nzSortKey="username">User Name</th>
+      <th>Email</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of nzTable.data">
+      <td>{{ data.name }}</td>
+      <td>{{ data.username }}</td>
+      <td>{{ data.email }}</td>
+      <td>
+        <a href="#">Reset Password</a> -
+        <a href="#">Update</a>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>

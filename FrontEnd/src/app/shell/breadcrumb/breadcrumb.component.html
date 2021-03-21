@@ -1,0 +1,6 @@
+<nz-breadcrumb class="breadcrumd">
+  <nz-breadcrumb-item *ngFor="let item of pageInfo?.urls; last as isLast">
+    <a [routerLink]="item.url" *ngIf="!isLast"> {{ item.title }} </a>
+    <span *ngIf="isLast && item.title != 'Home'">{{ item.title }}</span>
+  </nz-breadcrumb-item>
+</nz-breadcrumb>
