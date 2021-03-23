@@ -174,7 +174,8 @@ def main():
     lst2 = ["JavaScript", "Swift", "C++", "Python"]
 
     result = Matching_ratio_list(lst1, lst2)
-    Export(result, lst1, lst2)
+    temp = Export(result, lst1, lst2)
+    print(temp)
 
         
 if __name__ == "__main__":

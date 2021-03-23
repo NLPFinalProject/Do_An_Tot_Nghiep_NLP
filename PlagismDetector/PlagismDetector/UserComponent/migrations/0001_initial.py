@@ -14,7 +14,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='User',
             fields=[
-                ('username', models.CharField(default='', max_length=30, primary_key=True, serialize=False)),
+                ('id',models.AutoField(primary_key=True)),
+                ('username', models.CharField(default='', max_length=30,  serialize=False)),
                 ('password', models.CharField(default='', max_length=100)),
                 ('name', models.CharField(default='', max_length=30)),
                 ('EmailOrganization', models.CharField(blank=True, default='', max_length=30)),

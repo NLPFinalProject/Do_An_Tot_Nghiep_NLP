@@ -7,7 +7,7 @@ from django.utils import timezone
 #---------model đồ án
 
 #file người dùng up post
-"""class DataDocument(models.Model):
+class DataDocument(models.Model):
     DataDocumentName = models.CharField(max_length=200)
     DataDocumentType = models.CharField(max_length=10)
     DataDocumentAuthor = models.CharField(max_length=100)
@@ -32,4 +32,3 @@ class DataDocumentContent(models.Model):
             models.Index(fields=['DataDocumentNo','DataDocumentSentence'], name='DataDocumentNo_idx'),
             models.Index(fields=['DataDocumentSentence'], name='DataDocumentSentence_idx'),
         ]
-"""
