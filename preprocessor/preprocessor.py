@@ -213,7 +213,7 @@ def preprocess(filename):
 
 
 if __name__ == '__main__':
-    filename = "sample.doc"
+    filename = "sample/sample.doc"
     a, b, c = preprocess(filename)
     print("Tên file là: ",a)
     print("\n Danh sách các câu của file là: ",b)
