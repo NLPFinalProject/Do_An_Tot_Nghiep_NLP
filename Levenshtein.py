@@ -121,12 +121,13 @@ def Levenshtein_distance(str1, str2):
 # Output: Tỉ lệ tương đồng bao nhiêu % (Float)
 def Matching_ratio(str1, str2):
     l = Levenshtein_distance(str1, str2)
-    m = len(str1)
-    if m < len(str2):
-        m = len(str2)
-    ratio = (1 - l/m) * 100
+    lensum = len(str1) + len(str2)
+    return (lensum - l) / lensum
 
-    return ratio
+    # m = len(str1)
+    # if m < len(str2):
+    #     m = len(str2)
+    # return (1 - l/m) * 100
 
 
 
