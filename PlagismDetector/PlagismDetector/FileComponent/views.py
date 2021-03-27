@@ -53,7 +53,7 @@ from .Levenshtein import *
 from PreprocessingComponent.views import *
 #cần import cho up file
 from django.core.files.storage import FileSystemStorage
-from .form import DocumentForm
+from .form import DocumentForm, DataDocumentFile
 from .form import UploadFileForm,UploadFileFormListVersion
 from django.conf import settings
 from PreprocessingComponent import views as p
@@ -134,7 +134,7 @@ def uploadDoc(request):
         print('-------------------------------------')
         
         print('-------------------------------------')
-        form1 = UploadFileForm(request.POST, request.FILES )
+        form1 = UploadOneFileForm(request.POST, request.FILES )
         
         #form1 = UploadFileForm(request.POST,'D:/kamen rider.doc')
 
@@ -142,12 +142,12 @@ def uploadDoc(request):
             # save form người dùng gửi
             data = form1.cleaned_data
             print('yes')
-            name2 = data['title'] #abc.doc
-            name = str(name2)
-            file1 = data['files'] #abc.doc
+            #name2 = data['title'] #abc.doc
+            #name = str(name2)
+            file1 = data['DataDocumentFile'] #abc.doc
             
-            file_name = name.split(".")[0]#doc
-            extension = name.split(".")[-1]#abc
+            file_name = file1.name.split(".")[0]#doc
+            extension = file1.name.split(".")[-1]#abc
             
             print(file1,type(file1))
             print('-------------------file name is'+file_name)
@@ -179,7 +179,7 @@ def uploadDoc(request):
             return Response(content, status=status.HTTP_200_OK)
             
     else:
-        form = DocumentForm()
+        form = UploadOneFileForm()
     content = {'please move along': 'have the same username'}
     print('fail')
     return Response(content, status=status.HTTP_204_NO_CONTENT)

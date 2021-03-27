@@ -17,6 +17,11 @@ class DataDocument(models.Model):
         return self.DataDocumentAuthor
     def DocumentType(self):
         return self.DataDocumentType
+
+#model dùng để tạo form post
+class DataDocumentFile(models.Model):
+    DataDocumentFile = models.FileField(upload_to='DocumentFile/')
+
 # nội dung file được tách thành các câu
 class DataDocumentContent(models.Model):
     DataDocumentNo = models.ForeignKey(DataDocument, on_delete=models.CASCADE)
