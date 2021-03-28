@@ -13,6 +13,12 @@ class UploadOneFileForm(forms.ModelForm):
     class Meta:
         model = DataDocumentFile
         fields = ['DataDocumentFile']
+
+# form cho người dùng up many file update fix
+class UploadManyFileForm(forms.Form):
+    
+    DataDocumentFile = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+
 class UploadFileForm(forms.Form):
     
     files = forms.FileField()

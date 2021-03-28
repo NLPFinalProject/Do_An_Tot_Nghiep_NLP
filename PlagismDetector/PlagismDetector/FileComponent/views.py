@@ -53,7 +53,7 @@ from .Levenshtein import *
 from PreprocessingComponent.views import *
 #cần import cho up file
 from django.core.files.storage import FileSystemStorage
-from .form import DocumentForm, DataDocumentFile
+from .form import DocumentForm, UploadOneFileForm, UploadManyFileForm
 from .form import UploadFileForm,UploadFileFormListVersion
 from django.conf import settings
 from PreprocessingComponent import views as p
@@ -189,19 +189,19 @@ def uploadDoc(request):
 def uploadDocList(request):
     #chuong trinh test
     if request.method=='POST':
-        listfile =  request.FILES.getlist('files')
+        listfile =  request.FILES.getlist('DataDocumentFile')
         count = 0
-        listname = request.data.getlist('title')
-        
+        #listname = request.data.getlist('title')
+        print('-------------------listfile is',listfile)
         for f in listfile:
 
-            name = listname[count]
+            #name = listname[count]
             count = count+1
             file1:file
             file1 = f #abc.doc
-            
-            file_name = name.split(".")[0]#doc
-            extension = name.split(".")[-1]#abc
+            print('-------------------f is',file1)
+            file_name = file1.name.split(".")[0]#doc
+            extension = file1.name.split(".")[-1]#abc
             
             print(file1,type(file1))
             print('-------------------file name is '+file_name)
@@ -251,7 +251,7 @@ def uploadDocList(request):
             
             
     else:
-        form = DocumentForm()
+        form = UploadManyFileForm()
     content = {'please move along': 'have the same username'}
     print('fail')
     return Response(content, status=status.HTTP_204_NO_CONTENT)"""
