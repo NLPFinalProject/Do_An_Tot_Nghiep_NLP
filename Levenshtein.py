@@ -118,11 +118,11 @@ def Levenshtein_distance(str1, str2):
 # Input: 2 chuỗi (String)
 #    + Str1 (String)
 #    + Str2 (String)
-# Output: Tỉ lệ tương đồng bao nhiêu % (Float)
+# Output: Tỉ lệ tương đồng bao nhiêu % (Float): Ví dụ 40%, 30%, 99.521%
 def Matching_ratio(str1, str2):
     l = Levenshtein_distance(str1, str2)
     lensum = len(str1) + len(str2)
-    return (lensum - l) / lensum
+    return round((100 * (lensum - l) / lensum), 3)
 
     # m = len(str1)
     # if m < len(str2):
@@ -133,8 +133,8 @@ def Matching_ratio(str1, str2):
 
 # Tính tỉ lệ tương đồng của từng câu trong mảng 1 với từng câu trong mảng 2
 # Input: 
-#    + List_1 (String)
-#    + List_2 (String)
+#    + Lst_1 (String)
+#    + Lst_2 (String)
 # Output: List của các dictionary. Với mỗi dictionary có format:
 #    + 'senA': <câu A>
 #    + 'senB': <câu B>
@@ -154,6 +154,35 @@ def Matching_ratio_dict(lst_1, lst_2):
             dic[key_3] = Matching_ratio(str1, str2)
             result.append(dic)
 
+    return result
+
+
+
+# Xuất kết quả theo format: [thứ tự câu trong lst_1, số câu trùng với câu trong lst_1, [các câu trùng theo thứ tự]]
+# Ví dụ: [5, 3, [1, 6, 7]]: Ứng với câu thứ 5 trong lst_1, có 3 câu trùng, các câu trùng là 1, 6, 7
+# Input: 
+#    + Lst_1 (String)
+#    + Lst_2 (String)
+#    + Ratio (Float): Mức ratio chuẩn để xác định một câu có trùng với câu kia hay không? (>= ratio được xem là trùng)
+# Output: List của các các kết quả như ví dụ trên
+# Ví dụ: [[5, 3, [1, 6, 7]], [6, 1, [6]] , [4, 0, []]]
+def ExportOrder(lst_1, lst_2, ratio):
+    result = []
+
+    for i in range(len(lst_1)):
+        export = []
+        similar_sent = []
+        count = 0
+        for j in range(len(lst_2)):
+            if Matching_ratio(lst_1[i], lst_2[j]) >= ratio:
+                count += 1
+                similar_sent.append(j + 1)
+
+        export.append(i + 1)
+        export.append(count)
+        export.append(similar_sent)
+        result.append(export)
+    
     return result
 
 
