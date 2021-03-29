@@ -53,6 +53,7 @@ from .Levenshtein import *
 from PreprocessingComponent.views import *
 #cần import cho up file
 from django.core.files.storage import FileSystemStorage
+#lock command UploadOneFileForm lại trước khi migrations vì sửa dụng model DocumentFile
 from .form import DocumentForm, UploadOneFileForm, UploadManyFileForm
 from .form import UploadFileForm,UploadFileFormListVersion
 from django.conf import settings
@@ -76,6 +77,67 @@ def dictfetchall(cursor):
     ]
 
 #result
+#import mới
+def documentimport2(request):
+    print('------------------------------')
+    fileName1 = "fileDocC.docx"
+    fileName2 = ['fileDocB.docx','vanbanE.docx']
+    userId=1
+
+    cursor = connections['default'].cursor()
+
+    #B1 start đọc data từ database
+    # fileName1
+    #query trên database
+    queryRaw ="SELECT DataDocumentFile FROM `filecomponent_datadocument` WHERE DataDocumentName='"+fileName1.split(".")[0]+"' AND DataDocumentAuthor_id='"+str(userId)+"';"
+    print("=====",queryRaw)
+    cursor.execute(queryRaw)
+    fetchQuery = dictfetchall(cursor)
+    documentNameLink = [a_dict["DataDocumentFile"] for a_dict in fetchQuery]
+    print("=====filename1====",os.path.basename(documentNameLink[0]))
+    print(settings.MEDIA_ROOT +'\\DocumentFile\\' + os.path.basename(documentNameLink[0]))
+    fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile\\' + os.path.basename(documentNameLink[0]))
+    #danh sách các câu trong file1 theo thứ tự
+    fileName1Sentence = lstSentence
+
+    print("===filename2 len ======",len(fileName2),fileName2[1])
+    # fileName2
+    # chạy preprocess cho từng file trong fileName2
+    # trả danh sách câu từng file vô dataReadDoc
+    dataReadDoc=[]
+    for i in fileName2:
+        try:
+            #query database
+            queryRaw ="SELECT DataDocumentFile FROM `filecomponent_datadocument` WHERE DataDocumentName='"+i.split(".")[0]+"' AND DataDocumentAuthor_id='"+str(userId)+"';"
+            cursor.execute(queryRaw)
+            
+            fetchQuery = dictfetchall(cursor)
+            documentNameLink = [a_dict["DataDocumentFile"] for a_dict in fetchQuery]
+            print("===filename2 ======",documentNameLink[0].split("/")[-1])
+
+            fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile\\' + documentNameLink[0].split("/")[-1])
+            lst2 = lstSentence
+            dataReadDoc.append(lst2)
+        except Exception:
+            pass
+    
+    #B2 trả json
+    # result so sánh
+    # lần lượt thêm danh sách câu file 1, danh sách câu các file 2, cuối cùng là thứ tự câu so sánh
+    # vào reportDataReadDoc
+    reportDataReadDoc=[]
+    reportDataReadDoc.append(fileName1Sentence)
+    reportDataReadDoc.append(dataReadDoc)
+    for i in range(len(dataReadDoc)):
+        result = ExportOrder(dataReadDoc[i],fileName1Sentence,30)
+        reportDataReadDoc.append(result)
+    
+    #list of dicts to list of value end
+
+    print(connection.queries)
+    return Response(reportDataReadDoc, status=status.HTTP_200_OK)
+
+#import cũ
 def documentimport(request):
     print('------------------------------')
     # đọc data từ database
@@ -123,6 +185,7 @@ def documentimport(request):
     print(connection.queries)
     print("__________",report)
     return render(request,'polls/output.html',{'data': report})
+
 #upload 1 file
 @api_view(('POST',))
 def uploadDoc(request):
