@@ -8,10 +8,6 @@ import io
 from vncorenlp import VnCoreNLP
 
 
-VNCORENLP_FILE_PATH = 'VnCoreNLP/VnCoreNLP-1.1.1.jar'
-vncorenlp = VnCoreNLP(VNCORENLP_FILE_PATH)
-
-
 # Hàm chia văn bản thành các đoạn
 # Input:
 #   + text: kiểu string, văn bản cần chia
@@ -94,6 +90,9 @@ def pdf2txt(file_path, pages=None):
 # Đọc từ trang 4 tới trang 7: read_pages(4, 7)
 # Đọc duy nhất trang 5: read_pages(5, 5)
 def read_pages(start_page, end_page, doc_file):
+    VNCORENLP_FILE_PATH = 'VnCoreNLP/VnCoreNLP-1.1.1.jar'
+    vncorenlp = VnCoreNLP(VNCORENLP_FILE_PATH)
+
     words = []
     doc = pdf2txt(doc_file, range(start_page - 1, end_page))
     for para in doc:
