@@ -1,5 +1,9 @@
 
+<<<<<<< HEAD
 #----------------Thêm, xóa, thay thế chữ"----------------#
+=======
+#----------------Thêm, xóa, thay thế chữ----------------#
+>>>>>>> branch-3--database
 
 def String_insert(string, text, position):
     return string[:position] + text + string[position:]
@@ -49,6 +53,10 @@ def Create_Matrix(str1, str2):
             matrix[current_row].append(value)
 
         previous_row += 1
+<<<<<<< HEAD
+=======
+
+>>>>>>> branch-3--database
     return matrix
 
 
@@ -117,6 +125,7 @@ def Levenshtein_distance(str1, str2):
 # Input: 2 chuỗi (String)
 #    + Str1 (String)
 #    + Str2 (String)
+<<<<<<< HEAD
 # Output: Tỉ lệ tương đồng bao nhiêu % (Float)
 def Matching_ratio(str1, str2):
     l = Levenshtein_distance(str1, str2)
@@ -128,6 +137,45 @@ def Matching_ratio(str1, str2):
     return ratio
 
 
+=======
+# Output: Tỉ lệ tương đồng bao nhiêu % (Float): Ví dụ 40%, 30%, 99.521%
+def Matching_ratio(str1, str2):
+    l = Levenshtein_distance(str1, str2)
+    lensum = len(str1) + len(str2)
+    return round((100 * (lensum - l) / lensum), 3)
+
+    # m = len(str1)
+    # if m < len(str2):
+    #     m = len(str2)
+    # return (1 - l/m) * 100
+
+
+
+# Tính tỉ lệ tương đồng của từng câu trong mảng 1 với từng câu trong mảng 2
+# Input: 
+#    + Lst_1 (String)
+#    + Lst_2 (String)
+# Output: List của các dictionary. Với mỗi dictionary có format:
+#    + 'senA': <câu A>
+#    + 'senB': <câu B>
+#    + 'ratio': <tỉ lệ tương đồng (ratio)> [kiểu float]
+def Matching_ratio_dict(lst_1, lst_2):
+    result = []
+
+    key_1 = "senA"
+    key_2 = "senB"
+    key_3 = "ratio"
+
+    for str1 in lst_1:
+        for str2 in lst_2:
+            dic = {}
+            dic[key_1] = str1
+            dic[key_2] = str2
+            dic[key_3] = Matching_ratio(str1, str2)
+            result.append(dic)
+
+    return result
+>>>>>>> branch-3--database
 
 # Tính tỉ lệ tương đồng của từng câu trong mảng 1 với từng câu trong mảng 2
 # Input: 
@@ -144,6 +192,7 @@ def Matching_ratio_list(lst_1, lst_2):
 
     return result
 
+<<<<<<< HEAD
 
 
 # Xuất kết quả
@@ -182,3 +231,49 @@ if __name__ == "__main__":
     main()
 
 # CHỈ CẦN CHẠY THÔI LÀ SẼ XUẤT KẾT QUẢ, KHÔNG CẦN CHỈNH SỬA GÌ.
+=======
+# Xuất kết quả theo format: [thứ tự câu trong lst_1, số câu trùng với câu trong lst_1, [các câu trùng theo thứ tự]]
+# Ví dụ: [5, 3, [1, 6, 7]]: Ứng với câu thứ 5 trong lst_1, có 3 câu trùng, các câu trùng là 1, 6, 7
+# Input: 
+#    + Lst_1 (String)
+#    + Lst_2 (String)
+#    + Ratio (Float): Mức ratio chuẩn để xác định một câu có trùng với câu kia hay không? (>= ratio được xem là trùng)
+# Output: List của các các kết quả như ví dụ trên
+# Ví dụ: [[5, 3, [1, 6, 7]], [6, 1, [6]] , [4, 0, []]]
+def ExportOrder(lst_1, lst_2, ratio):
+    result = []
+
+    for i in range(len(lst_1)):
+        export = []
+        similar_sent = []
+        count = 0
+        for j in range(len(lst_2)):
+            if Matching_ratio(lst_1[i], lst_2[j]) >= ratio:
+                count += 1
+                similar_sent.append(j + 1)
+
+        export.append(i + 1)
+        export.append(count)
+        export.append(similar_sent)
+        result.append(export)
+    
+    return result
+
+
+
+def main():   
+    lst1 = ['Không có kính không phải vì xe không có kính', 'Bom giật bom run kính vỡ đi rồi', 'Ung dung buồng lái ta ngồi']
+    lst2 = ['Nhìn đất nhìn trời nhìn thẳng', 'Nhìn thấy gió vào xoa mắt đắng', 'Nhìn thấy con đường chạy thẳng vào tim']
+
+    result = Matching_ratio_dict(lst1, lst2)
+    for dic in result:
+        values = list(dic.values())
+        string = values[0] + ' - ' + values[1] + ': ' + str(values[2]) + " %"
+        print(string)
+
+
+
+
+if __name__ == "__main__":
+    main()
+>>>>>>> branch-3--database

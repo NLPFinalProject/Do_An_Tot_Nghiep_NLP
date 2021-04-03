@@ -53,8 +53,14 @@ from .Levenshtein import *
 from PreprocessingComponent.views import *
 #cần import cho up file
 from django.core.files.storage import FileSystemStorage
+<<<<<<< HEAD
 from .form import DocumentForm
 from .form import UploadFileForm
+=======
+#lock command UploadOneFileForm lại trước khi migrations vì sửa dụng model DocumentFile
+from .form import DocumentForm, UploadOneFileForm, UploadManyFileForm
+from .form import UploadFileForm,UploadFileFormListVersion
+>>>>>>> branch-3--database
 from django.conf import settings
 from PreprocessingComponent import views as p
 
@@ -76,6 +82,70 @@ def dictfetchall(cursor):
     ]
 
 #result
+<<<<<<< HEAD
+=======
+#import mới
+def documentimport2(request):
+    print('------------------------------')
+    fileName1 = "fileDocC.docx"
+    fileName2 = ['fileDocB.docx','vanbanE.docx']
+    userId=1
+
+    cursor = connections['default'].cursor()
+
+    #B1 start đọc data từ database
+    # fileName1
+    #query trên database
+    queryRaw ="SELECT DataDocumentFile FROM `filecomponent_datadocument` WHERE DataDocumentName='"+fileName1.split(".")[0]+"' AND DataDocumentAuthor_id='"+str(userId)+"';"
+    print("=====",queryRaw)
+    cursor.execute(queryRaw)
+    fetchQuery = dictfetchall(cursor)
+    documentNameLink = [a_dict["DataDocumentFile"] for a_dict in fetchQuery]
+    print("=====filename1====",os.path.basename(documentNameLink[0]))
+    print(settings.MEDIA_ROOT +'\\DocumentFile\\' + os.path.basename(documentNameLink[0]))
+    fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile\\' + os.path.basename(documentNameLink[0]))
+    #danh sách các câu trong file1 theo thứ tự
+    fileName1Sentence = lstSentence
+
+    print("===filename2 len ======",len(fileName2),fileName2[1])
+    # fileName2
+    # chạy preprocess cho từng file trong fileName2
+    # trả danh sách câu từng file vô dataReadDoc
+    dataReadDoc=[]
+    for i in fileName2:
+        try:
+            #query database
+            queryRaw ="SELECT DataDocumentFile FROM `filecomponent_datadocument` WHERE DataDocumentName='"+i.split(".")[0]+"' AND DataDocumentAuthor_id='"+str(userId)+"';"
+            cursor.execute(queryRaw)
+            
+            fetchQuery = dictfetchall(cursor)
+            documentNameLink = [a_dict["DataDocumentFile"] for a_dict in fetchQuery]
+            print("===filename2 ======",documentNameLink[0].split("/")[-1])
+
+            fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile\\' + documentNameLink[0].split("/")[-1])
+            lst2 = lstSentence
+            dataReadDoc.append(lst2)
+        except Exception:
+            pass
+    
+    #B2 trả json
+    # result so sánh
+    # lần lượt thêm danh sách câu file 1, danh sách câu các file 2, cuối cùng là thứ tự câu so sánh
+    # vào reportDataReadDoc
+    reportDataReadDoc=[]
+    reportDataReadDoc.append(fileName1Sentence)
+    reportDataReadDoc.append(dataReadDoc)
+    for i in range(len(dataReadDoc)):
+        result = ExportOrder(dataReadDoc[i],fileName1Sentence,30)
+        reportDataReadDoc.append(result)
+    
+    #list of dicts to list of value end
+
+    print(connection.queries)
+    return Response(reportDataReadDoc, status=status.HTTP_200_OK)
+
+#import cũ
+>>>>>>> branch-3--database
 def documentimport(request):
     print('------------------------------')
     # đọc data từ database
@@ -124,11 +194,18 @@ def documentimport(request):
     print("__________",report)
     return render(request,'polls/output.html',{'data': report})
 
+<<<<<<< HEAD
 
 #upload 1 file
 @api_view(('POST',))
 def uploadDoc(request):
     content = {'success': 'youre good'}
+=======
+#upload 1 file
+@api_view(('POST',))
+def uploadDoc(request):
+    
+>>>>>>> branch-3--database
     if request.method=='POST':
         #print(request.data)
         #filename = request.data['FILES']
@@ -136,7 +213,11 @@ def uploadDoc(request):
         print('-------------------------------------')
         
         print('-------------------------------------')
+<<<<<<< HEAD
         form1 = UploadFileForm(request.POST, request.FILES )
+=======
+        form1 = UploadOneFileForm(request.POST, request.FILES )
+>>>>>>> branch-3--database
         
         #form1 = UploadFileForm(request.POST,'D:/kamen rider.doc')
 
@@ -144,12 +225,21 @@ def uploadDoc(request):
             # save form người dùng gửi
             data = form1.cleaned_data
             print('yes')
+<<<<<<< HEAD
             name2 = data['title'] #abc.doc
             name = str(name2)
             file1 = data['files'] #abc.doc
             
             file_name = name.split(".")[0]#doc
             extension = name.split(".")[-1]#abc
+=======
+            #name2 = data['title'] #abc.doc
+            #name = str(name2)
+            file1 = data['DataDocumentFile'] #abc.doc
+            
+            file_name = file1.name.split(".")[0]#doc
+            extension = file1.name.split(".")[-1]#abc
+>>>>>>> branch-3--database
             
             print(file1,type(file1))
             print('-------------------file name is'+file_name)
@@ -181,11 +271,90 @@ def uploadDoc(request):
             return Response(content, status=status.HTTP_200_OK)
             
     else:
+<<<<<<< HEAD
         form = DocumentForm()
+=======
+        form = UploadOneFileForm()
+>>>>>>> branch-3--database
     content = {'please move along': 'have the same username'}
     print('fail')
     return Response(content, status=status.HTTP_204_NO_CONTENT)
     
+<<<<<<< HEAD
+=======
+#upload multiple file
+@api_view(('POST',))
+def uploadDocList(request):
+    #chuong trinh test
+    if request.method=='POST':
+        listfile =  request.FILES.getlist('DataDocumentFile')
+        count = 0
+        #listname = request.data.getlist('title')
+        print('-------------------listfile is',listfile)
+        for f in listfile:
+
+            #name = listname[count]
+            count = count+1
+            file1:file
+            file1 = f #abc.doc
+            print('-------------------f is',file1)
+            file_name = file1.name.split(".")[0]#doc
+            extension = file1.name.split(".")[-1]#abc
+            
+            print(file1,type(file1))
+            print('-------------------file name is '+file_name)
+            print('-------------------extension is '+extension)
+            data = DataDocument(DataDocumentName=file_name, DataDocumentAuthor="abc",DataDocumentType=extension, DataDocumentFile=file1)
+            data.save()
+            print('stop here right now')
+            """fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile\\' + data.DataDocumentName+'.'+ data.DataDocumentType)
+            
+            //save to db//  
+            length= len(lstSentence)
+            for i in range(length):
+                c=data.datadocumentcontentt_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=lstLength[i])
+                print(c)"""
+        return Response(None, status=status.HTTP_200_OK)    
+            
+        
+        """    
+        print(request.data)
+        #print(request.data)
+        #filename = request.data['FILES']
+        #print('-----file key is'+filekey)
+        form1 = UploadFileForm(request.POST, request.FILES )
+        print(request.FILES)
+        #form1 = UploadFileForm(request.POST,'D:/kamen rider.doc')
+
+        if form1.is_valid():
+            # save form người dùng gửi
+            data = form1.cleaned_data
+            print('yes')
+            name2 = data['title'] #abc.doc
+            name = str(name2)
+            file1 = data['files'] #abc.doc
+            
+            file_name = name.split(".")[0]#doc
+            extension = name.split(".")[-1]#abc
+            
+            print(file1,type(file1))
+            print('-------------------file name is'+file_name)
+            print('-------------------extension is'+extension)
+            data = DataDocument(DataDocumentName=file_name, DataDocumentAuthor="abc",DataDocumentType=extension, DataDocumentFile=file1)
+            data.save()
+            #data= form1.save(commit = False)
+            print('pass')
+            # sử dụng preprocessor và lưu vào database
+            #lỗi zip file
+            
+            
+    else:
+        form = UploadManyFileForm()
+    content = {'please move along': 'have the same username'}
+    print('fail')
+    return Response(content, status=status.HTTP_204_NO_CONTENT)"""
+    
+>>>>>>> branch-3--database
 @api_view([ 'GET'])
 def test(self):
     main()

@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import BaseUserManager
 
 # Create your models here.
+<<<<<<< HEAD
 class UserManager(BaseUserManager):
     def create_user(self,username, password=None):
         """
@@ -63,6 +64,17 @@ class User(AbstractBaseUser):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['password']
     objects = UserManager()
+=======
+#bỏ primary key, xóa bảng trong database trên máy rồi migrations lại sẽ tự sinh id(pk)
+class User(models.Model):
+    username = models.CharField(max_length=30, blank=False, default='')
+    password = models.CharField(max_length=100, blank=False, default='')
+    name = models.CharField(max_length=30, blank=False, default='')
+    EmailOrganization = models.CharField(max_length=30,blank=True, default='')
+    DateOfBirth = models.DateTimeField(blank=True)
+    active = models.BooleanField(default=False,blank=False)
+    phone = models.CharField(max_length=15,blank=True,  default='')
+>>>>>>> branch-3--database
     def __str__(self):
         return self.username
 
