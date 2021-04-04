@@ -1,0 +1,49 @@
+<br />
+<h5><b>Lịch sử tải lên</b></h5>
+<br />
+
+<div class="gutter-box">
+  <nz-table #nestedTable [nzLoading]="loading" [nzData]="reportInputFile" [nzPageSize]="10">
+    <thead (nzSortChange)="sort($event)" nzSingleSort>
+      <tr>
+        <th nzShowExpand></th>
+        <th nzShowSort nzSortKey="createdDate">Ngày tải lên</th>
+        <th>Tổng tệp tải lên</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-template ngFor let-data [ngForOf]="reportInputFile">
+        <tr>
+          <td nzShowExpand [(nzExpand)]="data.expand"></td>
+          <td>
+            <b>{{ data.createdDate | date: 'dd-MM-yyyy' }}</b>
+          </td>
+          <td>
+            <nz-badge
+              [nzCount]="data.totalFile"
+              [nzOverflowCount]="999"
+              [nzStyle]="{ backgroundColor: '#52c41a' }"
+            ></nz-badge>
+          </td>
+        </tr>
+        <tr [nzExpand]="data.expand">
+          <td></td>
+          <td colspan="5">
+            <nz-table #innerTable [nzData]="data.childReport" nzSize="middle" [nzShowPagination]="false">
+              <tbody>
+                <tr *ngFor="let data of innerTable.data">
+                  <td (click)="goToDetail(data)">
+                    <b>{{ data.name }}</b>
+                  </td>
+                  <td>
+                    <b>{{ data.totalFile }}</b>
+                  </td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </td>
+        </tr>
+      </ng-template>
+    </tbody>
+  </nz-table>
+</div>

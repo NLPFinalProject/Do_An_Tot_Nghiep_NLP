@@ -1,0 +1,57 @@
+<div nz-row nzType="flex" nzJustify="center" nzAlign="top">
+  
+  <div class="form-group">
+    
+    <nz-upload [nzCustomRequest]="uploadFile"  [nzShowUploadList]="false" [nzData]="fileList">
+      <button nz-button><i nz-icon id="upload" type="upload"
+      (change)="handleChange($event.target.files)"></i><span>Tải lên tệp tin cần so sánh</span></button>    
+      </nz-upload>
+
+</div>
+<div class="form-group">
+  
+  <input type="file" 
+  name = "Tải lên tệp tin so sánh"
+         id="file"
+         multiple
+         (change)="handleChange($event.target.files)">
+</div>
+
+    <button
+            nz-button
+            class="w-100"
+            nzType="primary"
+            nzShape="omitted"
+            (click)="checkPlagism()"
+            
+          >
+            <i  theme="outline"></i> <span translate>Kiểm tra</span>
+          </button>
+</div>
+
+<nz-table #filterTable [nzData]="displayData" [nzLoading]="loading" nzSize="small">
+  <thead (nzSortChange)="sort($event)" nzSingleSort>
+    <tr>
+      <th nzShowSort nzSortKey="name">Tên tệp tin</th>
+      <th
+        nzShowSort
+        nzSortKey="address"
+        nzShowFilter
+        [nzFilters]="statusList"
+        (nzFilterChange)="filter($event, searchAddress)"
+      >
+        Trạng thái
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of filterTable.data">
+      <td>
+        <span class="d-inline-block text-truncate" style="max-width: 150px;" nz-tooltip nzTitle="{{ data.name }}">
+          {{ data.name }}
+        </span>
+      </td>
+      <td>{{ data.status }}</td>
+    </tr>
+  </tbody>
+</nz-table>

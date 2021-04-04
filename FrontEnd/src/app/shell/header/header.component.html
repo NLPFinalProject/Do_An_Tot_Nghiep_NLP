@@ -1,0 +1,41 @@
+<nz-header>
+  <div class="logo">
+    <a href="/daovan" translate> APP_NAME </a>
+  </div>
+  <ul nz-menu [nzTheme]="'dark'" [nzMode]="'horizontal'" style="line-height: 64px;">
+    <li nz-menu-item routerLink="/daovan" routerLinkActive="active" translate>Home</li>
+   
+    <!-- <li nz-menu-item>
+      <nz-dropdown>
+        <a nz-dropdown>
+          Ngôn ngữ: <b> {{ currentLanguage }} </b> <i nz-icon type="down"></i>
+        </a>
+        <ul nz-menu nzSelectable *ngFor="let language of languages" (click)="setLanguage(language)">
+          <li nz-menu-item>
+            {{ language }}
+          </li>
+        </ul>
+      </nz-dropdown>
+    </li> -->
+    <li nz-menu-item>
+      <nz-dropdown>
+        <a nz-dropdown>
+          <b>Tài khoản: {{ username }}</b> <i nz-icon type="down"></i>
+        </a>
+        <ul nz-menu nzSelectable>
+          <li nz-menu-item>
+            <a (click)="account()" translate>Profile</a>
+          </li>
+          <li nz-menu-item>
+            <a [routerLink]="['/about']" translate>About</a>
+          </li>
+          
+          <li nz-menu-item>
+            <a (click)="logout()" translate>Logout</a>
+          </li>
+         
+        </ul>
+      </nz-dropdown>
+    </li>
+  </ul>
+</nz-header>

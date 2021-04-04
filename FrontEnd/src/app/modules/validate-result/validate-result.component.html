@@ -1,0 +1,42 @@
+
+<div class="container">
+  
+  <h2 class ="textcenter">Kiểm tra kết quả</h2>
+ <div class="on" id = "scroller" >
+
+  <table >
+    
+    <tbody class="green">
+        <tr>
+          
+            <td><div  contenteditable="true" id="ex1">
+              
+              <div class = "inlinetable" *ngFor="let temp of answer.ls1">
+              
+                <div  [ngClass]="[shouldHighlight(temp.id) ? 'highlight' : '']">
+                <a  (click)="triggerScrollTo(temp.id)">{{temp.data}}.</a>
+                </div>
+            </div>
+
+            </div>
+          </td>
+          <td>
+            <div contenteditable="true" id="ex2">
+              <div class = "inlinetable" *ngFor="let temp of answer.ls2">
+                <div class = "inlinetable"  [ngClass]="[shouldHighlight2(temp.id) ? 'highlight' : '']"  id ={{temp.id}} #{{temp.id}}>{{temp.data}}.</div>
+            </div>
+            
+            </div>
+          </td>
+           
+        </tr>
+    </tbody>
+    </table>
+    
+  
+  </div>
+</div>
+  
+
+  
+  

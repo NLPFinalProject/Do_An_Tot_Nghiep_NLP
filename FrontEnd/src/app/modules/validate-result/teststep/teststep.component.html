@@ -1,0 +1,63 @@
+<div class="container">
+<div *ngIf="step===1">
+
+  <div class ="center-button">
+    
+  <div class="file-input">
+    <p class="center">Mời bạn chọn file cần kiểm tra</p>
+    <input type="file" (change)="handleChangeFileV1($event.target.files)"  id="file"  class="file">
+    <label for="file">Select file</label>
+  </div>
+</div>
+
+
+  <button
+  [disabled]="isvalid!==true"
+  nz-button
+  class="w-100"
+  nzType="primary"
+  nzShape="omitted"
+  
+  (click)="nextstep()"
+  
+>
+  <i  theme="outline"></i> <span translate>Tiếp theo</span>
+</button>
+<div>
+ 
+ 
+</div>
+
+
+</div>
+
+<div *ngIf="step===2">
+  
+ 
+  <div class ="center-button">
+    
+    <div class="file-input">
+      <p class= "center">Mời bạn chọn file muốn đối chiếu</p>
+      <input type="file" (change)="handleChangeFileList($event.target.files)"  id="file" multiple class="file">
+      <label for="file">Select file</label>
+    </div>
+  </div>
+         
+
+  
+  <button
+  nz-button
+  class="w-100"
+  nzType="primary"
+  nzShape="omitted"
+  
+  (click)="nextstep()"
+  [disabled]="isvalid!==true"
+>
+  <i  theme="outline"></i> <span translate>Kết quả</span>
+</button>
+</div>
+
+</div>
+
+

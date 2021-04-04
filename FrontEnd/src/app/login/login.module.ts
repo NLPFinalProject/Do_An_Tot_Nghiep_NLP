@@ -13,6 +13,9 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { IndexLoginComponent } from './index-login/index-login.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ValidationComponent } from './validation/validation.component';
+import { TestComponent } from './test/test.component';
+import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
+
 
 @NgModule({
   imports: [
@@ -22,7 +25,8 @@ import { ValidationComponent } from './validation/validation.component';
     NgbModule,
     LoginRoutingModule,
     NgZorroAntdModule,
-    NgxErrorsModule
+    NgxErrorsModule,
+    ScrollToModule.forRoot()
   ],
   declarations: [
     LoginComponent,
@@ -30,7 +34,9 @@ import { ValidationComponent } from './validation/validation.component';
     ForgotPasswordComponent,
     IndexLoginComponent,
     ResetPasswordComponent,
-    ValidationComponent
+    ValidationComponent,
+    TestComponent,
+    
   ]
 })
 export class LoginModule {}

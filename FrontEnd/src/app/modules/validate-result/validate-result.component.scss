@@ -1,0 +1,78 @@
+#mainDiv {
+  height: 100px;
+  width: 80px;
+  position: relative;
+  border-bottom: 2px solid #f51c40;
+  background: #3beadc;
+}
+
+#borderLeft {
+  border-left: 2px solid #f51c40;
+  position: absolute;
+  top: 50%;
+  bottom: 0;
+}
+#mainDiv {
+  height: 100px;
+  width: 80px;
+  position: relative;
+  border-bottom: 2px solid #f51c40;
+  background: #3beadc;
+}
+
+#area {
+  height: 500px;
+  width: 500px;
+  border: 1px solid blue;
+  box-sizing: border-box;
+}
+::ng-deep .selected {
+  color: red;
+}
+#ex1 {
+  height: 400px;
+  width: 500px;
+  border: 1px solid blue;
+  box-sizing: border-box;
+  overflow: auto;
+}
+#ex2 {
+  height: 400px;
+  width: 500px;
+  border: 1px solid blue;
+  box-sizing: border-box;
+  overflow: auto;
+}
+.on {
+  overflow-anchor: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+.off {
+  overflow-anchor: none;
+}
+#anchor {
+  overflow-anchor: auto;
+  height: 1px;
+}
+.highlightText {
+  background: yellow;
+}
+.ngx-text-highlight {
+  background: yellow;
+}
+.highlight {
+  background: yellow;
+}
+.inlinetable {
+  display: inline-block;
+}
+div.container {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  .textcenter {
+    text-align: center;
+    font-style: normal;
+  }
+}
