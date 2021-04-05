@@ -8,6 +8,8 @@ import { stringify } from '@angular/core/src/util';
 import { ScrollToService, ScrollToConfigOptions } from '@nicky-lenaers/ngx-scroll-to';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { identity } from 'lodash';
+import throttleByAnimationFrame from 'ng-zorro-antd/core/util/throttleByAnimationFrame';
 @Component({
   selector: 'app-validate-result',
   templateUrl: './validate-result.component.html',
@@ -24,8 +26,13 @@ export class ValidateResultComponent implements OnInit {
   public listchar: any[];
   private sameline:any[]
   public answer: any;
+  public option:any[];
+  public SelectedOption:number;
   ngOnInit() {
     //this.forgodTest();
+    this.characterList1=[];
+    this.SelectedOption=0;
+    //this.characterList1 = ['kurogane yaiba', 'kurosaki ichigo', 'monkey D luffy', 'uzumaki naruto'];
     this.answer={
       ls1:null,
       ls2:null,
@@ -33,14 +40,75 @@ export class ValidateResultComponent implements OnInit {
     }
     this.getFirstSentences();
     this.ShowResult(0); 
-    
-   
+    if(this.data!=null)
+    {
+        console.log('escape success')
+    this.createOptionList();
+    }
+    else{
+      this.ChangeOption();
+    }
+  
 
     
   }
+  ChangeOption()
+  {
+    this.characterList2 = ['kurogane yaiba', 'kurosaki ichigo', 'monkey D luffy', 'uzumaki naruto'];
+      //console.log('escape fail');
+      let temp: {
+        id: number;
+        data: string;
+      };
+      console.log(this.characterList2.length);
+      console.log(this.characterList1);
+      this.characterList1=[];
+        for(var i = 0; i < this.characterList2.length; i++)
+        {
+          temp={
+            id :i,
+            data: this.characterList2[i],
+          }
+          this.characterList1.push(temp);
+        }
+      
+      console.log(this.characterList1);
+  }
+  createOptionList()
+  {
+    let temp: {
+      id: number;
+      data: string;
+    };
+
+    if(this.data!= null)
+    {
+      for(var i = 0; i < this.data.ListFileName.length; i++)
+      {
+        temp={
+          id :i,
+          data: this.data.ListFileName[i],
+        }
+        this.characterList1.push(temp);
+      }
+    }
+  }
+  GetSelection(id:number)
+  {
+    this.SelectedOption = id;
+    
+  }
+  confirmed()
+  {
+    console.log('this is');
+    console.log(this.SelectedOption);
+    this.ShowResult(this.SelectedOption);
+  }
   getFirstSentences()
   {
-    this.tempdata=[];
+    if(this.data!= null)
+    {
+      this.tempdata=[];
       let temp: {
         id: number;
         data: string;
@@ -55,12 +123,17 @@ export class ValidateResultComponent implements OnInit {
         this.tempdata.push(temp);
       }
       this.answer.ls1 = this.tempdata;
+    }
+    
   }
   constructor(private viewportScroller: ViewportScroller, private scrollToService: ScrollToService,private router:Router,
     private route: ActivatedRoute,
     ) {
-      
-      this.data = this.router.getCurrentNavigation().extras.state.data;
+      console.log(this.router.getCurrentNavigation());
+      if(this.router.getCurrentNavigation().extras.state!= null)
+      {
+        this.data = this.router.getCurrentNavigation().extras.state.data;
+      }
       
     }
     
@@ -244,8 +317,8 @@ export class ValidateResultComponent implements OnInit {
 /*this.answer=
       {
         ls1:data.file1,
-        ls2:data.fileName2[0].data,
-        ls3:data.fileName2[0].stt
+        ls2:data.ListFile[0].data,
+        ls3:data.ListFile[0].stt
       }*/
 /*forgodlvlMax(num : number)
 {
@@ -270,23 +343,23 @@ export class ValidateResultComponent implements OnInit {
         
         
         
-        for(var j = 0; j < this.data.fileName2[num].stt[i][1]; j++)
+        for(var j = 0; j < this.data.ListFile[num].stt[i][1]; j++)
         {
           console.log('begin');
-          console.log(this.data.fileName2[num].stt[i][2][j])
-          if (this.sameline.indexOf(this.data.fileName2[num].stt[i][2][j]) === -1) {
-            this.sameline.push(this.data.fileName2[num].stt[i][2][j]);
+          console.log(this.data.ListFile[num].stt[i][2][j])
+          if (this.sameline.indexOf(this.data.ListFile[num].stt[i][2][j]) === -1) {
+            this.sameline.push(this.data.ListFile[num].stt[i][2][j]);
         }
       }
         index = index + 1;
       }
       index = 0;
       let tempdata2 = [];
-      for (var i = 0; i < this.data.fileName2[num].data.length; i++) {
+      for (var i = 0; i < this.data.ListFile[num].data.length; i++) {
     
         temp = {
           id: index+1,
-          data: this.data.fileName2[num].data[i]
+          data: this.data.ListFile[num].data[i]
         };
         tempdata2.push(temp);
         index = index + 1;
@@ -297,7 +370,7 @@ export class ValidateResultComponent implements OnInit {
       {
         ls1:this.tempdata,
         ls2:tempdata2,
-        ls3:data.fileName2[0].stt
+        ls3:data.ListFile[0].stt
       }
       console.log(this.answer.ls1);
       console.log(this.answer.ls2);
@@ -312,6 +385,9 @@ ShowResult(num : number)
       console.log(this.data);
 
       
+     if(this.data!=null)
+     {
+
      
       let temp: {
         id: number;
@@ -319,23 +395,23 @@ ShowResult(num : number)
       };
       let index = 0;
       for (var i = 0; i < this.data.file1.length; i++) {
-        for(var j = 0; j < this.data.fileName2[num].stt[i][1]; j++)
+        for(var j = 0; j < this.data.ListFile[num].stt[i][1]; j++)
         {
           console.log('begin');
-          console.log(this.data.fileName2[num].stt[i][2][j])
-          if (this.sameline.indexOf(this.data.fileName2[num].stt[i][2][j]) === -1) {
-            this.sameline.push(this.data.fileName2[num].stt[i][2][j]);
+          console.log(this.data.ListFile[num].stt[i][2][j])
+          if (this.sameline.indexOf(this.data.ListFile[num].stt[i][2][j]) === -1) {
+            this.sameline.push(this.data.ListFile[num].stt[i][2][j]);
         }
       }
         
       }
       
       let tempdata2 = [];
-      for (var i = 0; i < this.data.fileName2[num].data.length; i++) {
+      for (var i = 0; i < this.data.ListFile[num].data.length; i++) {
     
         temp = {
           id: index+1,
-          data: this.data.fileName2[num].data[i]
+          data: this.data.ListFile[num].data[i]
         };
         tempdata2.push(temp);
         index = index + 1;
@@ -343,17 +419,25 @@ ShowResult(num : number)
        
       }
       this.answer.ls2 = tempdata2;
-      this.answer.ls3 = data.fileName2[0].stt
+      this.answer.ls3 = data.ListFile[0].stt
       /*this.answer=
       {
         ls1:this.tempdata,
         ls2:tempdata2,
-        ls3:data.fileName2[0].stt
+        ls3:data.ListFile[0].stt
       }
       console.log(this.answer.ls1);
       console.log(this.answer.ls2);
       console.log(this.answer.ls3);
      */
       console.log(data);
+    }
+    else{
+      this.forgodTest();
+    }
+}
+ExportEmail()
+{
+  
 }
 }

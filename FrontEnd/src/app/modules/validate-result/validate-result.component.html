@@ -2,10 +2,17 @@
 <div class="container">
   
   <h2 class ="textcenter">Kiểm tra kết quả</h2>
- <div class="on" id = "scroller" >
-
+  <div class="autocenter">
+    <p>Mời bạn chọn văn bản muốn so sánh:</p>
+    <select id="pricingtemplates" (change)="GetSelection($event.target.value)">
+      <option [value]="(temp.id)" *ngFor="let temp of characterList1 ">{{temp.data}}</option>
+    </select>
+    <button (click)="confirmed()">Xác nhận</button>
+    </div>
+ <div  id = "scroller" >
+  
   <table >
-    
+   
     <tbody class="green">
         <tr>
           
@@ -32,7 +39,7 @@
         </tr>
     </tbody>
     </table>
-    
+    <button (click)="ExportEmail()">Xuất kết quả ra email</button>
   
   </div>
 </div>

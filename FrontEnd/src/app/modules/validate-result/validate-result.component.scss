@@ -71,8 +71,19 @@ div.container {
   display: block;
   margin-left: auto;
   margin-right: auto;
+  
   .textcenter {
     text-align: center;
     font-style: normal;
   }
+}
+.autocenter{
+  //margin: auto;
+  
+  text-align: center;
+  //display: inline-block;
+ 
+}
+.container{
+background: white;
 }
