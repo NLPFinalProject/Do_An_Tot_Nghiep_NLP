@@ -18,6 +18,7 @@ def split_text(text):
     list_para = text.split("\n\n")
     for i in range(len(list_para)):
         list_para[i] = list_para[i].replace('\n', '')
+    list_para = list(filter(str.strip, list_para))
     return list_para
 
 # Hàm đọc file pdf trả ra list các text theo các trang có áp dụng chia đoạn
