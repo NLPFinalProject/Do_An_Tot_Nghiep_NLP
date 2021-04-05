@@ -17,6 +17,7 @@ import docx
 import PyPDF2
 import uuid
 from os.path import dirname, abspath, join
+
 from pdfminer3.layout import LAParams, LTTextBox
 from pdfminer3.pdfpage import PDFPage
 from pdfminer3.pdfinterp import PDFResourceManager
@@ -24,12 +25,20 @@ from pdfminer3.pdfinterp import PDFPageInterpreter
 from pdfminer3.converter import PDFPageAggregator
 from pdfminer3.converter import TextConverter
 import io
-import preprocessor_pdf
+from itertools import tee, islice, chain
 
-if("preprocessor" in os.getcwd()):
-    vncorenlp_file = os.getcwd()+'/VnCoreNLP/VnCoreNLP-1.1.1.jar'
+if ("preprocessing" in os.getcwd()):
+    vncorenlp_file = os.getcwd() + '/VnCoreNLP/VnCoreNLP-1.1.1.jar'
 else:
-    vncorenlp_file = os.getcwd()+'/preprocessing/VnCoreNLP/VnCoreNLP-1.1.1.jar'
+    vncorenlp_file = os.getcwd() + '/preprocessing/VnCoreNLP/VnCoreNLP-1.1.1.jar'
+
+vncorenlp=VnCoreNLP(vncorenlp_file, annotators="wseg,pos", max_heap_size='-Xmx4g', quiet=False)
+
+def previous_and_next(some_iterable):
+    prevs, items, nexts = tee(some_iterable, 3)
+    prevs = chain([None], prevs)
+    nexts = chain(islice(nexts, 1, None), [None])
+    return zip(prevs, items, nexts)
 
 
 # LƯU Ý:
@@ -81,6 +90,10 @@ def para2text(p):
     return u" ".join([r.text for r in rs])
 
 
+##--------------------------------------------------------------------
+
+
+
 def docx2txt(docx_file_name):
     # Parse xml file
     xml_file_name = 'mydocx.xml'
@@ -98,38 +111,32 @@ def docx2txt(docx_file_name):
     para_index = 0
     tbl_index = 0
     string = ""
-    count=0
-    lst_para=[] # res: list paragraph of docx
+    count = 0
+    lst_para = []  # res: list paragraph of docx
     while para_index < len(paragraph):
         if paragraph[para_index] in wp_tbl:
-            #string = string + table_string(table[tbl_index])
+            # string = string + table_string(table[tbl_index])
             lst_para.append(table_string(table[tbl_index]))
             para_index += len(table[tbl_index].getElementsByTagName('w:p'))
             tbl_index += 1
         else:
-            #string = string + para_string(paragraph[para_index])
+            # string = string + para_string(paragraph[para_index])
             lst_para.append(para_string(paragraph[para_index]))
             para_index += 1
-    for i in range(0,len(lst_para)):
-        if("\xa0" in lst_para[i]):
-            lst_para[i]=lst_para[i].replace("\xa0"," ")
+    for i in range(0, len(lst_para)):
+        if ("\xa0" in lst_para[i]):
+            lst_para[i] = lst_para[i].replace("\xa0", " ")
     os.remove("mydocx.xml")
-    split_sentence = [] ## list chứa danh sách câu được tách ra. mỗi phần tử là 1 câu.
-    with VnCoreNLP(vncorenlp_file) as vncorenlp:
-        for sentences in lst_para:
-            split_sentence.extend(vncorenlp.pos_tag(sentences))
-    return split_sentence #update: trả ra pos_tag là có gán nhãn cho tưng từ về loại từ.  
-    #return lst_para
-    #return string # gộp các đoạn lại và trả về toàn bộ văn bản ban đầu.
+    split_sentence = []  ## list chứa danh sách câu được tách ra. mỗi phần tử là 1 câu.
+    for sentences in lst_para:
+        split_sentence.extend(vncorenlp.pos_tag(sentences))
+    vncorenlp.close()
+    return split_sentence  # update: trả ra pos_tag là có gán nhãn cho tưng từ về loại từ.
+    # return lst_para
+    # return string # gộp các đoạn lại và trả về toàn bộ văn bản ban đầu.
 
 
-def pdf2txt(file_path):
-    list_para=preprocessor_pdf.pdf2txt(file_path)
-    split_sentence = [] ## list chứa danh sách câu được tách ra. mỗi phần tử là 1 câu.
-    with VnCoreNLP(vncorenlp_file) as vncorenlp:
-        for para in list_para:
-            split_sentence.extend(vncorenlp.pos_tag(para))
-    return split_sentence #update: trả ra pos_tag là có gán nhãn cho tưng từ về loại từ.    
+
 
 # hàm chuyển đổi định dạng từ fild .doc sang .docx
 def doc2docx(filename, path=os.getcwd()):
@@ -141,7 +148,8 @@ def doc2docx(filename, path=os.getcwd()):
     if "~$" not in file_name:
         if file_extension.lower() == '.doc':  #
             # docx_file = '{0}{1}'.format(file_path, 'x')
-            docx_file = file_name + str(uuid.uuid4().hex[:10]).format(file_path, 'x') # tránh trương hợp có sẵn file .docx tước đó nên thêm phần random để tránh trùng tên
+            docx_file = file_name + str(uuid.uuid4().hex[:10]).format(file_path,
+                                                                      'x')  # tránh trương hợp có sẵn file .docx tước đó nên thêm phần random để tránh trùng tên
             if not os.path.isfile(docx_file):  # Skip conversion where docx file already exists
 
                 file_path = os.path.abspath(file_path)
@@ -154,7 +162,7 @@ def doc2docx(filename, path=os.getcwd()):
                 except Exception as e:
                     print('Failed to Convert: {0}'.format(file_path))
                     print(e)
-            return docx_file+".docx" ## trả ra tên file đã chuyển từ doc -> docx
+            return docx_file + ".docx"  ## trả ra tên file đã chuyển từ doc -> docx
 
 
 # hàm rút trích các câu từ file ppt
@@ -182,35 +190,146 @@ def xlsx2txt(filename):
         list_sen[i] = " ".join(list_sen[i].split())
     return list_sen
 
+# Hàm chia văn bản thành các đoạn
+# Input:
+#   + text: kiểu string, văn bản cần chia
+# Output:
+#   + list_para: list các đoạn
+
+def split_text(text):
+    list_para = text.split("\n\n")
+    for i in range(len(list_para)):
+        list_para[i] = list_para[i].replace('\n', '')
+    list_para = list(filter(str.strip, list_para))
+    return list_para
+
+# Hàm đọc file pdf trả ra list các text theo các trang có áp dụng chia đoạn
+# Input:
+#   + file_path: Vị trị lưu file pdf cần đọc
+# Output:
+#   + list_para: list các văn bản đọc theo trang, 1 trang là list các đoạn văn bản của trang đó
+# Ví dụ:
+#   list_para[3][2]: Trang thứ 4, đoạn thứ 3
+
+def pdf2txt_page(file_path):
+    list_page = []
+    with open(file_path, 'rb') as fh:
+        for page in PDFPage.get_pages(fh, caching=True, check_extractable=True):
+            resource_manager = PDFResourceManager()
+            fake_file_handle = io.StringIO()
+            converter = TextConverter(resource_manager, fake_file_handle, laparams=LAParams())
+            page_interpreter = PDFPageInterpreter(resource_manager, converter)
+            page_interpreter.process_page(page)
+            list_page.append(fake_file_handle.getvalue())
+            converter.close()
+            fake_file_handle.close()
+    list_para = []
+    for i in range(len(list_page)):
+        list_para.append(split_text(list_page[i]))
+
+    return list_para
+
+# Hàm đọc file pdf trả ra text và chia thành list đoạn cho text đó
+# Input:
+#   + file_path: Vị trị lưu file pdf cần đọc
+#   + pages: nếu để trống thì đọc từ đầu đến cuối file
+#           nếu có tham số là iteration thì đọc từ page a đến page b
+# Output:
+#   + list_para: list các đoạn của văn bản
+# Ví dụ:
+#   pdf2txt("sample.pdf"): Đọc toàn bộ văn bản
+#   pdf2txt("sample.pdf", pages = range(1,6)): Đọc văn bản từ trang 2 đến trang 6
+#   list_para[0]: Đoạn thứ 1 của văn bản
+def pdf2para(file_path, pages=None):
+    if not pages:
+        pagenums = set()
+    else:
+        pagenums = set(pages)
+
+    output = io.StringIO()
+    manager = PDFResourceManager()
+    converter = TextConverter(manager, output, laparams=LAParams())
+    interpreter = PDFPageInterpreter(manager, converter)
+
+    infile = open(file_path, 'rb')
+    for page in PDFPage.get_pages(infile, pagenums):
+        interpreter.process_page(page)
+    infile.close()
+    converter.close()
+    text = output.getvalue()
+    print(text)
+    output.close
+    list_para = split_text(text)
+
+    return list_para # trả ra danh sách các đoạn văn bản được tách.
+
+def pdf2txt(file_path):
+    list_para = pdf2para(file_path) 
+    split_sentence = []  ## list chứa danh sách câu được tách ra. mỗi phần tử là 1 câu.
+    for para in list_para:
+        split_sentence.extend(vncorenlp.pos_tag(para))
+    vncorenlp.close()
+    return split_sentence  # update: trả ra pos_tag là có gán nhãn cho tưng từ về loại từ.
+
+# Đọc theo số trang
+# Input:
+#    + start_page: trang đầu tiên
+#    + end_page: trang cuối cùng
+#    + doc_file: file .pdf cần đọc
+# Output:
+#    + Tương tự output của vncorenlp.tokenize
+# Ví dụ:
+# Đọc từ trang 4 tới trang 7: read_pages(4, 7)
+# Đọc duy nhất trang 5: read_pages(5, 5)
+def read_pages(start_page, end_page, doc_file):
+    words = []
+    doc = pdf2txt(doc_file, range(start_page - 1, end_page))
+    for para in doc:
+        words.extend(vncorenlp.tokenize(para))
+
+    return words
+
 def convert2listsen(vncore_postag):
-    s=""
-    res=[]
+    s = ""
+    res = []
     for i in vncore_postag:
         count = 0
+        for previous, item, nxt in previous_and_next(i):
+            # print("Item is now", item[0], "next is", nxt, "previous is", previous)
+            if (previous == None or nxt == None):
+                continue
+            if (previous[0] == "[" and item[1] == "M" and nxt[0] == "]"):
+                i.remove(previous)
+                i.remove(item)
+                i.remove(nxt)
         for j in i:
-            if(j[1]!="CH"):
-                s+= j[0]+" "
-            else:
-                if(j[0]=='"'):
-                    count+=1
-                    if(count%2!=0):
-                        s+=" "+j[0]
-                    else:
-                        s=s.strip()
-                        s+=j[0]+" "
-                    continue
-                if(j[0] in ['(','[','{']):
-                    s+=" "+j[0]
+            if (j[0] == "."):
+                i=i.remove(j)
+            if (j[1] != "CH"):
+                s += j[0] + " "
+        else:
+            if (j[0] == '"'):
+                count += 1
+                if (count % 2 != 0):
+                    s += " " + j[0]
                 else:
-                    s=s.strip()
-                    s+=j[0]+" "
-            if("_" in s):
-                s=s.replace("_"," ")
-        s=s.strip()+"."
+                    s = s.strip()
+                    s += j[0] + " "
+                continue
+            if (j[0] in ['(', '[', '{']):
+                s += " " + j[0]
+            else:
+                s = s.strip()
+                s += j[0] + " "
+        if ("_" in s):
+            s = s.replace("_", " ")
+        s = s.strip() + "."
         res.append(s)
-        s=""
+        s = ""
     return res
-#hàm dùng để đém số từ trong 1 câu
+
+
+# hàm dùng để đém số từ trong 1 câu
 def num_of_word(list_sentences):
     num_word = []
     for i in list_sentences:
@@ -255,11 +374,10 @@ def rtf2txt(filename):
     with open("yourfile.rtf") as infile:
         for line in infile:
             print(line)
-
-
+            
 if __name__ == '__main__':
-    filename = "docFile_test/bacho.docx"
+    filename = "sample.pdf"
     a, b, c = preprocess(filename)
-    print("Tên file là: ",a)
-    print("\n Danh sách các câu của file là: ",b)
-    print("\n Danh sách số từ của file là: ",c)
+    print("Tên file là: ", a)
+    print("\n Danh sách các câu của file là: ", b)
+    print("\n Danh sách số từ của file là: ", c)
