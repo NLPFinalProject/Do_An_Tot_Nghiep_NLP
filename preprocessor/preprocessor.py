@@ -92,7 +92,29 @@ def para2text(p):
 
 ##--------------------------------------------------------------------
 
+# def docx2txt(filename):
+#     doc = docx.Document(filename)
+#     fullText = []
+#     for para in doc.paragraphs:
+#         fullText.append(para2text(para))
+#     for table in doc.tables:
+#         for row in table.rows:
+#             s = ""
+#             for cell in row.cells:
+#                 if (cell.text == ""):
+#                     continue
+#                 s += cell.text + '. '
+#             fullText.append(s)
+#     # return '\n'.join(fullText),
 
+#     if("preprocessor" in os.getcwd()):
+#         vncorenlp_file = os.getcwd()+'/VnCoreNLP/VnCoreNLP-1.1.1.jar'
+#     else:
+#         vncorenlp_file = os.getcwd()+'/preprocessing/preprocessor/VnCoreNLP/VnCoreNLP-1.1.1.jar'
+#     split_sentence = []
+#     for sentences in fullText:
+#         split_sentence.extend(vncorenlp.pos_tag(sentences))
+#     return split_sentence
 
 def docx2txt(docx_file_name):
     # Parse xml file
@@ -130,7 +152,6 @@ def docx2txt(docx_file_name):
     split_sentence = []  ## list chứa danh sách câu được tách ra. mỗi phần tử là 1 câu.
     for sentences in lst_para:
         split_sentence.extend(vncorenlp.pos_tag(sentences))
-    vncorenlp.close()
     return split_sentence  # update: trả ra pos_tag là có gán nhãn cho tưng từ về loại từ.
     # return lst_para
     # return string # gộp các đoạn lại và trả về toàn bộ văn bản ban đầu.
@@ -173,8 +194,7 @@ def ppt2txt(filename):
         for shape in slide.shapes:
             if shape.has_text_frame:
                 sentences += shape.text + ". "
-    with VnCoreNLP(vncorenlp_file, annotators="wseg", max_heap_size='-Xmx4g', quiet=False) as vncorenlp:
-        split_sentence = vncorenlp.tokenize(sentences)
+    split_sentence = vncorenlp.tokenize(sentences)
     return split_sentence
 
 
@@ -226,7 +246,6 @@ def pdf2txt_page(file_path):
     list_para = []
     for i in range(len(list_page)):
         list_para.append(split_text(list_page[i]))
-
     return list_para
 
 # Hàm đọc file pdf trả ra text và chia thành list đoạn cho text đó
@@ -267,8 +286,7 @@ def pdf2txt(file_path):
     list_para = pdf2para(file_path) 
     split_sentence = []  ## list chứa danh sách câu được tách ra. mỗi phần tử là 1 câu.
     for para in list_para:
-        split_sentence.extend(vncorenlp.pos_tag(para))
-    vncorenlp.close()
+        split_sentence.extend(vncorenlp.pos_tag(para))  
     return split_sentence  # update: trả ra pos_tag là có gán nhãn cho tưng từ về loại từ.
 
 # Đọc theo số trang
@@ -376,8 +394,12 @@ def rtf2txt(filename):
             print(line)
             
 if __name__ == '__main__':
-    filename = "sample.pdf"
+    filename = "bacho.docx"
     a, b, c = preprocess(filename)
     print("Tên file là: ", a)
     print("\n Danh sách các câu của file là: ", b)
     print("\n Danh sách số từ của file là: ", c)
+
+
+
+vncorenlp.close()# đóng server vncore
