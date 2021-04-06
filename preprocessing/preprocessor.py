@@ -14,10 +14,8 @@ from docx_utils.flatten import opc_to_flat_opc
 from xml.dom import minidom
 import win32com.client
 import docx
-import PyPDF2
 import uuid
 from os.path import dirname, abspath, join
-
 from pdfminer3.layout import LAParams, LTTextBox
 from pdfminer3.pdfpage import PDFPage
 from pdfminer3.pdfinterp import PDFResourceManager
@@ -26,12 +24,12 @@ from pdfminer3.converter import PDFPageAggregator
 from pdfminer3.converter import TextConverter
 import io
 from itertools import tee, islice, chain
+import time
 
 if ("preprocessing" in os.getcwd()):
     vncorenlp_file = os.getcwd() + '/VnCoreNLP/VnCoreNLP-1.1.1.jar'
 else:
     vncorenlp_file = os.getcwd() + '/preprocessing/VnCoreNLP/VnCoreNLP-1.1.1.jar'
-
 vncorenlp=VnCoreNLP(vncorenlp_file, annotators="wseg,pos", max_heap_size='-Xmx4g', quiet=False)
 
 def previous_and_next(some_iterable):
@@ -92,29 +90,7 @@ def para2text(p):
 
 ##--------------------------------------------------------------------
 
-# def docx2txt(filename):
-#     doc = docx.Document(filename)
-#     fullText = []
-#     for para in doc.paragraphs:
-#         fullText.append(para2text(para))
-#     for table in doc.tables:
-#         for row in table.rows:
-#             s = ""
-#             for cell in row.cells:
-#                 if (cell.text == ""):
-#                     continue
-#                 s += cell.text + '. '
-#             fullText.append(s)
-#     # return '\n'.join(fullText),
 
-#     if("preprocessor" in os.getcwd()):
-#         vncorenlp_file = os.getcwd()+'/VnCoreNLP/VnCoreNLP-1.1.1.jar'
-#     else:
-#         vncorenlp_file = os.getcwd()+'/preprocessing/preprocessor/VnCoreNLP/VnCoreNLP-1.1.1.jar'
-#     split_sentence = []
-#     for sentences in fullText:
-#         split_sentence.extend(vncorenlp.pos_tag(sentences))
-#     return split_sentence
 
 def docx2txt(docx_file_name):
     # Parse xml file
@@ -194,7 +170,8 @@ def ppt2txt(filename):
         for shape in slide.shapes:
             if shape.has_text_frame:
                 sentences += shape.text + ". "
-    split_sentence = vncorenlp.tokenize(sentences)
+    with VnCoreNLP(vncorenlp_file, annotators="wseg", max_heap_size='-Xmx4g', quiet=False) as vncorenlp:
+        split_sentence = vncorenlp.tokenize(sentences)
     return split_sentence
 
 
@@ -209,6 +186,59 @@ def xlsx2txt(filename):
     for i in range(0, len(list_sen)):
         list_sen[i] = " ".join(list_sen[i].split())
     return list_sen
+
+
+def convert2listsen(vncore_postag):
+    s = ""
+    res = []
+    index=[]
+    turn=0
+    for i in vncore_postag:
+        count = 0
+        # for previous, item, nxt in previous_and_next(i):    
+        #     turn+=1
+        #     if (previous == None or nxt == None):
+        #         continue
+        #     if (previous[0] == "[" and item[1] == "M" and nxt[0] == "]"):
+        #         index.append(turn-2)
+        #         index.append(turn-1)
+        #         index.append(turn)
+        # if(len(index)!=0):
+        #     set_index=set(index)
+        #     for h,k in zip(set_index,range(len(set_index))):
+        #         i.pop(h-k)
+        for j in i:
+            if (j[1] != "CH"):
+                s += j[0] + " "
+            else:
+                if (j[0] == '"'):
+                    count += 1
+                    if (count % 2 != 0):
+                        s += " " + j[0]
+                    else:
+                        s = s.strip()
+                        s += j[0] + " "
+                    continue
+                if (j[0] in ['(', '[', '{']):
+                    s += " " + j[0]
+                else:
+                    s = s.strip()
+                    s += j[0] + " "
+        if ("_" in s):
+            s = s.replace("_", " ")
+        s = s.strip()
+        res.append(s)
+        s = ""
+    return res
+
+
+# hàm dùng để đém số từ trong 1 câu
+def num_of_word(list_sentences):
+    num_word = []
+    for i in list_sentences:
+        num_word.append(len(i))
+    return num_word
+
 
 # Hàm chia văn bản thành các đoạn
 # Input:
@@ -276,7 +306,6 @@ def pdf2para(file_path, pages=None):
     infile.close()
     converter.close()
     text = output.getvalue()
-    print(text)
     output.close
     list_para = split_text(text)
 
@@ -304,62 +333,17 @@ def read_pages(start_page, end_page, doc_file):
     doc = pdf2txt(doc_file, range(start_page - 1, end_page))
     for para in doc:
         words.extend(vncorenlp.tokenize(para))
-
     return words
 
-def convert2listsen(vncore_postag):
-    s = ""
-    res = []
-    index=[]
-    turn=0
-    for i in vncore_postag:
-        count = 0
-        for previous, item, nxt in previous_and_next(i):    
-            turn+=1
-            if (previous == None or nxt == None):
-                continue
-            if (previous[0] == "[" and item[1] == "M" and nxt[0] == "]"):
-                index.append(turn-2)
-                index.append(turn-1)
-                index.append(turn)
-        index=set(index)
-        for h,k in zip(index,range(len(index))):
-            i.pop(h-k)
-        for j in i:
-            if (j[1] != "CH"):
-                s += j[0] + " "
-            else:
-                if (j[0] == '"'):
-                    count += 1
-                    if (count % 2 != 0):
-                        s += " " + j[0]
-                    else:
-                        s = s.strip()
-                        s += j[0] + " "
-                    continue
-                if (j[0] in ['(', '[', '{']):
-                    s += " " + j[0]
-                else:
-                    s = s.strip()
-                    s += j[0] + " "
-        if ("_" in s):
-            s = s.replace("_", " ")
-        s = s.strip() + "."
-        res.append(s)
-        s = ""
-    return res
 
-
-# hàm dùng để đém số từ trong 1 câu
-def num_of_word(list_sentences):
-    num_word = []
-    for i in list_sentences:
-        num_word.append(len(i))
-    return num_word
 
 
 def preprocess(filename):
     # thực hiện đưa filename nào muốn xử lý vào biến filename bên dưới và đợi kết quả trên màn hình.
+    res=[]
+    #for filename in  list_filename:
+    #start_time = time.time()
+    #print("Thời gian bắt đầu xử lý file ",filename," la: ", start_time)
     name, file_extension = os.path.splitext(filename)
     if (file_extension.lower() == ".doc"):
         new_filename_docx = doc2docx(filename)
@@ -388,7 +372,49 @@ def preprocess(filename):
         b = convert2listsen(a)  # đay là list các câu. b[0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
         num_word = num_of_word(b)
 
-    return os.path.basename(filename), b, num_word  # filename, list câu. số từ của mỗi câu
+    #res.append([os.path.basename(filename), b, num_word])  # filename, list câu. số từ của mỗi câu
+    #print("Run time of file ",filename," là: --- %s seconds ---" % (time.time() - start_time))
+    return os.path.basename(filename), b, num_word
+
+
+# hàm này dùng dể trả ra output khác,( thêm 1 cái postag)
+def preprocess_link(filename):
+    # thực hiện đưa filename nào muốn xử lý vào biến filename bên dưới và đợi kết quả trên màn hình.
+    res=[]
+    #for filename in  list_filename:
+    #start_time = time.time()
+    #print("Thời gian bắt đầu xử lý file ",filename," la: ", start_time)
+    name, file_extension = os.path.splitext(filename)
+    if (file_extension.lower() == ".doc"):
+        new_filename_docx = doc2docx(filename)
+        a = docx2txt(new_filename_docx)
+        os.remove(new_filename_docx)
+        b = convert2listsen(a)  # đay là list các câu. b[0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
+        num_word = num_of_word(b)  # số từ của câu đầu tiên tương tự cho a[1],....
+
+    elif (file_extension.lower() == ".docx"):
+        a = docx2txt(filename)
+        b = convert2listsen(a)  # đay là list các câu. b[0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
+        num_word = num_of_word(b)  # số từ của câu đầu tiên tương tự cho a[1],....
+
+    elif (file_extension.lower() == ".pdf"):
+        a = pdf2txt(filename)
+        b = convert2listsen(a)  # đay là list các câu. b[0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
+        num_word = num_of_word(b)
+
+    elif (file_extension.lower() == ".xlsx"):
+        a = xlsx2txt(filename)
+        b = convert2listsen(a)  # đay là list các câu. b[0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
+        num_word = num_of_word(b)
+
+    elif (file_extension.lower() == ".pptx"):
+        a = ppt2txt(filename)
+        b = convert2listsen(a)  # đay là list các câu. b[0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
+        num_word = num_of_word(b)
+
+    #res.append([os.path.basename(filename), b, num_word])  # filename, list câu. số từ của mỗi câu
+    #print("Run time of file ",filename," là: --- %s seconds ---" % (time.time() - start_time))
+    return a,os.path.basename(filename), b, num_word
 
 
 def rtf2txt(filename):
@@ -397,12 +423,12 @@ def rtf2txt(filename):
             print(line)
             
 if __name__ == '__main__':
-    filename = "bacho.docx"
-    a, b, c = preprocess(filename)
-    print("Tên file là: ", a)
-    print("\n Danh sách các câu của file là: ", b)
-    print("\n Danh sách số từ của file là: ", c)
+    filename = "docFile_test/bacho2.docx"
+    a= preprocess(filename)
+    print(a)
+    # print("Tên file là: ", a)
+    # print("\n Danh sách các câu của file là: ", b)
+    # print("\n Danh sách số từ của file là: ", c)
 
 
-
-vncorenlp.close()# đóng server vncore
+vncorenlp.close()
