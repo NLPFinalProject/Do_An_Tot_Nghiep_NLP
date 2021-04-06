@@ -321,8 +321,6 @@ def convert2listsen(vncore_postag):
                 i.remove(item)
                 i.remove(nxt)
         for j in i:
-            if (j[0] == "."):
-                i=i.remove(j)
             if (j[1] != "CH"):
                 s += j[0] + " "
         else:
