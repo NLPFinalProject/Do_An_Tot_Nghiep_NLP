@@ -2,7 +2,7 @@ from operator import itemgetter
 import math
 import string
 from Pdf_extract import read_pages
-
+import internet as i
 
 # Cách chạy chương trình:
 # Sửa path của các file và thực thi chương trình 
