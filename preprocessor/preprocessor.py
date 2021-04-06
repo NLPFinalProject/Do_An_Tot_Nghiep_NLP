@@ -310,33 +310,38 @@ def read_pages(start_page, end_page, doc_file):
 def convert2listsen(vncore_postag):
     s = ""
     res = []
+    index=[]
+    turn=0
     for i in vncore_postag:
         count = 0
-        for previous, item, nxt in previous_and_next(i):
-            # print("Item is now", item[0], "next is", nxt, "previous is", previous)
+        for previous, item, nxt in previous_and_next(i):    
+            turn+=1
             if (previous == None or nxt == None):
                 continue
             if (previous[0] == "[" and item[1] == "M" and nxt[0] == "]"):
-                i.remove(previous)
-                i.remove(item)
-                i.remove(nxt)
+                index.append(turn-2)
+                index.append(turn-1)
+                index.append(turn)
+        index=set(index)
+        for h,k in zip(index,range(len(index))):
+            i.pop(h-k)
         for j in i:
             if (j[1] != "CH"):
                 s += j[0] + " "
-        else:
-            if (j[0] == '"'):
-                count += 1
-                if (count % 2 != 0):
+            else:
+                if (j[0] == '"'):
+                    count += 1
+                    if (count % 2 != 0):
+                        s += " " + j[0]
+                    else:
+                        s = s.strip()
+                        s += j[0] + " "
+                    continue
+                if (j[0] in ['(', '[', '{']):
                     s += " " + j[0]
                 else:
                     s = s.strip()
                     s += j[0] + " "
-                continue
-            if (j[0] in ['(', '[', '{']):
-                s += " " + j[0]
-            else:
-                s = s.strip()
-                s += j[0] + " "
         if ("_" in s):
             s = s.replace("_", " ")
         s = s.strip() + "."
