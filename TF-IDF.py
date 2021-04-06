@@ -137,22 +137,34 @@ def TFIDF(tf, idf):
 stopwords = preprocess_text_file(STOPWORD_FILE_PATH)
 alphabet = preprocess_text_file(ALPHABET_FILE_PATH)
 
-def Main():
-    start_page = 1
-    end_page = 3
-    tokenize = read_pages(start_page, end_page, DOC_FILE_PATH)
+def get_link(postag, filename, sentences, numofwords):
+    words, length = total_words_and_len(postag)
 
-    words, len = total_words_and_len(tokenize, stopwords)
-
-    tf = TF(words, len)
-    idf = IDF(words, tokenize)
+    tf = TF(words, length)
+    idf = IDF(words, postag)
     tfidf = TFIDF(tf, idf)
 
-    # N giá trị cao nhất
+    #N giá trị cao nhất
     N = 20
-    print(get_top(tfidf, N))
+    N_keywords = get_top(tfidf, N)
+
+    kw_index = 1
+    keyword_list = list(N_keywords.keys())
+    tag = tag_statistic(keyword_list[kw_index], postag)[0][0]
+
+    sentences_index = find_sentence_index(keyword_list[kw_index], tag, postag)
+
+    index = 5 #int(len(sentences_index) / 2)
+    link = i.search_keyword(sentences[sentences_index[index]])
+
+    return link
+
+
+
     
 
-
 if __name__ == "__main__":
-    Main()
+    a,b,c,d = p.preprocess_link('baocao.docx')
+    l = get_link(a, b, c,d)
+    for a in l:
+        print(a, '\n')
