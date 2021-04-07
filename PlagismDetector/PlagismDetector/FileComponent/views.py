@@ -96,7 +96,7 @@ def documentimport2(request):
     documentNameLink = [a_dict["DataDocumentFile"] for a_dict in fetchQuery]
     print("=====filename1====",os.path.basename(documentNameLink[0]))
     print(settings.MEDIA_ROOT +'\\DocumentFile\\' + os.path.basename(documentNameLink[0]))
-    fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile\\' + os.path.basename(documentNameLink[0]))
+    fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile/' + os.path.basename(documentNameLink[0]))
     #danh sách các câu trong file1 theo thứ tự
     fileName1Sentence = lstSentence
 
@@ -113,9 +113,9 @@ def documentimport2(request):
             
             fetchQuery = dictfetchall(cursor)
             documentNameLink = [a_dict["DataDocumentFile"] for a_dict in fetchQuery]
-            print("===filename2 ======",documentNameLink[0].split("/")[-1])
+            print("===filename2 ======",os.path.basename(documentNameLink[0]))
 
-            fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile\\' + documentNameLink[0].split("/")[-1])
+            fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile/' + os.path.basename(documentNameLink[0]))
             lst2 = lstSentence
             dataReadDoc.append(lst2)
         except Exception:
@@ -229,9 +229,9 @@ def uploadDocumentSentenceToDatabase(request):
             documentNameLink = [a_dict["DataDocumentFile"] for a_dict in fetchQuery]
             print("=====filename1====",os.path.basename(documentNameLink[0]))
             print(settings.MEDIA_ROOT +'\\DocumentFile\\' + os.path.basename(documentNameLink[0]))
-            fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile\\' + os.path.basename(documentNameLink[0]))
+            fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile/' + os.path.basename(documentNameLink[0]))
             
-            #fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile\\' + data.DataDocumentName+'.'+ data.DataDocumentType)
+            #fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile/' + data.DataDocumentName+'.'+ data.DataDocumentType)
             
             #//save to db//  
             length= len(lstSentence)
@@ -291,7 +291,7 @@ def uploadMultipleDocumentSentenceToDatabase(request):
             documentNameLink = [a_dict["DataDocumentFile"] for a_dict in fetchQuery]
             print("=====filename1====",os.path.basename(documentNameLink[0]))
             print(settings.MEDIA_ROOT +'\\DocumentFile\\' + os.path.basename(documentNameLink[0]))
-            fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile\\' + os.path.basename(documentNameLink[0]))
+            fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile/' + os.path.basename(documentNameLink[0]))
             
             #//save sentence to db//  
             length= len(lstSentence)
