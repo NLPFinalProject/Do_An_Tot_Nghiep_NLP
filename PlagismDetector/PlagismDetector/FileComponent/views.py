@@ -58,7 +58,7 @@ from .form import DocumentForm, UploadOneFileForm, UploadManyFileForm
 from .form import UploadFileForm,UploadFileFormListVersion
 from django.conf import settings
 from PreprocessingComponent import views as p
-
+from .preprocessing import TF-IDF as internetKeywordSearch
 #import cho tách câu
 import os
 import sys
@@ -186,6 +186,43 @@ def documentimport(request):
     print("__________",report)
     return render(request,'polls/output.html',{'data': report})
 
+#import internet pdf
+def documentimportInternet(request):
+    print('------------------------------')
+    fileName1 = "bacho1.doc"
+    userId=3
+
+    cursor = connections['default'].cursor()
+    # fileName1
+    queryRaw ="SELECT DataDocumentFile FROM `filecomponent_datadocument` WHERE DataDocumentName='"+fileName1.split(".")[0]+"' AND DataDocumentAuthor_id='"+str(userId)+"';"
+    print("=====",queryRaw)
+    cursor.execute(queryRaw)
+    fetchQuery = dictfetchall(cursor)
+    documentNameLink = [a_dict["DataDocumentFile"] for a_dict in fetchQuery]
+    print("=====filename1====",os.path.basename(documentNameLink[0]))
+    print(settings.MEDIA_ROOT +'\\DocumentFile/' + os.path.basename(documentNameLink[0]))
+    #return tag preprocess
+    tagPage,fName,lstSentence,lstLength = p.preprocess_link(settings.MEDIA_ROOT +'\\DocumentFile/' + os.path.basename(documentNameLink[0]))
+    print("---tag---",type(tagPage),tagPage)
+    #internet search
+    internetPage = internetKeywordSearch.get_link(tagPage,fName,lstSentence,lstLength)
+
+    print("_______nội dung report ======== ",internetPage)
+    link_pdf=[link for link in internetPage if('.pdf' in link)]
+    if(len(link_pdf)!=0):
+        lst_file=internetKeywordSearch.download_pdf(link_pdf)
+        for file_pdf in lst_file:
+            fName,lstSentence,lstLength = p.preprocess(file_pdf)
+            data = DataDocument(DataDocumentName=os.path.basename(file_pdf), DataDocumentAuthor_id=3,DataDocumentType="pdf", DataDocumentFile=file_pdf)
+            data.save()
+            length= len(lstSentence)
+            for i in range(length):
+                c=data.datadocumentcontent_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=lstLength[i])
+                print(c)
+            
+            os.remove(file_pdf)
+    print(connection.queries)
+    return render(request,'polls/output.html',{'data': internetPage})
 
 #upload 1 file vo luu tru cau db cua he thong(khac userdb)
 def uploadDocumentSentenceToDatabase(request):
