@@ -20,7 +20,6 @@ from itertools import tee, islice, chain
 import time
 import subprocess
 import pythoncom
-from pdfminer3_custom import Pdf_extract
 
 #khai báo đường dẫn file VnCoreNLP
 if ("preprocessing" in os.getcwd()):
