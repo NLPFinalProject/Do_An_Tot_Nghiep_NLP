@@ -193,8 +193,10 @@ def documentimportInternet(request):
     userId=3
 
     cursor = connections['default'].cursor()
+    # queryRaw ="ALTER TABLE polls_datadocumentcontentt ADD FULLTEXT (DataDocumentSentence);"
+    # cursor.execute(queryRaw)
     # fileName1
-    queryRaw ="SELECT DataDocumentFile FROM `filecomponent_datadocument` WHERE DataDocumentName='"+fileName1.split(".")[0]+"' AND DataDocumentAuthor_id='"+str(userId)+"';"
+    queryRaw ="SELECT DataDocumentFile FROM `polls_datadocumentt` WHERE DataDocumentName='"+fileName1.split(".")[0]+"' AND DataDocumentAuthor_id='"+str(userId)+"';"
     print("=====",queryRaw)
     cursor.execute(queryRaw)
     fetchQuery = dictfetchall(cursor)
@@ -205,24 +207,57 @@ def documentimportInternet(request):
     tagPage,fName,lstSentence,lstLength = p.preprocess_link(settings.MEDIA_ROOT +'\\DocumentFile/' + os.path.basename(documentNameLink[0]))
     print("---tag---",type(tagPage),tagPage)
     #internet search
-    internetPage = internetKeywordSearch.get_link(tagPage,fName,lstSentence,lstLength)
-
+    internetPage2 = internetKeywordSearch.get_link(tagPage,fName,lstSentence,lstLength)
+    fileName1Sentence = lstSentence
+    internetPage = [internetPage2[i] for i in range(3)]
     print("_______nội dung report ======== ",internetPage)
-    link_pdf=[link for link in internetPage if('.pdf' in link)]
-    if(len(link_pdf)!=0):
-        lst_file=internetKeywordSearch.download_pdf(link_pdf)
-        for file_pdf in lst_file:
+    #link_pdf=[]
+    #link_html=[]
+    # report cac cau html
+    dataReadDoc=[]
+    for link in internetPage:
+        if(internetKeywordSearch.is_downloadable(link)):
+            #link_pdf.append(link)
+            file_pdf=internetKeywordSearch.download_document(link)
             fName,lstSentence,lstLength = p.preprocess(file_pdf)
-            data = DataDocument(DataDocumentName=os.path.basename(file_pdf), DataDocumentAuthor_id=3,DataDocumentType="pdf", DataDocumentFile=file_pdf)
+            data = DataDocumentT(DataDocumentName=os.path.basename(file_pdf), DataDocumentAuthor_id=3,DataDocumentType="pdf", DataDocumentFile=file_pdf)
             data.save()
-            length= len(lstSentence)
-            for i in range(length):
-                c=data.datadocumentcontent_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=lstLength[i])
-                print(c)
+            dataReadDoc.append(lstSentence)
+            # length= len(lstSentence)
+            # for i in range(length):
+            #     c=data.datadocumentcontentt_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=lstLength[i])
+            #     print(c)
             
             os.remove(file_pdf)
+        else:
+            fName=os.path.basename(link)
+            lstSentence=internetKeywordSearch.crawl_web(link)
+            data = DataDocumentT(DataDocumentName=link, DataDocumentAuthor_id=3,DataDocumentType="internet", DataDocumentFile=link)
+            data.save()
+            dataReadDoc.append(lstSentence)
+            # length= len(lstSentence)
+            # for i in range(length):
+            #     c=data.datadocumentcontentt_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=len(lstSentence[i]))
+            #     #print(c)
+    #B2 trả json
+    # result so sanh
+    reportDataReadDoc=[]
+    for i in range(len(dataReadDoc)):
+        result = ExportOrder2(fileName1Sentence, dataReadDoc[i],70)
+        reportDataReadDoc.append(result)
+
+    myDict = {}
+    myDict2 = {}
+    myDict["file1"] = fileName1Sentence
+    for i in range(len(internetPage)):
+        mydic3={}
+        mydic3["list"+internetPage[i]]=dataReadDoc[i]
+        mydic3["stt"]=reportDataReadDoc[i]
+        myDict2[internetPage[i]]=mydic3
+    #line length list
+    myDict["fileName2"]=myDict2
     print(connection.queries)
-    return render(request,'polls/output.html',{'data': internetPage})
+    return render(request,'polls/output.html',{'data': myDict})
 
 #upload 1 file vo luu tru cau db cua he thong(khac userdb)
 def uploadDocumentSentenceToDatabase(request):
