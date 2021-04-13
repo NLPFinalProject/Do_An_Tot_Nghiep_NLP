@@ -21,6 +21,7 @@ import time
 import subprocess
 import pythoncom
 
+
 #khai báo đường dẫn file VnCoreNLP
 if ("preprocessing" in os.getcwd()):
     vncorenlp_file = os.getcwd() + '/VnCoreNLP/VnCoreNLP-1.1.1.jar'
@@ -151,7 +152,7 @@ def pdf2para(file_path, pages=None):
     infile.close()
     converter.close()
     text = output.getvalue()
-    output.close
+    output.close()
     list_para = split_text(text)
 
     return list_para  # trả ra danh sách các đoạn văn bản được tách.
@@ -240,7 +241,7 @@ def docx2txt(docx_file_name):
         if ("\xa0" in lst_para[i]):
             lst_para[i] = lst_para[i].replace("\xa0", " ")
     os.remove("mydocx.xml")
-    return list_para2txt(lst_para)
+    return lst_para
 
 # hàm chuyển đổi định dạng từ fild .doc sang .docx do không tìm được cách tối ưu khi xử lỳ file .doc
 def doc2docx(filename, path=os.getcwd()):
@@ -392,14 +393,16 @@ def preprocess(filename):
     name, file_extension = os.path.splitext(filename)
     if (file_extension.lower() == ".doc"):
         new_filename_docx = doc2docx(filename)
-        a = docx2txt(new_filename_docx)
+        a = docx2txt(new_filename_docx) #list para
+        pos_tag=list_para2txt((a))
         os.remove(new_filename_docx)
-        b = convert2listsentence(a)  # đay là list các câu. b[0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
+        b = convert2listsentence(pos_tag)  # đay là list các câu. b[0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
         num_word = num_of_word(b)  # số từ của câu đầu tiên tương tự cho a[1],....
 
     elif (file_extension.lower() == ".docx"):
         a = docx2txt(filename)
-        b = convert2listsentence(a)  # đay là list các câu. b[0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
+        pos_tag = list_para2txt((a))
+        b = convert2listsentence(pos_tag)  # đay là list các câu. b[0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
         num_word = num_of_word(b)  # số từ của câu đầu tiên tương tự cho a[1],....
 
     elif (file_extension.lower() == ".pdf"):
@@ -432,14 +435,16 @@ def preprocess_link(filename):
     name, file_extension = os.path.splitext(filename)
     if (file_extension.lower() == ".doc"):
         new_filename_docx = doc2docx(filename)
-        a = docx2txt(new_filename_docx) # list các pos_tag sau khi được xử lý
-        os.remove(new_filename_docx) # xóa ngay file .docx từ khi nó được tạo
-        b = convert2listsentence(a)  # đay là list các câu. b[0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
+        a = docx2txt(new_filename_docx) #list para
+        pos_tag=list_para2txt((a))
+        os.remove(new_filename_docx)
+        b = convert2listsentence(pos_tag)  # đay là list các câu. b[0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
         num_word = num_of_word(b)  # số từ của câu đầu tiên tương tự cho a[1],....
 
     elif (file_extension.lower() == ".docx"):
         a = docx2txt(filename)
-        b = convert2listsentence(a)  # đay là list các câu. b[0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
+        pos_tag = list_para2txt((a))
+        b = convert2listsentence(pos_tag)  # đay là list các câu. b[0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
         num_word = num_of_word(b)  # số từ của câu đầu tiên tương tự cho a[1],....
 
     elif (file_extension.lower() == ".pdf"):
@@ -459,7 +464,7 @@ def preprocess_link(filename):
 
     # res.append([os.path.basename(filename), b, num_word])  # filename, list câu. số từ của mỗi câu
     # print("Run time of file ",filename," là: --- %s seconds ---" % (time.time() - start_time))
-    return a, os.path.basename(filename), b, num_word
+    return pos_tag, os.path.basename(filename), b, num_word
 
 
 def rtf2txt(filename):
