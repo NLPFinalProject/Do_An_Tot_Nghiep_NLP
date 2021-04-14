@@ -448,8 +448,9 @@ def preprocess_link(filename):
         num_word = num_of_word(b)  # số từ của câu đầu tiên tương tự cho a[1],....
 
     elif (file_extension.lower() == ".pdf"):
-        a = pdf2txt(filename)
-        b = convert2listsentence(a)  # đay là list các câu. b[0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
+        a = pdf2para(filename)
+        pos_tag = list_para2txt(a)
+        b = convert2listsentence(pos_tag)  # đay là list các câu. b[0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
         num_word = num_of_word(b)
 
     elif (file_extension.lower() == ".xlsx"):
