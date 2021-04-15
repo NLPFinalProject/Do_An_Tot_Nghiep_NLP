@@ -16,14 +16,17 @@ export class FileService {
     return this.http.get(`${this.baseUrl}/api/file/test`);*/
     return this.http.get(`${this.baseUrl}/api/file/test2`);
   }
-
+  ExportResultToEmail(data:Object): Observable<Object> {
+    /*console.log('there');
+    return this.http.get(`${this.baseUrl}/api/file/test`);*/
+    return this.http.post(`${this.baseUrl}/api/mail-export/export-result`,data);
+  }
   UploadFile(file: File): Observable<Object> {
     const formData: FormData = new FormData();
     var id = localStorage.getItem('id');
-    if(id != undefined)
-      formData.append('id', id);
-      console.log('file is 2');
-      console.log(file);
+    if (id != undefined) formData.append('id', id);
+    console.log('file is 2');
+    console.log(file);
     formData.append('DataDocumentFile', file);
 
     //formData.append('title', file.name);
@@ -31,16 +34,20 @@ export class FileService {
     //  formData.append('id', localStorage.getItem('id'));
     return this.http.post(`${this.baseUrl}/api/file/uploadfile`, formData);
   }
-  checkPlagiasm(data:Object):Observable<Object> {
+  checkPlagiasm(data: Object): Observable<Object> {
     /*console.log('there');
     return this.http.get(`${this.baseUrl}/api/file/test`);*/
-    return this.http.post(`${this.baseUrl}/api/file/test3`,data);
+    return this.http.post(`${this.baseUrl}/api/file/test3`, data);
+  }
+  checkPlagiasmV2(data: Object): Observable<Object> {
+    console.log('there');
+
+    return this.http.post(`${this.baseUrl}/api/file/final-check`, data);
   }
   UploadFileList(file: FileList): Observable<Object> {
     const formData: FormData = new FormData();
     var id = localStorage.getItem('id');
-    if(id != undefined)
-      formData.append('id', id);
+    if (id != undefined) formData.append('id', id);
     for (var i = 0; i < file.length; i++) {
       let temp = file.item(i);
 

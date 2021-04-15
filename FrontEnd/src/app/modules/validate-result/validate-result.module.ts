@@ -18,7 +18,7 @@ const MODULE = [
   NgZorroAntdModule,
   SharedModule,
   ScrollToModule,
-  NgHighlightModule,
+  NgHighlightModule
 ];
 @NgModule({
   declarations: [...COMPONENT],

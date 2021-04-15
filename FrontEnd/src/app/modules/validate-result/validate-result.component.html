@@ -1,19 +1,31 @@
 
+    
 <div class="container">
-  
+  <button nz-button
+  nzType="primary"
+  nzShape="omitted" (click) ="Comeback()">
+  <i nz-icon nzType="rollback" nzTheme="outline"></i>Quay lại</button>
   <h2 class ="textcenter">Kiểm tra kết quả</h2>
   <div class="autocenter">
-    <p>Mời bạn chọn văn bản muốn so sánh:</p>
+    <p class = "inline">Mời bạn chọn văn bản muốn so sánh:</p>
     <select id="pricingtemplates" (change)="GetSelection($event.target.value)">
       <option [value]="(temp.id)" *ngFor="let temp of characterList1 ">{{temp.data}}</option>
     </select>
-    <button (click)="confirmed()">Xác nhận</button>
+    <button nz-button
+  nzType="primary"
+  nzShape="omitted" (click)="confirmed()">Xác nhận</button>
+    
     </div>
+    <button nz-button 
+    class="autocenter"
+  nzType="primary"
+  nzShape="omitted" (click)="settrue()">Kiểm tra kết quả</button>
  <div  id = "scroller" >
   
   <table >
    
     <tbody class="green">
+      <div *ngIf= "trolling==true">
         <tr>
           
             <td><div  contenteditable="true" id="ex1">
@@ -37,13 +49,33 @@
           </td>
            
         </tr>
+      </div>
+      
+      <div *ngIf= "trolling==false">
+        <tr>
+          
+            <td><div  contenteditable="true" id="ex1">
+
+            </div>
+          </td>
+          <td>
+            <div contenteditable="true" id="ex2">
+              
+            
+            </div>
+          </td>
+           
+        </tr>
+      </div>
     </tbody>
     </table>
-    <button (click)="ExportEmail()">Xuất kết quả ra email</button>
+    <button nz-button
+  nzType="primary"
+  nzShape="omitted" class="autocenter" (click)="ExportEmail()">Xuất kết quả ra email</button>
+  
   
   </div>
 </div>
   
 
-  
   

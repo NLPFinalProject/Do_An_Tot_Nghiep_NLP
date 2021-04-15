@@ -16,7 +16,6 @@ import { ValidationComponent } from './validation/validation.component';
 import { TestComponent } from './test/test.component';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 
-
 @NgModule({
   imports: [
     CommonModule,
@@ -35,8 +34,7 @@ import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
     IndexLoginComponent,
     ResetPasswordComponent,
     ValidationComponent,
-    TestComponent,
-    
+    TestComponent
   ]
 })
 export class LoginModule {}

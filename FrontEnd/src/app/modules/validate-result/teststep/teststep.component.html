@@ -1,5 +1,5 @@
 <div class="container">
-<div *ngIf="step===1">
+<ng-container *ngIf="step===1">
 
   <div class ="center-button">
     
@@ -14,7 +14,7 @@
   <button
   [disabled]="isvalid!==true"
   nz-button
-  class="w-100"
+  class="w-25"
   nzType="primary"
   nzShape="omitted"
   
@@ -23,15 +23,24 @@
 >
   <i  theme="outline"></i> <span translate>Tiếp theo</span>
 </button>
+
 <div>
  
  
 </div>
 
 
-</div>
-
-<div *ngIf="step===2">
+</ng-container>
+<ng-container *ngIf="step===2">
+  <div class="sth">
+    <p><button class ="w-25" (click)=checkChoice2($event.target.value) value ="1" >So sánh với file của bạn</button></p>
+    <p><button class ="w-25" (click)=checkChoice2($event.target.value) value ="2" >So sánh với dữ liệu của hệ thốngn</button></p>
+    <p><button class ="w-25" (click)=checkChoice2($event.target.value) value ="3" >So sánh với dữ liệu internet</button></p>
+    <p><button class ="w-25" (click)=checkChoice2($event.target.value) value ="4" >So sánh với cả file internet và dữ liệu của hệ thống</button></p>
+    </div>
+  
+</ng-container>
+<ng-container *ngIf="step===3">
   
  
   <div class ="center-button">
@@ -47,7 +56,7 @@
   
   <button
   nz-button
-  class="w-100"
+  class="w-25"
   nzType="primary"
   nzShape="omitted"
   
@@ -56,7 +65,7 @@
 >
   <i  theme="outline"></i> <span translate>Kết quả</span>
 </button>
-</div>
+</ng-container>
 
 </div>
 

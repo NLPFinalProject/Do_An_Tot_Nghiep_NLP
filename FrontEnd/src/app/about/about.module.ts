@@ -4,12 +4,10 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { AboutRoutingModule } from './about-routing.module';
 import { AboutComponent } from './about.component';
-import {SharedModule} from '../shared/shared.module'
-
-
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
-  imports: [CommonModule, TranslateModule, AboutRoutingModule,SharedModule],
+  imports: [CommonModule, TranslateModule, AboutRoutingModule, SharedModule],
   declarations: [AboutComponent]
 })
 export class AboutModule {}

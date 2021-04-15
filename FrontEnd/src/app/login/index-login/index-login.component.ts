@@ -93,26 +93,41 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
       password: this.loginForm.controls.password.value
     };
     //this.UserService
+
     this.authenticationService
       .login(data)
 
-      .subscribe((value: Data) => {
-        console.log('sucess ');
-        this.isLoading = false;
-        this.authenticationService.setSession(value);
-        //const rememberValue = this.loginForm.get('remember').value;
-        //this.authenticationService.setCredentials(credentials, rememberValue);
-        //const url = this.statusAccount ? RoutingConstant.DaoVan : RoutingConstant.Admin;
-        console.log(value);
-        if (value.token != null) {
-          setTimeout(() => {
-            this.router.navigate(['daovan'], { replaceUrl: true, state: { user: value } });
-          }, 1000);
-        } else {
-          
-          this.notificationService.error(value.toString());
+      .subscribe(
+        (value: Data) => {
+          console.log('sucess ');
+          this.isLoading = false;
+          this.loading = false;
+          this.authenticationService.setSession(value);
+          //const rememberValue = this.loginForm.get('remember').value;
+          //this.authenticationService.setCredentials(credentials, rememberValue);
+          //const url = this.statusAccount ? RoutingConstant.DaoVan : RoutingConstant.Admin;
+          console.log(value);
+
+          if (value.token != null) {
+            setTimeout(() => {
+              this.router.navigate(['daovan'], { replaceUrl: true, state: { user: value } });
+            }, 1000);
+          } else {
+            this.isLoading = false;
+            this.notificationService.error(value.toString()+"1");
+            this.loading = false;
+          }
+        },
+        error => {
+          this.isLoading = false;
+
+          this.loading = false;
+          log.debug(`Login error: ${error}`);
+          this.error = error;
+          //this.notificationService.error("Tài khoản hoặc mật khẩu không chính xác");
+          this.showErrorNotification(`${MessageConstant.LoginFailed}`);
         }
-      });
+      );
   }
   //#endregion
 

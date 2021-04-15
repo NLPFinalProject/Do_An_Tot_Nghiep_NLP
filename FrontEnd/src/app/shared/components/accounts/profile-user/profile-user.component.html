@@ -1,6 +1,6 @@
 <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="email">E-mail</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="10" nzRequired nzFor="email">E-mail</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
       <input disabled nz-input formControlName="email" id="email" />
       <nz-form-explain *ngIf="validateForm.get('email').dirty && validateForm.get('email').errors"
@@ -9,7 +9,7 @@
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="phoneNumber" nzRequired>Điện thoại</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="10" nzFor="phoneNumber" nzRequired>Điện thoại</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" [nzValidateStatus]="validateForm.controls['phoneNumber']">
       <nz-input-group [nzAddOnBefore]="addOnBeforeTemplate">
         <ng-template #addOnBeforeTemplate>
@@ -41,7 +41,7 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="ngaySinh">Ngày sinh</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
-      <input nz-input formControlName="ngaySinh" id="ngaySinh" />
+      <input nz-input formControlName="ngaySinh" value="MM/dd/yyyy" id="ngaySinh" />
       
     </nz-form-control>
   </nz-form-item>
@@ -49,7 +49,7 @@
   <nz-form-item nz-row style="margin-bottom:8px;">
     <nz-form-control [nzSpan]="14" [nzOffset]="6">
       <button (click)="updateUserData()" nz-button nzType="primary">Cập nhật</button> -
-      <button routerLink="/reset-passwork" nz-button nzType="primary">Đổi mật khẩu</button>
+      <button (click)="Clicked()" nz-button nzType="primary">Đổi mật khẩu</button>
     </nz-form-control>
   </nz-form-item>
 </form>

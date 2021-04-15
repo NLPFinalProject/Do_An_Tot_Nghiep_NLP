@@ -2,6 +2,7 @@ div.container {
   min-height: 10em;
 
   align-items: center;
+  
 }
 #center {
   align-items: center;
@@ -26,12 +27,32 @@ div.container {
   color: #fff;
   font-weight: bold;
   cursor: pointer;
-  transition: transform .2s ease-out;
+  transition: transform 0.2s ease-out;
+  font-family: "Times New Roman", Times, serif;
 }
-.center-button{
+.center-button {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 200px;
+  height: 500px;
+  
   background-color: #fff;
+}
+#container{
+  width: 100%; height: 100%;
+}
+button{
+  margin:auto;
+  display:block;
+  height: 50px;
+  font-weight: bold;
+  font-family: "Times New Roman", Times, serif;
+}
+#layout
+{
+  height: 1000px;
+}
+p{
+  font-family: "Times New Roman", Times, serif;
+  size:15px;
 }

@@ -17,6 +17,7 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
   passwordVisible = false;
   checkPasswordVisible = false;
   isLoading = true;
+  dateFormat = 'dd/MM/yyyy';
 
   constructor(
     injector: Injector,
@@ -70,8 +71,6 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
 
     if (this.registerForm.controls.password.value.length < 6)
       this.notificationService.warning('Mật khẩu không được ít hơn 6 sử cái');
-    
-      
     else {
       // this here will send email
       var data = {
@@ -91,11 +90,14 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
         gioiTinh: this.registerForm.controls.gioiTinh.value
         //captcha: [null, [Validators.required]],
       };
+
       console.log(data);
       this.UserService.register(data).subscribe(
         //data=> {console.log(data)};
-        data => {
+        (data: any) => {
           console.log('we success');
+          if (data.data != 'username is existed') {
+          }
           console.log(data);
           this.notificationService.success(MessageConstant.RegisterSucssec);
           setTimeout(() => {
@@ -103,6 +105,9 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
             this.router.navigate(['validate'], { replaceUrl: true, state: { active: data } });
           }, 1000);
           //this.notificationService.warning(MessageConstant.LoginFailed);
+        },
+        error => {
+          this.notificationService.error('Tài khoản đã bị được sử dụng');
         }
       );
     }

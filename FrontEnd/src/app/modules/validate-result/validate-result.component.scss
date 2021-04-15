@@ -71,19 +71,27 @@ div.container {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  
+
   .textcenter {
     text-align: center;
     font-style: normal;
   }
 }
-.autocenter{
+.autocenter {
   //margin: auto;
+  display: block;
+  margin: 0 auto;
   
   text-align: center;
   //display: inline-block;
- 
 }
-.container{
-background: white;
+.container {
+  background: white;
+}
+div{
+  font-family: "Times New Roman", Times, serif;
+}
+.inline
+{
+  display: inline-block;
 }

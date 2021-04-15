@@ -3,11 +3,20 @@ import { Router } from '@angular/router';
 import { FileService } from '@../../../src/app/shell/shell-routing-service';
 import { AuthenticationService, I18nService } from '@app/core';
 import { UserService } from '@../../../src/app/login/user-authenticate-service';
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
+  styles: [
+    `
+      [nz-menu] {
+        width: 240px;
+      }
+    `
+  ]
 })
+
 export class HeaderComponent implements OnInit {
   menuHidden = true;
 

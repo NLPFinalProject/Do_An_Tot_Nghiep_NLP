@@ -10,6 +10,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { identity } from 'lodash';
 import throttleByAnimationFrame from 'ng-zorro-antd/core/util/throttleByAnimationFrame';
+import { FileService } from '@../../../src/app/shell/shell-routing-service';
 @Component({
   selector: 'app-validate-result',
   templateUrl: './validate-result.component.html',
@@ -24,119 +25,113 @@ export class ValidateResultComponent implements OnInit {
   public characterList1: any[];
   public characterList2: any[];
   public listchar: any[];
-  private sameline:any[]
+  private sameline: any[];
   public answer: any;
-  public option:any[];
-  public SelectedOption:number;
+  public option: any[];
+  public SelectedOption: number;
+  public hitrate: any[];
+  public trolling: boolean;
+  ListHitRate:any[];
+  HighestHitRate:any;
   ngOnInit() {
     //this.forgodTest();
-    this.characterList1=[];
-    this.SelectedOption=0;
+    this.characterList1 = [];
+    this.SelectedOption = 0;
+    this.ListHitRate=[];
     //this.characterList1 = ['kurogane yaiba', 'kurosaki ichigo', 'monkey D luffy', 'uzumaki naruto'];
-    this.answer={
-      ls1:null,
-      ls2:null,
-      ls3:null,
-    }
+    this.answer = {
+      ls1: null,
+      ls2: null,
+      ls3: null
+    };
+
     this.getFirstSentences();
-    this.ShowResult(0); 
-    if(this.data!=null)
-    {
-        console.log('escape success')
-    this.createOptionList();
-    }
-    else{
+    this.ShowResult(0);
+    if (this.data != null) {
+      console.log('escape success');
+      this.createOptionList();
+      console.log('this ls1 is');
+      console.log(this.answer.ls1);
+    } else {
       this.ChangeOption();
     }
-  
-
-    
   }
-  ChangeOption()
-  {
+  ChangeOption() {
     this.characterList2 = ['kurogane yaiba', 'kurosaki ichigo', 'monkey D luffy', 'uzumaki naruto'];
-      //console.log('escape fail');
-      let temp: {
-        id: number;
-        data: string;
+    //console.log('escape fail');
+    let temp: {
+      id: number;
+      data: string;
+    };
+    console.log(this.characterList2.length);
+    console.log(this.characterList1);
+    this.characterList1 = [];
+    for (var i = 0; i < this.characterList2.length; i++) {
+      temp = {
+        id: i,
+        data: this.characterList2[i]
       };
-      console.log(this.characterList2.length);
-      console.log(this.characterList1);
-      this.characterList1=[];
-        for(var i = 0; i < this.characterList2.length; i++)
-        {
-          temp={
-            id :i,
-            data: this.characterList2[i],
-          }
-          this.characterList1.push(temp);
-        }
-      
-      console.log(this.characterList1);
+      this.characterList1.push(temp);
+    }
+
+    console.log(this.characterList1);
   }
-  createOptionList()
-  {
+  createOptionList() {
     let temp: {
       id: number;
       data: string;
     };
 
-    if(this.data!= null)
-    {
-      for(var i = 0; i < this.data.ListFileName.length; i++)
-      {
-        temp={
-          id :i,
-          data: this.data.ListFileName[i],
-        }
+    if (this.data != null) {
+      for (var i = 0; i < this.data.ListFileName.length; i++) {
+        temp = {
+          id: i,
+          data: this.data.ListFileName[i]
+        };
         this.characterList1.push(temp);
       }
     }
   }
-  GetSelection(id:number)
-  {
+  GetSelection(id: number) {
     this.SelectedOption = id;
-    
   }
-  confirmed()
-  {
+  confirmed() {
     console.log('this is');
     console.log(this.SelectedOption);
     this.ShowResult(this.SelectedOption);
   }
-  getFirstSentences()
-  {
-    if(this.data!= null)
-    {
-      this.tempdata=[];
+  getFirstSentences() {
+    if (this.data != null) {
+      this.tempdata = [];
       let temp: {
         id: number;
         data: string;
       };
-      let index = 0;
+
       for (var i = 0; i < this.data.file1.length; i++) {
-    
         temp = {
-          id: index+1,
+          id: i + 1,
           data: this.data.file1[i]
         };
         this.tempdata.push(temp);
       }
       this.answer.ls1 = this.tempdata;
     }
-    
   }
-  constructor(private viewportScroller: ViewportScroller, private scrollToService: ScrollToService,private router:Router,
+  constructor(
+    private viewportScroller: ViewportScroller,
+    private scrollToService: ScrollToService,
+    private router: Router,
     private route: ActivatedRoute,
-    ) {
-      console.log(this.router.getCurrentNavigation());
-      if(this.router.getCurrentNavigation().extras.state!= null)
-      {
-        this.data = this.router.getCurrentNavigation().extras.state.data;
-      }
-      
+    private fileService:FileService
+  ) {
+    console.log(this.router.getCurrentNavigation());
+    if (this.router.getCurrentNavigation().extras.state != null) {
+      this.data = this.router.getCurrentNavigation().extras.state.data;
     }
-    
+    this.trolling = false;
+  }
+
   // get store number - the number of the current same line
   public getCurrentStoreNumber() {
     return this.StoreNumber;
@@ -171,9 +166,8 @@ export class ValidateResultComponent implements OnInit {
   triggerScrollTo(id: number) {
     id = id;
     let element = this.answer.ls3[id];
-    
+
     if (element.length! > 0) {
-    
       const config: ScrollToConfigOptions = {
         target: element.list[0]
       };
@@ -183,12 +177,12 @@ export class ValidateResultComponent implements OnInit {
   }
   checkline(id: number) {
     if (this.answer.ls3[id].length > 0) return true;
-    else 
-      return false;
+    else return false;
   }
-  shouldHighlight(id:number)
-  {
-    
+ Comeback() {
+  this.router.navigate(['daovan'], { replaceUrl: true });
+  }
+  shouldHighlight(id: number) {
     /*if (this.answer.ls3[id].length > 0)
      {
        console.log(id);
@@ -198,129 +192,118 @@ export class ValidateResultComponent implements OnInit {
 
     else 
       return false;*/
-      if (this.answer.ls3[id-1][1] > 0)
-     {
-       console.log(id);
-       
-       return true;
-     }
 
-    else 
+    if (id <= this.answer.ls1.length) {
+      if (this.answer.ls3[id - 1][1] > 0) {
+        return true;
+      } else return false;
+    }
+    return false;
+  }
+  settrue() {
+    console.log('pass');
+    this.trolling = true;
+  }
+  shouldHighlight2(id: number) {
+    if (this.sameline.indexOf(id) === -1) {
       return false;
-
+    } else return true;
   }
-  shouldHighlight2(id:number)
-  {
-    if (this.sameline.indexOf(id) === -1) 
-     {
-       return false;
-     }
-
-    else 
-      return true;
-
-  }
-  choose(choice: string)
-  {
+  choose(choice: string) {
     console.log(choice);
   }
   /*onClick3($element): void {
     console.log($element);
     $element.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
   }*/
-  forgodTest()
-{
-  this.listchar = [
-    { line: 0, length: 2, list: [0,7] },
-    { line: 1, length: 0, list: null },
-    {
-      line: 2,
-      length: 1,
-      list: [7]
-    },
-    {
-      line: 3,
-      length: 1,
-      list: [12]
-    }
-  ];
-  
-  this.StoreNumber = 0;
-  this.characterList2 = [
-    'kurogane yaiba',
-    'mod',
-    'mod',
-    'mod',
-    'kurosaki ichigo',
-    'mod',
-    'mod',
-    'monkey D luffy',
-    'mod',
-    'mod',
-    'mod',
-    'mod',
-    'uzumaki naruto'
-  ];
-  this.characterList1 = ['kurogane yaiba', 'kurosaki ichigo', 'monkey D luffy', 'uzumaki naruto'];
+  forgodTest() {
+    this.listchar = [
+      { line: 0, length: 2, list: [0, 7] },
+      { line: 1, length: 0, list: null },
+      {
+        line: 2,
+        length: 1,
+        list: [7]
+      },
+      {
+        line: 3,
+        length: 1,
+        list: [12]
+      }
+    ];
 
-  this.tempdata = [];
-  let tempdata2 = [];
-  let ans: {
-    ls1: any;
-    ls2: any;
-    ls3: any;
-  };
-  ans = { ls1: 3, ls2: 4, ls3: 5 };
-  let index = 0;
-  ans.ls3 = this.listchar;
-  let temp: {
-    id: number;
-    data: string;
-  };
-  for (var i = 0; i < this.characterList1.length; i++) {
-    
-    temp = {
-      id: index,
-      data: this.characterList1[i]
-    };
-    this.tempdata.push(temp);
-    
-    for(var j = 0; j < this.listchar[index].length; j++)
-    {
-      if (this.sameline.indexOf(this.listchar[index].list[j]) === -1) {
-        this.sameline.push(this.listchar[index].list[j]);
-    }
-  }
-    index = index + 1;
-  }
+    this.StoreNumber = 0;
+    this.characterList2 = [
+      'kurogane yaiba',
+      'mod',
+      'mod',
+      'mod',
+      'kurosaki ichigo',
+      'mod',
+      'mod',
+      'monkey D luffy',
+      'mod',
+      'mod',
+      'mod',
+      'mod',
+      'uzumaki naruto'
+    ];
+    this.characterList1 = ['kurogane yaiba', 'kurosaki ichigo', 'monkey D luffy', 'uzumaki naruto'];
 
-  ans.ls1 = this.tempdata;
-  index = 0;
-  for (var i = 0; i < this.characterList2.length; i++) {
-    
-    temp = {
-      id: index,
-      data: this.characterList2[i]
+    this.tempdata = [];
+    let tempdata2 = [];
+    let ans: {
+      ls1: any;
+      ls2: any;
+      ls3: any;
     };
-    tempdata2.push(temp);
-    index = index + 1;
-    //console.log(this.listchar[index].length);
-   
+    ans = { ls1: 3, ls2: 4, ls3: 5 };
+    let index = 0;
+    ans.ls3 = this.listchar;
+    let temp: {
+      id: number;
+      data: string;
+    };
+    for (var i = 0; i < this.characterList1.length; i++) {
+      temp = {
+        id: index,
+        data: this.characterList1[i]
+      };
+      this.tempdata.push(temp);
+
+      for (var j = 0; j < this.listchar[index].length; j++) {
+        if (this.sameline.indexOf(this.listchar[index].list[j]) === -1) {
+          this.sameline.push(this.listchar[index].list[j]);
+        }
+      }
+      index = index + 1;
+    }
+
+    ans.ls1 = this.tempdata;
+    index = 0;
+    for (var i = 0; i < this.characterList2.length; i++) {
+      temp = {
+        id: index,
+        data: this.characterList2[i]
+      };
+      tempdata2.push(temp);
+      index = index + 1;
+      //console.log(this.listchar[index].length);
+    }
+    ans.ls2 = tempdata2;
+
+    this.tdata;
+    this.tdata = this.tempdata;
+    this.answer = ans;
+    console.log(this.sameline);
   }
-  ans.ls2 = tempdata2;
- 
-  this.tdata;
-  this.tdata = this.tempdata;
-  this.answer = ans;
-  console.log(this.sameline);
-}
-/*this.answer=
+  /*this.answer=
       {
         ls1:data.file1,
         ls2:data.ListFile[0].data,
         ls3:data.ListFile[0].stt
       }*/
-/*forgodlvlMax(num : number)
+  /*forgodlvlMax(num : number)
 {
   this.sameline=[];
       let data = this.data;
@@ -378,48 +361,40 @@ export class ValidateResultComponent implements OnInit {
      
       console.log(data);
 }*/
-ShowResult(num : number)
-{
-  this.sameline=[];
-      let data = this.data;
-      console.log(this.data);
+  ShowResult(num: number) {
+    this.sameline = [];
+    let data = this.data;
+    console.log(this.data);
 
-      
-     if(this.data!=null)
-     {
-
-     
+    if (this.data != null) {
       let temp: {
         id: number;
         data: string;
       };
       let index = 0;
       for (var i = 0; i < this.data.file1.length; i++) {
-        for(var j = 0; j < this.data.ListFile[num].stt[i][1]; j++)
-        {
-          console.log('begin');
-          console.log(this.data.ListFile[num].stt[i][2][j])
-          if (this.sameline.indexOf(this.data.ListFile[num].stt[i][2][j]) === -1) {
-            this.sameline.push(this.data.ListFile[num].stt[i][2][j]);
+        if (this.data.ListFile[num].stt[i] != undefined) {
+          for (var j = 0; j < this.data.ListFile[num].stt[i][1]; j++) {
+            console.log(this.data.ListFile[num].stt[i][2][j]);
+            if (this.sameline.indexOf(this.data.ListFile[num].stt[i][2][j]) === -1) {
+              this.sameline.push(this.data.ListFile[num].stt[i][2][j]);
+            }
+          }
         }
       }
-        
-      }
-      
+
       let tempdata2 = [];
       for (var i = 0; i < this.data.ListFile[num].data.length; i++) {
-    
         temp = {
-          id: index+1,
+          id: index + 1,
           data: this.data.ListFile[num].data[i]
         };
         tempdata2.push(temp);
         index = index + 1;
         //console.log(this.listchar[index].length);
-       
       }
       this.answer.ls2 = tempdata2;
-      this.answer.ls3 = data.ListFile[0].stt
+      this.answer.ls3 = data.ListFile[num].stt;
       /*this.answer=
       {
         ls1:this.tempdata,
@@ -431,13 +406,49 @@ ShowResult(num : number)
       console.log(this.answer.ls3);
      */
       console.log(data);
-    }
-    else{
+    } else {
       this.forgodTest();
     }
-}
-ExportEmail()
-{
-  
-}
+  }
+  ExportEmail() {
+    let temp = 0;
+    
+    this.hitrate = [];
+    console.log(this.answer.ls2.length);
+    console.log(this.answer);
+    for (var i = 0; i < this.data.ListFile.length; i++) {
+      temp = 0;
+      for (var j = 0; j < this.data.ListFile[i].stt.length; j++) {
+        if (this.data.ListFile[i].stt[j][1] > 0) 
+        {
+          temp = temp + 1;
+      
+        }
+      }
+      let totalrate = temp / this.answer.ls1.length;
+      this.hitrate.push(totalrate * 100);
+      
+    }
+   console.log('final result is');
+   console.log(this.hitrate);
+   let HighestHitRate = 0;
+   for(var i = 0; i < this.hitrate.length; i++)
+   {
+     if(this.hitrate[i]>=this.hitrate[HighestHitRate])
+     {
+       HighestHitRate = i;
+     }
+   }
+   var result=
+   {
+     listFileName:this.data.ListFileName,
+     HitRate:this.hitrate,
+     Highest:HighestHitRate,
+     id:localStorage.getItem('id')
+   }
+   this.fileService.ExportResultToEmail(result).subscribe((data:any)=>
+   {
+     console.log('success');
+   })
+  }
 }

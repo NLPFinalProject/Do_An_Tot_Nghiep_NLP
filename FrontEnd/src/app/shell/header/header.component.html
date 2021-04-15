@@ -2,8 +2,8 @@
   <div class="logo">
     <a href="/daovan" translate> APP_NAME </a>
   </div>
-  <ul nz-menu [nzTheme]="'dark'" [nzMode]="'horizontal'" style="line-height: 64px;">
-    <li nz-menu-item routerLink="/daovan" routerLinkActive="active" translate>Home</li>
+  <ul nz-menu [nzTheme]="'dark'" [nzMode]="'horizontal'" style="line-height: 64px;" [nzSelectable]="false">
+    <li  style ="color: #f0f2f5;"  nz-menu-item routerLink="/daovan" routerLinkActive="active" translate>Home</li>
    
     <!-- <li nz-menu-item>
       <nz-dropdown>
@@ -19,8 +19,8 @@
     </li> -->
     <li nz-menu-item>
       <nz-dropdown>
-        <a nz-dropdown>
-          <b>Tài khoản: {{ username }}</b> <i nz-icon type="down"></i>
+        <a nz-dropdown style ="color: #f0f2f5;">
+          Tài khoản: {{ username }} <i nz-icon type="down"></i>
         </a>
         <ul nz-menu nzSelectable>
           <li nz-menu-item>
@@ -37,5 +37,9 @@
         </ul>
       </nz-dropdown>
     </li>
+    
   </ul>
+  
+  
+
 </nz-header>

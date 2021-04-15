@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from '@app/core/services/Utils/message.service';
-import { UploadChangeParam, NzUploadModule,UploadFile,NzUploadComponent} from 'ng-zorro-antd/upload';
+import { UploadChangeParam, NzUploadModule, UploadFile, NzUploadComponent } from 'ng-zorro-antd/upload';
 
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { FileService } from '@../../../src/app/shell/shell-routing-service';
@@ -118,7 +118,7 @@ export class ListInputFileComponent implements OnInit {
     // tslint:disable-next-line:semicolon
     this.fileService.UploadFile(file);
   };
- /* uploadFile = ((file: NzUploadFile) => {
+  /* uploadFile = ((file: NzUploadFile) => {
     console.log('welcome to upload');
     /*console.log(file.name);
     console.log(file);
@@ -146,14 +146,13 @@ export class ListInputFileComponent implements OnInit {
     });
     // tslint:disable-next-line:semicolon
   };*/
-  uploadFile = ((file: UploadFile) => {
+  uploadFile = (file: UploadFile) => {
     console.log('welcome to upload');
     console.log(file.name);
     console.log(file);
-    this.FileToUpload = file.
-    this.invalid();
+    this.FileToUpload = file.this.invalid();
     console.log(this.isvalid);
-    
+
     setTimeout(() => {
       file.onProgress({ percent: 50 });
       setTimeout(() => {
@@ -172,10 +171,10 @@ export class ListInputFileComponent implements OnInit {
       console.log(data);
     });
     // tslint:disable-next-line:semicolon
-  });
+  };
   uploadFileList = () => {
     this.invalid();
-    
+
     /*setTimeout(() => {
       file.onProgress({ percent: 50 });
       setTimeout(() => {
@@ -191,7 +190,6 @@ export class ListInputFileComponent implements OnInit {
       }, 500);
     }, 10);*/
     this.fileService.UploadFileList(this.ListFileToUpload).subscribe(data => {
-     
       console.log(data);
     });
     console.log('llll');
