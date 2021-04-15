@@ -8,17 +8,39 @@ import io
 from vncorenlp import VnCoreNLP
 
 
-# Hàm chia văn bản thành các đoạn
+# Hàm xử lý, chia văn bản thành các đoạn
 # Input:
 #   + text: kiểu string, văn bản cần chia
 # Output:
 #   + list_para: list các đoạn
 
 def split_text(text):
+    text = text.replace('\x0c', '\n\n')
+    text = text.replace('-\n','')
+    text = text.replace('..', '\n')
     list_para = text.split("\n\n")
+    
     for i in range(len(list_para)):
         list_para[i] = list_para[i].replace('\n', '')
+        list_para[i] = list_para[i].strip()
     list_para = list(filter(str.strip, list_para))
+    i = 0
+    len_list = len(list_para)
+    MAX_LEN_ELE = 8
+    
+    while(i < len_list):
+        if(len(list_para[i]) < MAX_LEN_ELE):
+            del list_para[i]
+            i -= 1
+            len_list -= 1
+            continue
+        if (i < (len_list - 1)):
+            if((list_para[i][-1].isalpha()) & (list_para[i + 1][0].islower())):
+                list_para[i] = list_para[i] + ' ' + list_para[i+1]
+                del list_para[i + 1]
+                i -= 1
+                len_list -= 1
+        i += 1
     return list_para
 
 # Hàm đọc file pdf trả ra list các text theo các trang có áp dụng chia đoạn
