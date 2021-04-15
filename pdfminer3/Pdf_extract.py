@@ -8,16 +8,26 @@ import io
 from vncorenlp import VnCoreNLP
 
 
-# Hàm chia văn bản thành các đoạn
+# Hàm xử lý, chia văn bản thành các đoạn
 # Input:
 #   + text: kiểu string, văn bản cần chia
 # Output:
 #   + list_para: list các đoạn
 
 def split_text(text):
+    text = text.replace('..', '\n')
     list_para = text.split("\n\n")
     for i in range(len(list_para)):
         list_para[i] = list_para[i].replace('\n', '')
+    i = 0
+    MAX_DEL_ELE = 8
+    len_list = len(list_para)
+    while(i < len_list):
+        if(len(list_para[i]) < MAX_DEL_ELE):
+            del list_para[i]
+            i -= 1
+            len_list -= 1
+        i += 1
     list_para = list(filter(str.strip, list_para))
     return list_para
 
