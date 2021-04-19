@@ -32,12 +32,14 @@ export class ValidateResultComponent implements OnInit {
   public hitrate: any[];
   public trolling: boolean;
   ListHitRate:any[];
+  public ratio:any[];
   HighestHitRate:any;
   ngOnInit() {
     //this.forgodTest();
     this.characterList1 = [];
     this.SelectedOption = 0;
     this.ListHitRate=[];
+    this.ratio = null;
     //this.characterList1 = ['kurogane yaiba', 'kurosaki ichigo', 'monkey D luffy', 'uzumaki naruto'];
     this.answer = {
       ls1: null,
@@ -164,12 +166,15 @@ export class ValidateResultComponent implements OnInit {
     //this.viewportScroller.scrollToAnchor(elementId);
   }
   triggerScrollTo(id: number) {
-    id = id;
+    id = id-1;
+    console.log(id);
+    
     let element = this.answer.ls3[id];
-
+    console.log(element);
+    this.ratio = element[3][0];
     if (element.length! > 0) {
       const config: ScrollToConfigOptions = {
-        target: element.list[0]
+        target: element[2][0]
       };
 
       this.scrollToService.scrollTo(config);
@@ -412,7 +417,7 @@ export class ValidateResultComponent implements OnInit {
   }
   ExportEmail() {
     let temp = 0;
-    
+    let countlist = [];
     this.hitrate = [];
     console.log(this.answer.ls2.length);
     console.log(this.answer);
@@ -425,6 +430,7 @@ export class ValidateResultComponent implements OnInit {
       
         }
       }
+      countlist.push(temp);
       let totalrate = temp / this.answer.ls1.length;
       this.hitrate.push(totalrate * 100);
       
@@ -441,11 +447,13 @@ export class ValidateResultComponent implements OnInit {
    }
    var result=
    {
-     listFileName:this.data.ListFileName,
+     name:this.data.ListFileName,
      HitRate:this.hitrate,
      Highest:HighestHitRate,
+     count:countlist,
      id:localStorage.getItem('id')
    }
+   
    this.fileService.ExportResultToEmail(result).subscribe((data:any)=>
    {
      console.log('success');

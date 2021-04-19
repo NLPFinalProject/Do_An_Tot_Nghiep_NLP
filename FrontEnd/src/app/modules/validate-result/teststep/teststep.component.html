@@ -33,10 +33,14 @@
 </ng-container>
 <ng-container *ngIf="step===2">
   <div class="sth">
-    <p><button class ="w-25" (click)=checkChoice2($event.target.value) value ="1" >So sánh với file của bạn</button></p>
-    <p><button class ="w-25" (click)=checkChoice2($event.target.value) value ="2" >So sánh với dữ liệu của hệ thốngn</button></p>
-    <p><button class ="w-25" (click)=checkChoice2($event.target.value) value ="3" >So sánh với dữ liệu internet</button></p>
-    <p><button class ="w-25" (click)=checkChoice2($event.target.value) value ="4" >So sánh với cả file internet và dữ liệu của hệ thống</button></p>
+    <p><button nz-button
+      nzType="primary" class ="w-50" (click)=checkChoice2($event.target.value) value ="1" >So sánh với file của bạn</button></p>
+    <p><button nz-button
+      nzType="primary" class ="w-50" (click)=checkChoice2($event.target.value) value ="2" >So sánh với dữ liệu của hệ thống</button></p>
+    <p><button nz-button
+      nzType="primary" class ="w-50" (click)=checkChoice2($event.target.value) value ="3" >So sánh với dữ liệu internet</button></p>
+    <p><button nz-button
+      nzType="primary" class ="w-50" (click)=checkChoice2($event.target.value) value ="4" >So sánh với cả file internet và dữ liệu của hệ thống</button></p>
     </div>
   
 </ng-container>
