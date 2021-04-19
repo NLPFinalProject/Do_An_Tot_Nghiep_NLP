@@ -1,15 +1,19 @@
-# Input: 2 chuoi bat ky
-# Output: Khoang cach Levenshtein giua 2 chuoi
 
+#----------------Thêm, xóa, thay thế chữ"----------------#
 
 def String_insert(string, text, position):
     return string[:position] + text + string[position:]
 
+
 def String_delete(string, position):
     return string[:position] + string[(position + 1):]
 
+
 def String_substitute(string, new_text, position):
     return string[:position] + new_text + string[(position + 1):]
+
+
+#---------------Thuật toán tính khoảng cách Levenshtein----------------#
 
 def Create_Matrix(str1, str2):
     matrix = []
@@ -46,6 +50,7 @@ def Create_Matrix(str1, str2):
 
         previous_row += 1
     return matrix
+
 
 def Create_Backtrace_List(str1, str2, matrix):
     backtrace_list = []
@@ -92,59 +97,87 @@ def Create_Backtrace_List(str1, str2, matrix):
     
     return backtrace_list
 
-def Print_Process(str1, backtrace_list):
-    
-    case_1 = 'insertion'
-    case_2 = 'deletion'
-    case_3 = 'substitution'
-    case_4 = '0'
-    
-    backtrace_list_index = 0
-    str1_temp = str1
-    string_index = len(str1_temp) - 1
-    print(str1)
+# --------------------------------Phần trên là thuật toán, bắt đầu từ đây thôi-----------------------------------------#    
 
-    while backtrace_list_index < len(backtrace_list):
-        if backtrace_list[backtrace_list_index] != case_4:
-            object_len = len(backtrace_list[backtrace_list_index])
-            text = backtrace_list[backtrace_list_index][object_len - 1]
-        
-            if case_1 in backtrace_list[backtrace_list_index]:       
-                str1_temp = String_insert(str1_temp, text, string_index + 1)
-                string_index += 1
-                print(str1_temp)
-
-            if case_2 in backtrace_list[backtrace_list_index]:
-                str1_temp = String_delete(str1_temp, string_index)
-                print(str1_temp)
-        
-            if case_3 in backtrace_list[backtrace_list_index]:
-                str1_temp = String_substitute(str1_temp, text, string_index)
-                print(str1_temp)
-
-        backtrace_list_index += 1
-        string_index -= 1
-    
-def Levenshtein_distance(matrix):
+# Khoảng cách Levenshtein giữa 2 chuỗi
+# Input: 2 chuỗi (String)
+#    + Str1 (String)
+#    + Str2 (String)
+# Output: Khoảng cách Levenshtein (kiểu Int)
+def Levenshtein_distance(str1, str2):
+    matrix = Create_Matrix(str1, str2)
     rows = len(matrix)
     cols = len(matrix[0])
     return matrix[rows - 1][cols - 1]
 
+
+
+# Source: https://stackoverflow.com/questions/14260126/how-python-levenshtein-ratio-is-computed
+# Tính tỉ lệ tương đồng giữa 2 chuỗi
+# Input: 2 chuỗi (String)
+#    + Str1 (String)
+#    + Str2 (String)
+# Output: Tỉ lệ tương đồng bao nhiêu % (Float)
+def Matching_ratio(str1, str2):
+    l = Levenshtein_distance(str1, str2)
+    m = len(str1)
+    if m < len(str2):
+        m = len(str2)
+    ratio = (1 - l/m) * 100
+
+    return ratio
+
+
+
+# Tính tỉ lệ tương đồng của từng câu trong mảng 1 với từng câu trong mảng 2
+# Input: 
+#    + List_1 (String)
+#    + List_2 (String)
+# Output: List các giá trị tương đồng (Float)
+def Matching_ratio_list(lst_1, lst_2):
+    result = []
+
+    for str1 in lst_1:
+        for str2 in lst_2:
+            ratio = Matching_ratio(str1, str2)
+            result.append(ratio)
+
+    return result
+
+
+
+# Xuất kết quả
+# Input:
+#    + List các kết quả đã tính ở hàm Matching_ratio_list
+#    + List_1 (String)
+#    + List_2 (String)
+# Output: Hiển thị theo format: "câu a - câu b: (tỉ lệ tương đồng) %"
+# vd: 123456 - 3456: 66.666667 %
+def Export(result_list, lst_1, lst_2):
+    len_result = len(result_list)
+    #len_2 = len(lst2)
+
+    index = 0
+    #tra ket qua ve list
+    report_list = []
+    for str1 in lst_1:
+        for str2 in lst_2:
+            string = str1 + ' - ' + str2 + ': ' + str(result_list[index]) + " %"
+            #print(string)
+            report_list.append(string)
+            index += 1
+    return report_list
+
+
 def main():   
-    print('Input 1: ')
-    str1 = input()
-    print('Input 2: ')
-    str2 = input()
+    lst1 = ['Python', 'C-Sharp', 'Java']
+    lst2 = ["JavaScript", "Swift", "C++", "Python"]
 
-    matrix = Create_Matrix(str1,str2)
+    result = Matching_ratio_list(lst1, lst2)
+    Export(result, lst1, lst2)
 
-    print('\n')
-    print('String 1: ', str1)
-    print('String 2: ', str2)
-
-    distance = 'Levenshtein distance: ' + str(Levenshtein_distance(matrix))
-    print('\n')
-    print(distance)
-
+        
 if __name__ == "__main__":
     main()
+
+# CHỈ CẦN CHẠY THÔI LÀ SẼ XUẤT KẾT QUẢ, KHÔNG CẦN CHỈNH SỬA GÌ.

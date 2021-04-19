@@ -1,23 +1,45 @@
 from django.conf.urls import url 
 from UserComponent import views 
 from django.urls import include, path
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.authentication import TokenAuthentication
 urlpatterns = [ 
-    
-     url(r'^customers/$', views.customer_list),
-     url(r'^customers/(?P<pk>[0-9]+)$', views.customer_detail),
-     url(r'^customers/age/(?P<age>[0-9]+)/$', views.customer_list_age),
-     url(r'^api/login',views.login),
+     #path('auth/', include('rest_auth.urls')),
+     
+     #url(r'^api/login', csrf_exempt(TokenObtainPairView.as_view())),
+     #url(r'^login', TokenObtainPairView.as_view()),
+     #url(r'^refresh-token/', TokenRefreshView.as_view()),
+     #path('/profile',views.GetProfile),
+     url(r'^api/SendMail',csrf_exempt(views.register)),
+     url(r'register',csrf_exempt(views.register)),
+     url(r'update-user',csrf_exempt(views.UpdateUser)),
+     url(r'SendMail',csrf_exempt(views.register)),
+     
+     url(r'^profile',views.GetProfile),
+     #url(r'^api/login',views.login),
+     url(r'^login', obtain_jwt_token),
+     url(r'^refresh-token/', refresh_jwt_token),
+     #url(r'^api/login',obtain_jwt_token),
+     #path('api/login/', obtain_jwt_token),
+     path('api/refresh-token/', refresh_jwt_token),
+     #url(r'^api/login',obtain_jwt_token),
+     #url(r'^login',views.fakelogin),
      url(r'^api/reset-password',views.ResetPassword),
      url(r'^api/forgot-password',views.ForgetPassword),
-     url(r'^api/SendMail',views.SendEmail),
+     url(r'^api/register',csrf_exempt(views.register)),
      url(r'^api/activate',views.ActivateUser),
      url(r'^activate',views.ActivateUser),
-     url(r'^SendMail',views.SendEmail),
+     
      #path(r'^SendMail',include('allauth.urls')),
-     url('api/SendMail',views.SendEmail),
-     url('register',views.SendEmail),
+    
+     
+     path('api/token/',TokenObtainPairView.as_view()),
+     path('api/token/refresh/',TokenRefreshView.as_view()),
      path('api-auth/', include('rest_framework.urls')),
 
      
-     #url('api/register',views.SendEmail),
+     #url('api/register',views.register),
 ]

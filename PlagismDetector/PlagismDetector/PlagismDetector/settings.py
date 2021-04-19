@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-
+from datetime import timedelta
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -50,6 +51,8 @@ INSTALLED_APPS = [
     'corsheaders',
     
     'django.contrib.sites',
+    'rest_framework.authtoken',
+    
 ]
 CORS_ORIGIN_ALLOW_ALL = False
 
@@ -60,6 +63,30 @@ CORS_ORIGIN_WHITELIST = (
        'http://localhost:8000',
 
 )
+MEDIA_ROOT = os.path.join(BASE_DIR, 'DEF')
+TEMPLATE_DIRS = (
+    os.path.join(BASE_DIR ),
+)
+
+MEDIA_URL = '/DEF/'
+REST_FRAMEWORK = {
+    
+    
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        #'rest_framework.permissions.AllowAny',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+    
+}
+
+CSRF_COOKIE_SECURE = False
+# JWT settings
+AUTH_USER_MODEL = 'UserComponent.User'
+JWT_AUTH = {
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_EXPIRATION_DELTA': timedelta(days=2),
+}
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  
     'django.middleware.security.SecurityMiddleware',
@@ -70,13 +97,20 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
 ROOT_URLCONF = 'PlagismDetector.urls'
+REST_USE_JWT = True
+SITE_ID = 1
 
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+"""AUTHENTICATION_BACKENDS = (
+"django.contrib.auth.backends.ModelBackend",
+"allauth.account.auth_backends.AuthenticationBackend"
+)"""
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [r'D:/study/PlagismDetector/PlagismDetector'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -99,7 +133,7 @@ WSGI_APPLICATION = 'PlagismDetector.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'test',
+        'NAME': 'test4',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': '127.0.0.1',

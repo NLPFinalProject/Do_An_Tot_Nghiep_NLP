@@ -1,4 +1,5 @@
 from django.db import models
+from UserComponent.models import User
 
 # Create your models here.
 class Document(models.Model):
@@ -9,7 +10,7 @@ class Document(models.Model):
 class DataDocument(models.Model):
     DataDocumentName = models.CharField(max_length=200)
     DataDocumentType = models.CharField(max_length=10)
-    DataDocumentAuthor = models.CharField(max_length=100)
+    DataDocumentAuthor = models.ForeignKey(User, on_delete=models.CASCADE)
     DataDocumentFile = models.FileField(upload_to='DocumentFile/')
     def __str__(self):
         return self.DataDocumentName
@@ -17,7 +18,15 @@ class DataDocument(models.Model):
         return self.DataDocumentAuthor
     def DocumentType(self):
         return self.DataDocumentType
+
+#model dùng để tạo form post
+#lock command lại trước khi makemigrations
+#class này k đưa vào database
+class DataDocumentFile(models.Model):
+    DataDocumentFile = models.FileField(upload_to='DocumentFile/')
+
 # nội dung file được tách thành các câu
+
 class DataDocumentContent(models.Model):
     DataDocumentNo = models.ForeignKey(DataDocument, on_delete=models.CASCADE)
     DataDocumentSentence = models.CharField(max_length=200)
@@ -31,3 +40,4 @@ class DataDocumentContent(models.Model):
             models.Index(fields=['DataDocumentNo','DataDocumentSentence'], name='DataDocumentNo_idx'),
             models.Index(fields=['DataDocumentSentence'], name='DataDocumentSentence_idx'),
         ]
+        

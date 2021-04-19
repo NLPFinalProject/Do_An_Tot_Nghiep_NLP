@@ -11,32 +11,43 @@ from UserComponent.serializers import UserSerializer
 from tkinter import *
 from tkinter import messagebox
 import pickle
+from Levenshtein import *
 from rest_framework import status
 from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.decorators import authentication_classes,permission_classes
+from rest_framework.authentication import TokenAuthentication
+import random as rand
+
 @api_view([ 'POST'])
-def SendEmail(request):
+#@permission_classes ( (AllowAny, ))
+
+@csrf_exempt
+def register(request):
     
     try:
         user = User.objects.get(username = request.data["email"])
-        content = {'please move along': 'have the same username'}
-        return Response(content, status=status.HTTP_204_NO_CONTENT)
+        content = {'data': 'username is existed'}
+        return Response(content, status=status.HTTP_400_BAD_REQUEST)
         
     except ObjectDoesNotExist:
+        print(request.data["phoneNumber"])
         user = User.objects.create(username = request.data["email"],
         password = request.data["password"],
         name = request.data["fullName"],
         EmailOrganization = request.data["emailOrganization"],
         phone = request.data["phoneNumber"],
-        active = False,
+        is_active = False,
         DateOfBirth = request.data["ngaySinh"],)
+        number = CreateValidateCode()
         email = EmailMessage(
         'Hello',
-        'this is a confirmnation link http://google.com',
+        'this is a confirmnation mail, please enter the code below'+str(number),
         'kaitouthuan@gmail.com',
         [user.username], 
         headers={'Message-ID': 'foo'},)
         email.send()
+        user.set_password(user.password)
         user.save()
         users = UserSerializer(user)
         users.data.key = '1243'
@@ -58,6 +69,7 @@ def ActivateUser(request):
     
     user = User.objects.get(username = request.data["username"])
     print(user.username)
+    user.is_active = True
     user.active = True
     user.save()
    
@@ -70,6 +82,9 @@ def ResetPassword(request):
     
     user = User.objects.get(username = request.data["username"])
     print(user.username)
+    print(user.password)
+
+    
     user.password = request.data.password
     user.save()
     return HttpResponse(status=status.HTTP_200_OK)
@@ -83,7 +98,7 @@ def ForgetPassword(request):
     user.password = '12543'
     user.save()
     email = EmailMessage(
-    'Hello,Yourn new password is now 12543',
+    'Hello,Your new password is now 12543',
     
     'kaitouthuan@gmail.com',
     [user.username], 
@@ -91,68 +106,19 @@ def ForgetPassword(request):
     email.send()
     content =''
     return HttpResponse(status=status.HTTP_200_OK)
-@csrf_exempt
-def customer_list(request):
-    if request.method == 'POST':
-        email = EmailMessage(
-        'Hello',
-        'Body goes here',
-        'kaitouthuan@gmail.com',
-        [request.email.value], 
-        headers={'Message-ID': 'foo'},)
-        return "None"
-       
-        #return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-        # In order to serialize objects, we must set 'safe=False'
 
-    
-    elif request.method == 'DELETE':
-        User.objects.all().delete()
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-
-@csrf_exempt 
-def customer_detail(request, pk):
-    try: 
-        User = User.objects.get(pk=pk) 
-    except User.DoesNotExist: 
-        return HttpResponse(status=status.HTTP_404_NOT_FOUND) 
- 
-    if request.method == 'GET': 
-        User_serializer = UserSerializer(User) 
-        return JsonResponse(User_serializer.data) 
- 
-    elif request.method == 'PUT': 
-        User_data = JSONParser().parse(request) 
-        User_serializer = UserSerializer(User, data=User_data) 
-        if User_serializer.is_valid(): 
-            User_serializer.save() 
-            return JsonResponse(User_serializer.data) 
-        return JsonResponse(User_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
- 
-    elif request.method == 'DELETE': 
-        User.delete() 
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-
-    
-@csrf_exempt
-def customer_list_age(request, age):
-    Users = User.objects.filter(age=age)
-        
-    if request.method == 'GET': 
-        Users_serializer = UserSerializer(Users, many=True)
-        return JsonResponse(Users_serializer.data, safe=False)
-        # In order to serialize objects, we must set 'safe=False'
     
 @api_view(['POST'])
 def login(request):
     content = None
     print(request.data["username"])
-    print(request.data)
+    print(request.data["password"])
+    
     try:
         user = User.objects.get(username = request.data["username"])
 
         if user.password == request.data["password"]:
-            if user.active == True:
+            if user.is_active == True:
                 users = UserSerializer(user)
                 return Response(users.data,status=status.HTTP_200_OK)
             else:
@@ -167,7 +133,28 @@ def login(request):
     # In order to serialize objects, we must set 'safe=False'
 
    
+@api_view(['POST'])
+def fakelogin(request):
+    content = None
+    print('fake login is here')
+    return Response(content, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
+@api_view(['GET'])
+def GetProfile(request):
+    try:
+        print('---------------------')
+    
+    
+        print(request.body)
+        print('---------------------')
+        user = User.objects.get(username=  request.GET.get('username'))
+        users =UserSerializer(user)
+        return Response(users.data, status=status.HTTP_200_OK)
+        
+    except ObjectDoesNotExist:
+        return Response(None, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+    
+        
 
 def ConvertData(request):
     user = User.objects.all()
@@ -179,3 +166,35 @@ def ConvertData(request):
     user.active = False
     user.DateOfBirth = request.data["ngaySinh"]
     return user
+def CreateValidateCode():
+    number = rand.randrange(1000, 9999)
+    return number
+@api_view([ 'POST'])
+@csrf_exempt
+def UpdateUser(request):
+    
+    try:
+        print(request.data)
+        user = User.objects.get(username = request.data["email"])
+        
+        
+        user.name = request.data["fullName"]
+        user.EmailOrganization = request.data["emailOrganization"]
+        user.phone = request.data["phoneNumber"]
+        
+        user.DateOfBirth = request.data["ngaySinh"]
+        
+        
+        user.save()
+        users = UserSerializer(user)
+        users.data.key = '1243'
+        print(users.data)
+        response = {'data' : users.data,'validCode' : '1243'}
+        return JsonResponse(response,status = status.HTTP_200_OK)
+        
+    except ObjectDoesNotExist:
+        
+        
+        content = {'please move along': 'have the same username'}
+        return Response(content, status=status.HTTP_204_NO_CONTENT)
+    #else:
