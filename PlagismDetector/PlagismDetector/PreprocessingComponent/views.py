@@ -34,7 +34,7 @@ if ("preprocessing" in os.getcwd()):
     vncorenlp_file = os.getcwd() + '/VnCoreNLP/VnCoreNLP-1.1.1.jar'
 else:
     vncorenlp_file = os.getcwd() + '/PreprocessingComponent/VnCoreNLP/VnCoreNLP-1.1.1.jar'
-vncorenlp = VnCoreNLP(vncorenlp_file, annotators="wseg,pos,ner,parse", max_heap_size='-Xmx2g',port=6000)
+vncorenlp = VnCoreNLP(vncorenlp_file, annotators="wseg,pos,ner,parse", max_heap_size='-Xmx4g',port=6000)
 #annotator = VnCoreNLP(vncorenlp_file, annotators="wseg,pos,ner,parse", max_heap_size='-Xmx2g',port=6000) 
 
 """def previous_and_next(some_iterable):

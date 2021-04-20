@@ -32,6 +32,7 @@ export class ValidateResultComponent implements OnInit {
   public hitrate: any[];
   public trolling: boolean;
   ListHitRate:any[];
+  public file1Name :any;
   public ratio:any[];
   HighestHitRate:any;
   ngOnInit() {
@@ -104,6 +105,7 @@ export class ValidateResultComponent implements OnInit {
   }
   getFirstSentences() {
     if (this.data != null) {
+      this.file1Name=this.data.File1Name;
       this.tempdata = [];
       let temp: {
         id: number;
@@ -445,8 +447,10 @@ export class ValidateResultComponent implements OnInit {
        HighestHitRate = i;
      }
    }
+   
    var result=
    {
+     File1Name:this.file1Name,
      name:this.data.ListFileName,
      HitRate:this.hitrate,
      Highest:HighestHitRate,

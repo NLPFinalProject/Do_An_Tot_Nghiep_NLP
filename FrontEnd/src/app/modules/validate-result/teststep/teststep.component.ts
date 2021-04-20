@@ -76,6 +76,19 @@ export class TeststepComponent implements OnInit {
         break;
       }
       case 2:
+        {
+          let data = {
+            id: localStorage.getItem('id'),
+            filename1: localStorage.getItem('file'),
+            choice: this.selectedOption
+          };
+          this.fileService.checkPlagiasmUsingDatabase(data).subscribe((data:any)=>
+      {
+        console.log('data is');
+          console.log(data);
+          console.log('-----------');
+          this.router.navigate(['checkresult/result'], { replaceUrl: true, state: { data: data }})
+        })}
       case 3:
       case 4: {
         let id = localStorage.getItem('id');
@@ -142,6 +155,15 @@ export class TeststepComponent implements OnInit {
         // do not trigger navigation
         replaceUrl: true
       });
+      
+      
+      /*this.router.navigate(['checkresult/step/3'], {
+        // preserve the existing query params in the route
+
+        // do not trigger navigation
+        replaceUrl: true
+      });*/
+      
     } else if (this.step == 3) {
       this.fileService.UploadFileList(this.ListFileToUpload).subscribe((data: any) => {
         console.log('hhhhh');

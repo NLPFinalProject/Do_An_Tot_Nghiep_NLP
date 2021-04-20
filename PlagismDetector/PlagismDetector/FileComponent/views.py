@@ -1,125 +1,5 @@
 
-"""
 
-
-def documentimport(request):
-    print('------------------------------')
-    # đọc data từ database
-    #posts = DataDocumentContent.objects.all()
-    cursor = connection.cursor()
-    #cursor.execute("SELECT DataDocumentSentence,DataDocumentNo_id  FROM polls_datadocumentcontent WHERE DataDocumentSentence='ABCDEF 123'")
-    cursor.execute("SELECT DataDocumentSentence FROM filecomponent_datadocumentcontent WHERE DataDocumentNo_id='1';")
-    
-    posts = dictfetchall(cursor)
-    #list of dicts to list of value (chuyển đổi)
-    a_key = "DataDocumentSentence"
-    # list 1 lấy từ database
-    lst1 = [a_dict[a_key] for a_dict in posts]
-    # list 2 user upload, lấy file rồi dùng proccessor, sau đó so sánh
-
-    #doc nhieu file db
-    dataReadDoc=[]
-    #get as many file in the database as possible
-    maxnumber = 10
-    reportDataReadDoc=[]
-    for i in range(1,maxnumber):
-        try:
-            #ko phải get theo pk mà là get theo tên file
-            dataFromFile= DataDocument.objects.get(pk=i)
-           ####### #begin multi selection
-            fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile\\' + dataFromFile.DataDocumentName+ '.'+dataFromFile.DataDocumentType)
-            lst2 = lstSentence
-            dataReadDoc.append(lst2)
-            #begin test
-            
-
-            print(connection.queries)
-            print("__________",report)
-        #end test
-        except Exception:
-            pass
-        #Xử lý danh sách file
-    for i in range(len(dataReadDoc)):
-                result = Matching_ratio_list(dataReadDoc[i],lst1)
-                report = Export(result,dataReadDoc[i],lst1)
-                reportDataReadDoc.append(report)
-            result = Matching_ratio_list(lst2, lst1)
-            report = Export(result, lst2, lst1)
-    
-#test mock data
-def documentimportTestting(request):
-    result = {}
-    # đọc data từ database
-    #posts = DataDocumentContent.objects.all()
-    cursor = connection.cursor()
-    #cursor.execute("SELECT DataDocumentSentence,DataDocumentNo_id  FROM polls_datadocumentcontent WHERE DataDocumentSentence='ABCDEF 123'")
-    cursor.execute("SELECT DataDocumentSentence FROM filecomponent_datadocumentcontent WHERE DataDocumentNo_id='1';")
-    
-    posts = dictfetchall(cursor)
-    #list of dicts to list of value (chuyển đổi)
-    a_key = "DataDocumentSentence"
-    # list 1 lấy từ database
-    lst1 = [a_dict[a_key] for a_dict in posts]
-    # list 2 user upload, lấy file rồi dùng proccessor, sau đó so sánh
-    result.FileFrom = lst1
-    #doc nhieu file db
-    dataReadDoc=[]
-    listnumber = [1,3,5,7]
-
-    #get as many file in the database as possible
-    maxnumber = 10
-    reportDataReadDoc=[]
-    for i in range(1,maxnumber):
-        try:
-            dataFromFile= DataDocument.objects.get(pk=i)
-           ####### #begin multi selection
-            fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile\\' + dataFromFile.DataDocumentName+ '.'+dataFromFile.DataDocumentType)
-            lst2 = lstSentence
-            dataReadDoc.append(lst2)
-
-            #begin test
-            
-            for i in range(len(dataReadDoc)):
-                result = Matching_ratio_list(dataReadDoc[i],lst1)
-                report = ExportResultByJson(result,dataReadDoc[i],lst1, 50)
-                reportDataReadDoc.append(report)
-            result = Matching_ratio_list(lst2, lst1)
-            report = Export(result, lst2, lst1)
-
-            print(connection.queries)
-            print("__________",report)
-        #end test
-        except Exception:
-     
-            pass
-    result.FileTo = dataReadDoc
-    data = GodOfModel(fromsentence = lst1,tosentences =dataReadDoc)
-    return Response(data=data, status=status.HTTP_200_OK)
-    ###################################################list of dicts to list of value end
-        
-    #begin mock data
-    dataFromFile= DataDocument.objects.get(pk=1)
-    
-    fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile\\' + dataFromFile.DataDocumentName+ '.'+dataFromFile.DataDocumentType)
-    #print(lstSentence)
-    lst2 = lstSentence
-    
-    #result so sanh
-    
-    for i in range(len(dataReadDoc)):
-        result = Matching_ratio_list(dataReadDoc[i],lst1)
-        report = Export(result,dataReadDoc[i],lst1)
-        reportDataReadDoc.append(report)
-    
-
-    #list of dicts to list of value end
-    result = Matching_ratio_list(lst2, lst1)
-    report = Export(result, lst2, lst1)
-
-    print(connection.queries)
-    print("__________",report)
-    return Response(report, status=status.HTTP_200_OK)
-    return render(request,'polls/output.html',{'data': report})"""
 #upload 1 file
 
   
@@ -166,16 +46,162 @@ sys.path.append(os.getcwd()+'\\polls\\preprocessing')
 
 
 #result
+# them ham tim kiem he thong + internet
+#systemSearch
+@api_view(('POST',))
+def documentimportDatabase(request):
+    print('------------------------------')
+    fileName1 = request.data["filename1"]
+        
+    userId=int(request.data["id"])
+    #fileName1 = data['fileName1']
+    #userId=data['id']
+
+    fileName2Sentence=[]
+
+    cursor = connections['default'].cursor()
+    # queryRaw ="ALTER TABLE filecomponent_datadocumentcontent ADD FULLTEXT (DataDocumentSentence);"
+    # cursor.execute(queryRaw)
+    # fileName1
+    queryRaw ="SELECT DataDocumentFile FROM `filecomponent_datadocument` WHERE DataDocumentName='"+fileName1.split(".")[0]+"' AND DataDocumentAuthor_id='"+str(userId)+"';"
+    print("=====",queryRaw)
+    cursor.execute(queryRaw)
+    fetchQuery = dictfetchall(cursor)
+    documentNameLink = [a_dict["DataDocumentFile"] for a_dict in fetchQuery]
+    print("=====filename1====",os.path.basename(documentNameLink[0]))
+    print(settings.MEDIA_ROOT +'\\DocumentFile/' + os.path.basename(documentNameLink[0]))
+    #return tag preprocess
+    tagPage,fName,lstSentence,lstLength = p.preprocess_link(settings.MEDIA_ROOT +'\\DocumentFile/' + os.path.basename(documentNameLink[0]))
+    # print("---tag---",type(tagPage),tagPage)
+    #internet search
+    internetPage2 = internetKeywordSearch.get_link(tagPage,fName,lstSentence,lstLength)
+    fileName1Sentence = lstSentence
+    internetPage = [internetPage2[i] for i in range(3)]
+    print("_______nội dung report ======== ",internetPage)
+
+    #database search
+    documentName=[]
+    documentNameId=[]
+    for i in fileName1Sentence:
+        sentence=chr(34)+i.replace(chr(34),"")+chr(34)
+        # print("dbs----",i)
+        queryRaw ="SELECT id FROM `filecomponent_datadocumentcontent` WHERE MATCH(DataDocumentSentence) Against(" + sentence +  ")"
+        # print("=====",queryRaw)
+        cursor.execute(queryRaw)
+        fetchQuery = dictfetchall(cursor)
+        documentNameFind = [a_dict["id"] for a_dict in fetchQuery]
+        documentNameId.extend(documentNameFind)
+    
+    documentNameId=list(dict.fromkeys(documentNameId))
+    for idDoc in documentNameId:
+        # print("dbs----",idDoc)
+        queryRaw ="SELECT id FROM `filecomponent_datadocument` WHERE id=(SELECT DataDocumentNo_id FROM `filecomponent_datadocumentcontent` WHERE id="+str(idDoc)+");"
+        # print("=====",queryRaw)
+        cursor.execute(queryRaw)
+        fetchQuery = dictfetchall(cursor)
+        documentNameFind = [a_dict["id"] for a_dict in fetchQuery]
+        documentName.extend(documentNameFind)
+
+    # thong ke
+    idStatistic = Counter(documentName)
+    countReport = 0
+    reportDataReadDoc = []
+    ReportFileName2Sentence = []
+    reportIdFile = []
+    print(idStatistic)
+    for idFile in idStatistic.items():
+        print(idFile[0])
+        if (countReport<1):
+            queryRaw ="SELECT DataDocumentSentence FROM `filecomponent_datadocumentcontent` WHERE DataDocumentNo_id="+str(idFile[0])+";"
+            print("=====",queryRaw)
+            cursor.execute(queryRaw)
+            fetchQuery = dictfetchall(cursor)
+            fileName2Sentence = [a_dict["DataDocumentSentence"] for a_dict in fetchQuery]
+            result = ExportOrder4(fileName2Sentence, fileName1Sentence,70)
+            if (result[1]>=70 and countReport<1):
+                countReport+=1
+                reportIdFile.append(idFile[0])
+                reportDataReadDoc.append(result[0])
+                ReportFileName2Sentence.append(fileName2Sentence)
+
+    
+    
+    
+
+    myDict = {}
+    myDict2 = {}
+    myDict["file1"] = fileName1Sentence
+    for i in range(countReport):
+        mydic3={}
+        mydic3["list"+str(reportIdFile[i])]=ReportFileName2Sentence[i]
+        mydic3["stt"]=reportDataReadDoc[i]
+        myDict2[str(reportIdFile[i])]=mydic3
+    
+    # # report cac cau html
+    # dataReadDoc=[]
+    # for link in internetPage:
+    #     if(internetKeywordSearch.is_downloadable(link)):
+    #         #link_pdf.append(link)
+    #         file_pdf=internetKeywordSearch.download_document(link)
+    #         fName,lstSentence,lstLength = p.preprocess(file_pdf)
+    #         data = DataDocument(DataDocumentName=os.path.basename(file_pdf), DataDocumentAuthor_id=3,DataDocumentType="pdf", DataDocumentFile=file_pdf)
+    #         data.save()
+    #         dataReadDoc.append(lstSentence)
+    #         # length= len(lstSentence)
+    #         # for i in range(length):
+    #         #     c=data.datadocumentcontent_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=lstLength[i])
+    #         #     print(c)
+            
+    #         os.remove(file_pdf)
+    #     else:
+    #         fName=os.path.basename(link)
+    #         lstSentence=internetKeywordSearch.crawl_web(link)
+    #         data = DataDocument(DataDocumentName=link, DataDocumentAuthor_id=3,DataDocumentType="internet", DataDocumentFile=link)
+    #         data.save()
+    #         dataReadDoc.append(lstSentence)
+    #         # length= len(lstSentence)
+    #         # for i in range(length):
+    #         #     c=data.datadocumentcontent_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=len(lstSentence[i]))
+    #         #     #print(c)
+    
+    # #B2 trả json
+    # # result so sanh
+    # reportDataReadDoc=[]
+    # for i in range(len(dataReadDoc)):
+    #     result = ExportOrder2(fileName1Sentence, dataReadDoc[i],70)
+    #     reportDataReadDoc.append(result)
+
+    # myDictHtml2 = {}
+    # myDict["file1"] = fileName1Sentence
+    # for i in range(len(internetPage)):
+    #     mydic3={}
+    #     mydic3["list"+internetPage[i]]=dataReadDoc[i]
+    #     mydic3["stt"]=reportDataReadDoc[i]
+    #     myDictHtml2[internetPage[i]]=mydic3
+
+    #line length list
+    myDict["fileName2"]=myDict2
+    # myDict["internet"]=myDictHtml2
+    # print(connection.queries)
+    return render(request,'polls/output.html',{'data': myDict})
 
 #import mới
-@api_view(('POST',))
+@api_view(('POST','GET'))
 def documentimport2(request):
-    print('------------------------------')
-    print(request.data)
-    
-    fileName1 = request.data["filename1"]
-    fileName2 = request.data["listfile"]
-    userId=int(request.data["id"])
+    fileName1 = None
+    fileName2 = None
+    userId = None
+    if request.method == 'POST':
+        print('------------------------------')
+        print(request.data)
+        
+        fileName1 = request.data["filename1"]
+        fileName2 = request.data["listfile"]
+        userId=int(request.data["id"])
+    elif request.method =='GET':
+        fileName1 = request.GET.get["filename1"]
+        fileName2 = request.GET.get["listfile"]
+        userId = int(request.GET.get["id"])
     print(type(fileName2))
     print('file name 1 is ',fileName1)
     print('file name 2 is ',fileName2)
@@ -263,13 +289,14 @@ def documentimport2(request):
     listFileName=fileName2
     myDict["ListFileName"] = listFileName
     myDict["ListFile"] = myDict4
+    myDict["File1Name"] = fileName1
     #end test
     print("===========",myDict)
     print("++++",dataReadDoc)
     print(connection.queries)
     return Response(myDict, status=status.HTTP_200_OK)
 
-@api_view(('POST',))
+@api_view(('POST','GET'))
 def FinalCheck(request):
     print(request.data)
     print(request.data['choice'])
@@ -282,6 +309,7 @@ def FinalCheck(request):
             redirect('')
         elif choice == 2:
             print('selection is ',2)
+            #documentimportDatabase()
         elif choice == 3:
             print('hohoho')
             
@@ -292,103 +320,7 @@ def FinalCheck(request):
             return Response(status=status.HTTP_400_BAD_REQUEST)
     
     return Response( status=status.HTTP_200_OK)
-@api_view(['POST','GET'])
-def documentimportInternet(request):
-    print('------------------------------')
-    
-    fileName1 = request.data['fileName1']
-    userId=request.data['id']
 
-    cursor = connections['default'].cursor()
-    # queryRaw ="ALTER TABLE polls_datadocumentcontentt ADD FULLTEXT (DataDocumentSentence);"
-    # cursor.execute(queryRaw)
-    # fileName1
-    queryRaw ="SELECT DataDocumentFile FROM `polls_datadocumentt` WHERE DataDocumentName='"+fileName1.split(".")[0]+"' AND DataDocumentAuthor_id='"+str(userId)+"';"
-    print("=====",queryRaw)
-    cursor.execute(queryRaw)
-    fetchQuery = dictfetchall(cursor)
-    documentNameLink = [a_dict["DataDocumentFile"] for a_dict in fetchQuery]
-    print("=====filename1====",os.path.basename(documentNameLink[0]))
-    print(settings.MEDIA_ROOT +'\\DocumentFile/' + os.path.basename(documentNameLink[0]))
-    #return tag preprocess
-    tagPage,fName,lstSentence,lstLength = p.preprocess_link(settings.MEDIA_ROOT +'\\DocumentFile/' + os.path.basename(documentNameLink[0]))
-    print("---tag---",type(tagPage),tagPage)
-    #internet search
-    internetPage2 = internetKeywordSearch.get_link(tagPage,fName,lstSentence,lstLength)
-    fileName1Sentence = lstSentence
-    internetPage = [internetPage2[i] for i in range(3)]
-    print("_______nội dung report ======== ",internetPage)
-    #link_pdf=[]
-    #link_html=[]
-    # report cac cau html
-    dataReadDoc=[]
-    for link in internetPage:
-        if(internetKeywordSearch.is_downloadable(link)):
-            #link_pdf.append(link)
-            file_pdf=internetKeywordSearch.download_document(link)
-            fName,lstSentence,lstLength = p.preprocess(file_pdf)
-            data = DataDocumentT(DataDocumentName=os.path.basename(file_pdf), DataDocumentAuthor_id=3,DataDocumentType="pdf", DataDocumentFile=file_pdf)
-            data.save()
-            dataReadDoc.append(lstSentence)
-            # length= len(lstSentence)
-            # for i in range(length):
-            #     c=data.datadocumentcontentt_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=lstLength[i])
-            #     print(c)
-            
-            os.remove(file_pdf)
-        else:
-            fName=os.path.basename(link)
-            lstSentence=internetKeywordSearch.crawl_web(link)
-            data = DataDocumentT(DataDocumentName=link, DataDocumentAuthor_id=userId,DataDocumentType="internet", DataDocumentFile=link)
-            data.save()
-            dataReadDoc.append(lstSentence)
-            # length= len(lstSentence)
-            # for i in range(length):
-            #     c=data.datadocumentcontentt_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=len(lstSentence[i]))
-            #     #print(c)
-    #B2 trả json
-    # result so sanh
-    reportDataReadDoc=[]
-    for i in range(len(dataReadDoc)):
-        result = ExportOrder2(fileName1Sentence, dataReadDoc[i],70)
-        reportDataReadDoc.append(result)
-    
-    #list of dicts to list of value end
-    # fileName1 = "fileDocA.doc"
-    # fileName2 = ['fileDocE.docx','fileDocB.docx']
-    # userId=2
-    # fileName1Sentence
-    
-    myDict = {}
-    myDict2 = {}
-
-    myDict["file1"] = fileName1Sentence
-    myDict4=[]
-    listFileName = {}
-    index = 0
-    
-    for i in range(len(fileName2)):
-        index = index+1
-        print('index is',index)
-        mydic3={}
-
-        mydic3["data"]=dataReadDoc[i]
-        mydic3["stt"]=reportDataReadDoc[i]
-        myDict4.append(mydic3)
-        myDict2[fileName2[i]]=mydic3
-    #line length list
-    # test mydict function
-    listFileName=fileName2
-    myDict["ListFileName"] = listFileName
-    myDict["ListFile"] = myDict4
-    #end test
-    print("===========",myDict)
-    print("++++",dataReadDoc)
-    print(connection.queries)
-    return Response(myDict, status=status.HTTP_200_OK)
-    #return Response(status=status.HTTP_200_OK)
-    #return data(request,'polls/output.html',{'data': internetPage})
-#import cũ
 def documentimportInternet2(data):
     print('------------------------------')
     print(data)
@@ -418,7 +350,7 @@ def documentimportInternet2(data):
             #link_pdf.append(link)
             file_pdf=internetKeywordSearch.download_document(link)
             fName,lstSentence,lstLength = p.preprocess(file_pdf)
-            data = DataDocument(DataDocumentName=os.path.basename(file_pdf), DataDocumentAuthor_id=3,DataDocumentType="pdf", DataDocumentFile=file_pdf)
+            data = DataDocument(DataDocumentName=os.path.basename(file_pdf), DataDocumentAuthor_id=userId,DataDocumentType="pdf", DataDocumentFile=file_pdf)
             data.save()
             dataReadDoc.append(lstSentence)
             # length= len(lstSentence)
@@ -430,7 +362,7 @@ def documentimportInternet2(data):
         else:
             fName=os.path.basename(link)
             lstSentence=internetKeywordSearch.crawl_web(link)
-            data = DataDocument(DataDocumentName=link, DataDocumentAuthor_id=3,DataDocumentType="internet", DataDocumentFile=link)
+            data = DataDocument(DataDocumentName=link, DataDocumentAuthor_id=userId,DataDocumentType="internet", DataDocumentFile=link)
             data.save()
             dataReadDoc.append(lstSentence)
             # length= len(lstSentence)
@@ -637,179 +569,7 @@ def test(self):
     print('done')
     content = {'please move along': 'have the same username222'}
     return Response(content, status=status.HTTP_200_OK)  
-"""
-@api_view(('POST',))
-def uploadDoc(request):
-    
-    if request.method=='POST':
-        content = None
-        #print(request.data)
-        #filename = request.data['FILES']
-        #print('-----file key is'+filekey)
-        print('-------------------------------------')
-        user = User.objects.get(id = 14)
-        print('-------------------------------------')
-        form1 = UploadFileForm(request.POST, request.FILES )
-        
-        #form1 = UploadFileForm(request.POST,'D:/kamen rider.doc')
 
-        if form1.is_valid():
-            # save form người dùng gửi
-            data = form1.cleaned_data
-            print('yes')
-            name2 = data['title'] #abc.doc
-            name = str(name2)
-            file1 = data['files'] #abc.doc
-            
-            file_name = name.split(".")[0]#doc
-            extension = name.split(".")[-1]#abc
-            
-            print(file1,type(file1))
-            print('-------------------file name is'+file_name)
-            print('-------------------extension is'+extension)
-            data = DataDocument(DataDocumentName=file_name, DataDocumentAuthor=user,DataDocumentType=extension, DataDocumentFile=file1)
-            data.save()
-            #data= form1.save(commit = False)
-            print('pass')
-            # sử dụng preprocessor và lưu vào database
-            #lỗi zip file
-            fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile\\' + data.DataDocumentName+'.'+ data.DataDocumentType)
-            
-            //save to db//  
-            length= len(lstSentence)
-            for i in range(length):
-                c=data.datadocumentcontentt_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=lstLength[i])
-                print(c)
-            return Response(content, status=status.HTTP_200_OK)
-            ####### fake mocking
-        else:
-            fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile\\' + 'kamen rider'+'.'+ 'docx')
-            
-            #//save to db//  
-            data = open("D:\study\PlagismDetector\PlagismDetector\DEF\DocumentFile\\kamen rider.docx")
-            length= len(lstSentence)
-            for i in range(length):
-                c=data.datadocumentcontentt_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=lstLength[i])
-                print(c)
-            return Response(content, status=status.HTTP_200_OK)
-            
-    else:
-        form = DocumentForm()
-    content = {'please move along': 'have the same username'}
-    print('fail')
-    return Response(content, status=status.HTTP_204_NO_CONTENT)
-    
-#upload multiple file
-@api_view(('POST',))
-def uploadDocList(request):
-    #chuong trinh test
-    if request.method=='POST':
-        listfile =  request.FILES.getlist('files')
-        count = 0
-        listname = request.data.getlist('title')
-        id = request.data.id
-        user = User.objects.get(id = request.data["id"])
-        
-        for f in listfile:
-
-            name = listname[count]
-            count = count+1
-            file1:file
-            file1 = f #abc.doc
-            
-            file_name = name.split(".")[0]#doc
-            extension = name.split(".")[-1]#abc
-            
-            print(file1,type(file1))
-            print('-------------------file name is '+file_name)
-            print('-------------------extension is '+extension)
-            user
-            data = DataDocument(DataDocumentName=file_name, DataDocumentAuthor="14",DataDocumentType=extension, DataDocumentFile=file1)
-            data.save()
-            print('stop here right now')
-            fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile\\' + data.DataDocumentName+'.'+ data.DataDocumentType)
-            
-            save to db
-            length= len(lstSentence)
-            for i in range(length):
-                c=data.datadocumentcontentt_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=lstLength[i])
-                print(c)
-        return Response(None, status=status.HTTP_200_OK)    
-            
-        
-        
-        print(request.data)
-        #print(request.data)
-        #filename = request.data['FILES']
-        #print('-----file key is'+filekey)
-        form1 = UploadFileForm(request.POST, request.FILES )
-        print(request.FILES)
-        #form1 = UploadFileForm(request.POST,'D:/kamen rider.doc')
-
-        if form1.is_valid():
-            # save form người dùng gửi
-            data = form1.cleaned_data
-            print('yes')
-            name2 = data['title'] #abc.doc
-            name = str(name2)
-            file1 = data['files'] #abc.doc
-            
-            file_name = name.split(".")[0]#doc
-            extension = name.split(".")[-1]#abc
-            
-            print(file1,type(file1))
-            print('-------------------file name is'+file_name)
-            print('-------------------extension is'+extension)
-            data = DataDocument(DataDocumentName=file_name, DataDocumentAuthor="abc",DataDocumentType=extension, DataDocumentFile=file1)
-            data.save()
-            #data= form1.save(commit = False)
-            print('pass')
-            # sử dụng preprocessor và lưu vào database
-            #lỗi zip file
-            
-            
-    else:
-        form = DocumentForm()
-    content = {'please move along': 'have the same username'}
-    print('fail')
-    return Response(content, status=status.HTTP_204_NO_CONTENT)"""
-
-"""# Create your views here.
-from django.shortcuts import render, redirect
-from django.conf import settings
-from django.core.files.storage import FileSystemStorage
-from rest_framework.response import Response
-from .models import Document
-from .serializers import DocumentForm
-from rest_framework import status
-
-def home(request):
-    documents = Document.objects.all()
-    return render(request, 'core/home.html', { 'documents': documents })
-
-
-def simple_upload(request):
-    if request.method == 'POST' and request.FILES['myfile']:
-        myfile = request.FILES['myfile']
-        fs = FileSystemStorage()
-        filename = fs.save(myfile.name, myfile)
-        uploaded_file_url = fs.url(filename)
-        return Response(uploaded_file_url,status=status.HTTP_200_OK)
-        
-    return Response('uploaded_file_url',status=status.HTTP_200_OK)
-
-
-def model_form_upload(request):
-    if request.method == 'POST':
-        form = DocumentForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-    else:
-        form = DocumentForm()
-    return render(request, 'core/model_form_upload.html', {
-        'form': form
-    })"""
 
 #from .preprocessing import preprocessor as p
 # Create your views here.
@@ -826,114 +586,7 @@ def dictfetchall(cursor):
 
 #result
 #import mới
-"""def documentimport2(request):
-    print('------------------------------')
-    fileName1 = "fileDocC.docx"
-    fileName2 = ['fileDocB.docx','vanbanE.docx']
-    userId=1
 
-    cursor = connections['default'].cursor()
-
-    #B1 start đọc data từ database
-    # fileName1
-    #query trên database
-    queryRaw ="SELECT DataDocumentFile FROM `filecomponent_datadocument` WHERE DataDocumentName='"+fileName1.split(".")[0]+"' AND DataDocumentAuthor_id='"+str(userId)+"';"
-    print("=====",queryRaw)
-    cursor.execute(queryRaw)
-    fetchQuery = dictfetchall(cursor)
-    documentNameLink = [a_dict["DataDocumentFile"] for a_dict in fetchQuery]
-    print("=====filename1====",os.path.basename(documentNameLink[0]))
-    print(settings.MEDIA_ROOT +'\\DocumentFile\\' + os.path.basename(documentNameLink[0]))
-    fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile\\' + os.path.basename(documentNameLink[0]))
-    #danh sách các câu trong file1 theo thứ tự
-    fileName1Sentence = lstSentence
-
-    print("===filename2 len ======",len(fileName2),fileName2[1])
-    # fileName2
-    # chạy preprocess cho từng file trong fileName2
-    # trả danh sách câu từng file vô dataReadDoc
-    dataReadDoc=[]
-    for i in fileName2:
-        try:
-            #query database
-            queryRaw ="SELECT DataDocumentFile FROM `filecomponent_datadocument` WHERE DataDocumentName='"+i.split(".")[0]+"' AND DataDocumentAuthor_id='"+str(userId)+"';"
-            cursor.execute(queryRaw)
-            
-            fetchQuery = dictfetchall(cursor)
-            documentNameLink = [a_dict["DataDocumentFile"] for a_dict in fetchQuery]
-            print("===filename2 ======",documentNameLink[0].split("/")[-1])
-
-            fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile\\' + documentNameLink[0].split("/")[-1])
-            lst2 = lstSentence
-            dataReadDoc.append(lst2)
-        except Exception:
-            pass
-    
-    #B2 trả json
-    # result so sánh
-    # lần lượt thêm danh sách câu file 1, danh sách câu các file 2, cuối cùng là thứ tự câu so sánh
-    # vào reportDataReadDoc
-    reportDataReadDoc=[]
-    reportDataReadDoc.append(fileName1Sentence)
-    reportDataReadDoc.append(dataReadDoc)
-    for i in range(len(dataReadDoc)):
-        result = ExportOrder(dataReadDoc[i],fileName1Sentence,30)
-        reportDataReadDoc.append(result)
-    
-    #list of dicts to list of value end
-
-    print(connection.queries)
-    return Response(reportDataReadDoc, status=status.HTTP_200_OK)"""
-
-#import cũ
-"""def documentimport(request):
-    print('------------------------------')
-    # đọc data từ database
-    #posts = DataDocumentContent.objects.all()
-    cursor = connection.cursor()
-    #cursor.execute("SELECT DataDocumentSentence,DataDocumentNo_id  FROM polls_datadocumentcontent WHERE DataDocumentSentence='ABCDEF 123'")
-    cursor.execute("SELECT DataDocumentSentence FROM filecomponent_datadocumentcontent WHERE DataDocumentNo_id='1';")
-    
-    posts = dictfetchall(cursor)
-    #list of dicts to list of value (chuyển đổi)
-    a_key = "DataDocumentSentence"
-    # list 1 lấy từ database
-    lst1 = [a_dict[a_key] for a_dict in posts]
-    # list 2 user upload, lấy file rồi dùng proccessor, sau đó so sánh
-
-    #doc nhieu file db
-    dataReadDoc=[]
-    for i in range(1,10):
-        try:
-            dataFromFile= DataDocument.objects.get(pk=i)
-            fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile\\' + dataFromFile.DataDocumentName+ '.'+dataFromFile.DataDocumentType)
-            lst2 = lstSentence
-            dataReadDoc.append(lst2)
-        except Exception:
-            pass
-    
-    dataFromFile= DataDocument.objects.get(pk=1)
-    
-    fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile\\' + dataFromFile.DataDocumentName+ '.'+dataFromFile.DataDocumentType)
-    #print(lstSentence)
-    lst2 = lstSentence
-
-    #result so sanh
-    reportDataReadDoc=[]
-    for i in range(len(dataReadDoc)):
-        result = Matching_ratio_list(dataReadDoc[i],lst1)
-        report = Export(result,dataReadDoc[i],lst1)
-        reportDataReadDoc.append(report)
-    
-
-    #list of dicts to list of value end
-    result = Matching_ratio_list(lst2, lst1)
-    report = Export(result, lst2, lst1)
-
-    print(connection.queries)
-    print("__________",report)
-    return render(request,'polls/output.html',{'data': report})
-"""
 
 #upload 1 file vo luu tru cau db cua he thong(khac userdb)
 def uploadDocumentSentenceToDatabase(request):

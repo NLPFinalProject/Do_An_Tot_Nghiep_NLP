@@ -39,12 +39,16 @@ def sendVerigicationMail(email):
     response = {'data' : None,'validCode' : number}
 
 def sendExportMail(data):
+    localsite = 'localhost:4200/checkresult/result'
     print(data)
     linkfile = os.getcwd() + '/MailComponent/mail_template.html'
     dataname = data['name']
     datahitrate = data['HitRate']
     dataid =  data['id']
     datacount = data['count']
+    File1Name = data['File1Name']
+    
+    linktoFile = []
     tmp={}
     list =[]
     for i in range(len(dataname)):
@@ -52,15 +56,19 @@ def sendExportMail(data):
         dicttmp['name']=dataname[i]
         dicttmp['HitRate']=datahitrate[i]
         dicttmp['count']=datacount[i]
+        link = localsite+'?filename1='+File1Name+'&listfile='+dataname[i]+'&id='+dataid
+        #dicttmp['link']=link
+        dicttmp['link']='http://google.com'
         tmp = dicttmp
+        
         list.append(tmp)
     #list.append(tmp)
     #for i in list
-    
+    print(list)
     html_message = render_to_string('mail_template.html', {'data':list})
     print(html_message)
     id = data['id']
-    print(id)
+    
     plain_message = strip_tags(html_message)
     """email = EmailMessage(
             'Hello',

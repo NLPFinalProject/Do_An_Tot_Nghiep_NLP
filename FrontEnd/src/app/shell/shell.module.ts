@@ -10,6 +10,7 @@ import { ShellComponent } from './shell.component';
 import { FooterComponent } from './footer/footer.component';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { SidebarComponent } from './sidebar/sidebar.component';
 const MODULE = [
   CommonModule,
   TranslateModule,
@@ -23,6 +24,6 @@ const MODULE = [
 const COMPONENT = [HeaderComponent, ShellComponent];
 @NgModule({
   imports: [...MODULE],
-  declarations: [...COMPONENT, FooterComponent, BreadcrumbComponent]
+  declarations: [...COMPONENT, FooterComponent, BreadcrumbComponent, SidebarComponent]
 })
 export class ShellModule {}

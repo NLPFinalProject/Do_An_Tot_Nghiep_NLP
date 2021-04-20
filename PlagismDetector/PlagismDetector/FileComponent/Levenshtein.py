@@ -431,6 +431,31 @@ def ExportOrder3(lst_1, lst_2, ratio):
     
     return result
 
+# them ham exportorder3 vao levenshtein
+def ExportOrder4(lst_1, lst_2, ratio):
+    result = []
+    length = 0
+    similar_sent = []
+    similar_ratio =[]
+    for i in range(len(lst_1)):
+        export = {}
+        similar_sent = []
+        count = 0
+        for j in range(len(lst_2)):
+            CurrentRatio = Matching_ratio(lst_1[i], lst_2[j])
+            if CurrentRatio >= ratio:
+                count += 1
+                similar_sent.append(j + 1)
+                similar_ratio.append(CurrentRatio)
+        if count != 0:
+            length += 1
+            export['line'] = i + 1
+            export['count'] = count
+            export['lst'] =similar_sent
+            export['ratio']=similar_ratio
+            result.append(export)
+    
+    return result, length/len(lst_1)*100
 def main():   
     lst1 = ['Không có kính không phải vì xe không có kính', 'Bom giật bom run kính vỡ đi rồi', 'Ung dung buồng lái ta ngồi']
     lst2 = ['Nhìn đất nhìn trời nhìn thẳng', 'Nhìn thấy gió vào xoa mắt đắng', 'Nhìn thấy con đường chạy thẳng vào tim']
