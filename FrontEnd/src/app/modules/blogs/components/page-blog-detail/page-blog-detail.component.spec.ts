@@ -8,7 +8,7 @@ describe('PageBlogDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [PageBlogDetailComponent]
+      declarations: [PageBlogDetailComponent],
     }).compileComponents();
   }));
 

@@ -9,7 +9,7 @@ import { UserService } from '@../../../src/app/login/user-authenticate-service';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent extends AppComponentBase implements OnInit {
   errors = MessageError.Errors;
@@ -87,7 +87,7 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
         phoneNumber: this.registerForm.controls.phoneNumber.value,
 
         ngaySinh: this.registerForm.controls.ngaySinh.value,
-        gioiTinh: this.registerForm.controls.gioiTinh.value
+        gioiTinh: this.registerForm.controls.gioiTinh.value,
         //captcha: [null, [Validators.required]],
       };
 
@@ -106,7 +106,7 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
           }, 1000);
           //this.notificationService.warning(MessageConstant.LoginFailed);
         },
-        error => {
+        (error) => {
           this.notificationService.error('Tài khoản đã bị được sử dụng');
         }
       );
@@ -129,7 +129,7 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
       ngaySinh: [null, [Validators.required]],
       gioiTinh: [true],
       //captcha: [null, [Validators.required]],
-      agree: [false]
+      agree: [false],
     });
   }
 }

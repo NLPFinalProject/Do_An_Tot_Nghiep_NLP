@@ -18,10 +18,10 @@ const MODULE = [
   NgZorroAntdModule,
   SharedModule,
   ScrollToModule,
-  NgHighlightModule
+  NgHighlightModule,
 ];
 @NgModule({
   declarations: [...COMPONENT],
-  imports: [...MODULE]
+  imports: [...MODULE],
 })
 export class VaildateResultModule {}

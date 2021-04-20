@@ -12,7 +12,7 @@ import { UserService } from '@../../../src/app/login/user-authenticate-service';
 @Component({
   selector: 'app-validation',
   templateUrl: './validation.component.html',
-  styleUrls: ['./validation.component.scss']
+  styleUrls: ['./validation.component.scss'],
 })
 export class ValidationComponent implements OnInit {
   version: string = environment.version;
@@ -74,7 +74,7 @@ export class ValidationComponent implements OnInit {
       console.log(data);
       this.UserService.ActivateUser(data).subscribe(
         //data=> {console.log(data)};
-        data => {
+        (data) => {
           console.log('we success');
           console.log(data);
           //this.notificationService.success(MessageConstant.RegisterSucssec);
@@ -92,7 +92,7 @@ export class ValidationComponent implements OnInit {
 
   private createForm() {
     this.validateForm = this.formBuilder.group({
-      username: [null, Validators.required]
+      username: [null, Validators.required],
     });
   }
 

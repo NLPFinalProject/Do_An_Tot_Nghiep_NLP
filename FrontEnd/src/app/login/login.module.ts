@@ -25,7 +25,7 @@ import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
     LoginRoutingModule,
     NgZorroAntdModule,
     NgxErrorsModule,
-    ScrollToModule.forRoot()
+    ScrollToModule.forRoot(),
   ],
   declarations: [
     LoginComponent,
@@ -34,7 +34,7 @@ import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
     IndexLoginComponent,
     ResetPasswordComponent,
     ValidationComponent,
-    TestComponent
-  ]
+    TestComponent,
+  ],
 })
 export class LoginModule {}

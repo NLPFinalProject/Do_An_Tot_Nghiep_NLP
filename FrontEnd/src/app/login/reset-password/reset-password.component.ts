@@ -8,7 +8,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-reset-password',
   templateUrl: './reset-password.component.html',
-  styleUrls: ['./reset-password.component.scss']
+  styleUrls: ['./reset-password.component.scss'],
 })
 export class ResetPasswordComponent extends AppComponentBase implements OnInit {
   errors = MessageError.Errors;
@@ -63,12 +63,12 @@ export class ResetPasswordComponent extends AppComponentBase implements OnInit {
     var data = {
       username: localStorage.getItem('username'),
       password: this.resetPasswordForm.value.password,
-      reset: '123'
+      reset: '123',
     };
 
     this.notificationService.success(`${MessageConstant.RegisterSucssec} ${MessageConstant.GoToPage} 5 giây`);
     setTimeout(() => {
-      this.route.queryParams.subscribe(params =>
+      this.route.queryParams.subscribe((params) =>
         this.router.navigate([params.redirect || RoutingConstant.Base], { replaceUrl: true })
       );
     }, 5000);
@@ -79,7 +79,7 @@ export class ResetPasswordComponent extends AppComponentBase implements OnInit {
       //userId: [null, [Validators.required]],
       password: [null, [Validators.required]],
       checkPassword: [null, [Validators.required, this.confirmationValidator]],
-      recheckPassword: [null, [Validators.required, this.confirmationValidator]]
+      recheckPassword: [null, [Validators.required, this.confirmationValidator]],
     });
   }
 }

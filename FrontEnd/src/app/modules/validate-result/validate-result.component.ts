@@ -14,7 +14,7 @@ import { FileService } from '@../../../src/app/shell/shell-routing-service';
 @Component({
   selector: 'app-validate-result',
   templateUrl: './validate-result.component.html',
-  styleUrls: ['./validate-result.component.scss']
+  styleUrls: ['./validate-result.component.scss'],
 })
 export class ValidateResultComponent implements OnInit {
   public data: any;
@@ -45,7 +45,7 @@ export class ValidateResultComponent implements OnInit {
     this.answer = {
       ls1: null,
       ls2: null,
-      ls3: null
+      ls3: null,
     };
 
     this.getFirstSentences();
@@ -72,7 +72,7 @@ export class ValidateResultComponent implements OnInit {
     for (var i = 0; i < this.characterList2.length; i++) {
       temp = {
         id: i,
-        data: this.characterList2[i]
+        data: this.characterList2[i],
       };
       this.characterList1.push(temp);
     }
@@ -89,7 +89,7 @@ export class ValidateResultComponent implements OnInit {
       for (var i = 0; i < this.data.ListFileName.length; i++) {
         temp = {
           id: i,
-          data: this.data.ListFileName[i]
+          data: this.data.ListFileName[i],
         };
         this.characterList1.push(temp);
       }
@@ -115,7 +115,7 @@ export class ValidateResultComponent implements OnInit {
       for (var i = 0; i < this.data.file1.length; i++) {
         temp = {
           id: i + 1,
-          data: this.data.file1[i]
+          data: this.data.file1[i],
         };
         this.tempdata.push(temp);
       }
@@ -176,7 +176,7 @@ export class ValidateResultComponent implements OnInit {
     this.ratio = element[3][0];
     if (element.length! > 0) {
       const config: ScrollToConfigOptions = {
-        target: element[2][0]
+        target: element[2][0],
       };
 
       this.scrollToService.scrollTo(config);
@@ -230,13 +230,13 @@ export class ValidateResultComponent implements OnInit {
       {
         line: 2,
         length: 1,
-        list: [7]
+        list: [7],
       },
       {
         line: 3,
         length: 1,
-        list: [12]
-      }
+        list: [12],
+      },
     ];
 
     this.StoreNumber = 0;
@@ -253,7 +253,7 @@ export class ValidateResultComponent implements OnInit {
       'mod',
       'mod',
       'mod',
-      'uzumaki naruto'
+      'uzumaki naruto',
     ];
     this.characterList1 = ['kurogane yaiba', 'kurosaki ichigo', 'monkey D luffy', 'uzumaki naruto'];
 
@@ -274,7 +274,7 @@ export class ValidateResultComponent implements OnInit {
     for (var i = 0; i < this.characterList1.length; i++) {
       temp = {
         id: index,
-        data: this.characterList1[i]
+        data: this.characterList1[i],
       };
       this.tempdata.push(temp);
 
@@ -291,7 +291,7 @@ export class ValidateResultComponent implements OnInit {
     for (var i = 0; i < this.characterList2.length; i++) {
       temp = {
         id: index,
-        data: this.characterList2[i]
+        data: this.characterList2[i],
       };
       tempdata2.push(temp);
       index = index + 1;
@@ -394,7 +394,7 @@ export class ValidateResultComponent implements OnInit {
       for (var i = 0; i < this.data.ListFile[num].data.length; i++) {
         temp = {
           id: index + 1,
-          data: this.data.ListFile[num].data[i]
+          data: this.data.ListFile[num].data[i],
         };
         tempdata2.push(temp);
         index = index + 1;
@@ -449,7 +449,7 @@ export class ValidateResultComponent implements OnInit {
       HitRate: this.hitrate,
       Highest: HighestHitRate,
       count: countlist,
-      id: localStorage.getItem('id')
+      id: localStorage.getItem('id'),
     };
 
     this.fileService.ExportResultToEmail(result).subscribe((data: any) => {

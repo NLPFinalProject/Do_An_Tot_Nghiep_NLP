@@ -7,20 +7,20 @@ const routes: Routes = [
   { path: '', redirectTo: 'index', pathMatch: 'full' },
   {
     path: 'index',
-    component: PageBlogIndexComponent
+    component: PageBlogIndexComponent,
   },
   {
     path: 'blog/:id',
     component: PageBlogDetailComponent,
     data: {
       title: extract('Detail'),
-      urls: [{ title: 'Blog', url: '/blog' }, { title: 'Detail' }]
-    }
-  }
+      urls: [{ title: 'Blog', url: '/blog' }, { title: 'Detail' }],
+    },
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class BlogsRoutingModule {}

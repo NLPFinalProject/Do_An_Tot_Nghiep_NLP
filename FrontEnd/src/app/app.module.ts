@@ -31,11 +31,11 @@ import { VaildateResultModule } from './modules/validate-result/validate-result.
     ShellModule,
     LoginModule,
     AppRoutingModule,
-    VaildateResultModule
+    VaildateResultModule,
     // must be imported as the last module as it contains the fallback route
   ],
   declarations: [AppComponent],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

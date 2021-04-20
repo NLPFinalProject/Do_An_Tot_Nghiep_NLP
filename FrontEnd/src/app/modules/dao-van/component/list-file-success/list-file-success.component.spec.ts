@@ -8,7 +8,7 @@ describe('ListFileSuccessComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ListFileSuccessComponent]
+      declarations: [ListFileSuccessComponent],
     }).compileComponents();
   }));
 

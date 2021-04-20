@@ -15,10 +15,10 @@ const MODULE = [
   AccountRoutingModule,
   SharedModule,
   RouterModule,
-  NzDropDownModule
+  NzDropDownModule,
 ];
 @NgModule({
   declarations: [...COMPONENT],
-  imports: [...MODULE]
+  imports: [...MODULE],
 })
 export class AccountModule {}

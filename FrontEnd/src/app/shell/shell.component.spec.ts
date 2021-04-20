@@ -16,7 +16,7 @@ describe('ShellComponent', () => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, TranslateModule.forRoot(), NgbModule, CoreModule],
       providers: [{ provide: AuthenticationService, useClass: MockAuthenticationService }],
-      declarations: [HeaderComponent, ShellComponent]
+      declarations: [HeaderComponent, ShellComponent],
     }).compileComponents();
   }));
 

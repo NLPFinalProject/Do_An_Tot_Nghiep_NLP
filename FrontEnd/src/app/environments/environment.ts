@@ -10,7 +10,7 @@ export const environment = {
   //serverUrl: 'https://reqres.in/api',
   serverUrl: 'http://localhost:5000',
   defaultLanguage: 'vn-VN',
-  supportedLanguages: ['en-US', 'vn-VN']
+  supportedLanguages: ['en-US', 'vn-VN'],
 };
 
 /*

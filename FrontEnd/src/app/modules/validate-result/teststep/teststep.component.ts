@@ -7,7 +7,7 @@ import { UploadChangeParam } from 'ng-zorro-antd/upload';
 @Component({
   selector: 'app-teststep',
   templateUrl: './teststep.component.html',
-  styleUrls: ['./teststep.component.scss']
+  styleUrls: ['./teststep.component.scss'],
 })
 export class TeststepComponent implements OnInit {
   //private routeSub: Subscription;
@@ -23,7 +23,7 @@ export class TeststepComponent implements OnInit {
   constructor(private route: ActivatedRoute, private router: Router, private fileService: FileService) {}
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       this.step = +params['id']; // (+) converts string 'id' to a number
       console.log(this.step);
     });
@@ -53,7 +53,7 @@ export class TeststepComponent implements OnInit {
         let data = {
           id: id,
           fileName1: localStorage.getItem('file'),
-          choice: this.selectedOption
+          choice: this.selectedOption,
         };
         console.log('hi');
         this.fileService.checkPlagiasmV2(data).subscribe((data: any) => {
@@ -79,7 +79,7 @@ export class TeststepComponent implements OnInit {
         let data = {
           id: localStorage.getItem('id'),
           filename1: localStorage.getItem('file'),
-          choice: this.selectedOption
+          choice: this.selectedOption,
         };
         this.fileService.checkPlagiasmUsingDatabase(data).subscribe((data: any) => {
           console.log('data is');
@@ -95,7 +95,7 @@ export class TeststepComponent implements OnInit {
         let data = {
           id: id,
           fileName1: localStorage.getItem('file'),
-          choice: this.selectedOption
+          choice: this.selectedOption,
         };
         console.log('hi');
         this.fileService.checkPlagiasmV2(data).subscribe((data: any) => {
@@ -145,14 +145,14 @@ export class TeststepComponent implements OnInit {
         // preserve the existing query params in the route
 
         // do not trigger navigation
-        replaceUrl: true
+        replaceUrl: true,
       });
     } else if (this.step == 2) {
       this.router.navigate(['checkresult/step/3'], {
         // preserve the existing query params in the route
 
         // do not trigger navigation
-        replaceUrl: true
+        replaceUrl: true,
       });
 
       /*this.router.navigate(['checkresult/step/3'], {
@@ -172,7 +172,7 @@ export class TeststepComponent implements OnInit {
           id: id,
           filename1: filename1,
           listfile: this.fileList,
-          choice: choice
+          choice: choice,
         };
 
         this.fileService.checkPlagiasm(tempdata).subscribe((data: any) => {

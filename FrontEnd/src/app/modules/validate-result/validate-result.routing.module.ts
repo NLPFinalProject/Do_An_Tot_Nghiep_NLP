@@ -9,20 +9,20 @@ const routes: Routes = [
   { path: '', redirectTo: 'result', pathMatch: 'full' },
   {
     path: 'result',
-    component: ValidateResultComponent
+    component: ValidateResultComponent,
   },
   {
     path: 'step/:id',
     component: TeststepComponent,
     data: {
       title: extract('Detail'),
-      urls: [{ title: 'checkresult', url: '/checkresult' }, { title: 'Detail' }]
-    }
-  }
+      urls: [{ title: 'checkresult', url: '/checkresult' }, { title: 'Detail' }],
+    },
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class ValidateResultRoutingModule {}

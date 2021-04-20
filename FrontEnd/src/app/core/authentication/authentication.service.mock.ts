@@ -6,7 +6,7 @@ export class MockAuthenticationService {
   credentials: Credentials | null = {
     username: 'test',
     exp: 1,
-    user_id: '12'
+    user_id: '12',
     // token: '123'
   };
 
@@ -15,7 +15,7 @@ export class MockAuthenticationService {
     return of({
       username: context.username,
       exp: 1,
-      user_id: '1'
+      user_id: '1',
       // token: '123456'
     });
   }

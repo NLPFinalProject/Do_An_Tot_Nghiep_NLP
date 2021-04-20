@@ -7,7 +7,7 @@ import { RoutingService } from '@app/core/services/Routing/routing.services';
 @Component({
   selector: 'app-report-input-file',
   templateUrl: './report-input-file.component.html',
-  styleUrls: ['./report-input-file.component.scss']
+  styleUrls: ['./report-input-file.component.scss'],
 })
 export class ReportInputFileComponent implements OnInit {
   loading = true;

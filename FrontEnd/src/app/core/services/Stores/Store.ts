@@ -4,7 +4,7 @@ import { distinctUntilChanged, pluck } from 'rxjs/operators';
 import { State } from './State';
 
 const state: State = {
-  Title: undefined
+  Title: undefined,
 };
 
 export class StoreSerivce {
@@ -22,7 +22,7 @@ export class StoreSerivce {
   set(name: string, state: any) {
     this.subject.next({
       ...this.value,
-      [name]: state
+      [name]: state,
     });
   }
 }

@@ -16,6 +16,6 @@ const MODULE = [CommonModule, NgZorroAntdModule, ReactiveFormsModule, NzNotifica
 @NgModule({
   imports: [...MODULE],
   declarations: [...COMPOENT, ...ACCOUNT, ...MANAGER_FILE, ErrorComponent],
-  exports: [...COMPOENT, ...ACCOUNT, ...MANAGER_FILE]
+  exports: [...COMPOENT, ...ACCOUNT, ...MANAGER_FILE],
 })
 export class SharedModule {}

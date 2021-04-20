@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 //import{User} from '@../../../src/app/login/User'
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FileService {
   private baseUrl = 'http://localhost:5000';

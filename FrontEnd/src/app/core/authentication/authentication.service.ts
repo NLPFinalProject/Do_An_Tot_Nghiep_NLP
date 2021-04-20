@@ -38,7 +38,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
     if (token) {
       const cloned = req.clone({
-        headers: req.headers.set('Authorization', 'JWT '.concat(token))
+        headers: req.headers.set('Authorization', 'JWT '.concat(token)),
       });
 
       return next.handle(cloned);
@@ -59,7 +59,7 @@ export class AuthenticationService {
     }
 
     this.httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
     };
   }
   public setSession(authResult: any) {
@@ -91,16 +91,16 @@ export class AuthenticationService {
      header.append('Content-Type', 'application/x-www-form-urlencoded');
      const options = new RequestOptions({ headers: header });*/
     let headers = new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     });
     let options = {
-      headers: headers
+      headers: headers,
     };
     let temp;
     console.log(context);
     const dataContext = {
       username: context.username,
-      password: context.password
+      password: context.password,
     };
     console.log(`${this.baseUrl}/api/user/login`);
     return this.httpClient.post(`${this.baseUrl}/login/`, JSON.stringify(dataContext), options);
@@ -182,7 +182,7 @@ export class AuthenticationService {
       return this.httpClient
         .post(this.baseUrl.concat('/token/refresh-token/'), { token: this.credentials })
         .pipe(
-          tap(response => this.setSession(response)),
+          tap((response) => this.setSession(response)),
           shareReplay()
         )
         .subscribe();

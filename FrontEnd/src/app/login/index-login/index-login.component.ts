@@ -13,7 +13,7 @@ const log = new Logger('Login');
 @Component({
   selector: 'app-index-login',
   templateUrl: './index-login.component.html',
-  styleUrls: ['./index-login.component.scss']
+  styleUrls: ['./index-login.component.scss'],
 })
 export class IndexLoginComponent extends AppComponentBase implements OnInit {
   version: string = environment.version;
@@ -90,7 +90,7 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
     this.isLoading = true;
     var data = {
       username: this.loginForm.controls.username.value,
-      password: this.loginForm.controls.password.value
+      password: this.loginForm.controls.password.value,
     };
     //this.UserService
 
@@ -118,7 +118,7 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
             this.loading = false;
           }
         },
-        error => {
+        (error) => {
           this.isLoading = false;
 
           this.loading = false;
@@ -135,7 +135,7 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
-      remember: true
+      remember: true,
     });
   }
 

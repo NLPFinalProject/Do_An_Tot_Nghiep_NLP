@@ -56,5 +56,5 @@ export class StorageService {
 
 export const storageServiceKey = {
   returnUrl: 'returnUrl',
-  loggingProfile: 'loggingProfile'
+  loggingProfile: 'loggingProfile',
 };

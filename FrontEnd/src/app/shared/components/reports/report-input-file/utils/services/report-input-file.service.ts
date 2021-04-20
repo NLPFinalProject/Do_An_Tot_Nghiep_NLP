@@ -7,7 +7,7 @@ import { catchError, map } from 'rxjs/operators';
 //   ReportInputFire: () => `${MookData}`
 // };
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ReportInputFileService {
   mookData = '../../../../../../../assets/mookdata/reportInputFile.json';

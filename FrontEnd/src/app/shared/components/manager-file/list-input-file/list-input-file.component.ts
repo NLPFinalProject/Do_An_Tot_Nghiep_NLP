@@ -8,13 +8,13 @@ import { RouterModule, Router } from '@angular/router';
 @Component({
   selector: 'app-list-input-file',
   templateUrl: './list-input-file.component.html',
-  styleUrls: ['./list-input-file.component.scss']
+  styleUrls: ['./list-input-file.component.scss'],
 })
 export class ListInputFileComponent implements OnInit {
   statusList = [
     { text: 'Chờ', value: 'Peding' },
     { text: 'Thành công', value: 'Sucess' },
-    { text: 'Thất bại', value: 'Error' }
+    { text: 'Thất bại', value: 'Error' },
   ];
   isvalid: boolean = false;
 
@@ -30,20 +30,20 @@ export class ListInputFileComponent implements OnInit {
   data = [
     {
       name: 'Hoàn thiện các giải pháp QLNN đối với các hoạt động tôn giáo ở Việt Nam trong thời kỳ đổi mới.docx',
-      status: 'Thất bại'
+      status: 'Thất bại',
     },
     {
       name: 'Quản lý nhà nước đối với tập đoàn kinh tế tư nhân ở Việt Nam hiện nay.pdf',
-      status: 'Chờ'
+      status: 'Chờ',
     },
     {
       name: 'Quản lý nhà nước về văn thư, lưu trữ.docx',
-      status: 'Thất bại'
+      status: 'Thất bại',
     },
     {
       name: 'Quản lý nhà nước về quy hoạch xây dựng nông thôn mới.docx',
-      status: 'Thành công'
-    }
+      status: 'Thành công',
+    },
   ];
   fileList: Array<object> = [];
   constructor(private messageService: MessageService, private fileService: FileService, private router: Router) {}
@@ -77,7 +77,7 @@ export class ListInputFileComponent implements OnInit {
       (this.listOfSearchName.length
         ? this.listOfSearchName.some((name: string) => item.name.indexOf(name) !== -1)
         : true);
-    const data = this.data.filter(item => filterFunc(item));
+    const data = this.data.filter((item) => filterFunc(item));
     // sort data
     if (this.sortName && this.sortValue) {
       this.displayData = data.sort((a, b) =>
@@ -158,7 +158,7 @@ export class ListInputFileComponent implements OnInit {
       setTimeout(() => {
         const dataFile = {
           name: file.file.name,
-          status: 'Thành công'
+          status: 'Thành công',
         };
         this.data.push(dataFile);
         // notify success
@@ -167,7 +167,7 @@ export class ListInputFileComponent implements OnInit {
         this.messageService.success('Thêm tệp tin thành công');
       }, 500);
     }, 10);
-    this.fileService.UploadFile(this.FileToUpload).subscribe(data => {
+    this.fileService.UploadFile(this.FileToUpload).subscribe((data) => {
       console.log(data);
     });
     // tslint:disable-next-line:semicolon
@@ -189,7 +189,7 @@ export class ListInputFileComponent implements OnInit {
         this.messageService.success('Thêm tệp tin thành công');
       }, 500);
     }, 10);*/
-    this.fileService.UploadFileList(this.ListFileToUpload).subscribe(data => {
+    this.fileService.UploadFileList(this.ListFileToUpload).subscribe((data) => {
       console.log(data);
     });
 

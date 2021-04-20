@@ -8,7 +8,7 @@ import { UserService } from '@../../../src/app/login/user-authenticate-service';
 @Component({
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.component.html',
-  styleUrls: ['./forgot-password.component.scss']
+  styleUrls: ['./forgot-password.component.scss'],
 })
 export class ForgotPasswordComponent extends AppComponentBase implements OnInit {
   errors = MessageError.Errors;
@@ -37,7 +37,7 @@ export class ForgotPasswordComponent extends AppComponentBase implements OnInit 
 
   submitForm(): void {
     var data = {
-      username: this.forgotPasswordForm.controls.email.value
+      username: this.forgotPasswordForm.controls.email.value,
     };
 
     console.log(data);
@@ -45,11 +45,11 @@ export class ForgotPasswordComponent extends AppComponentBase implements OnInit 
       this.forgotPasswordForm.controls[i].markAsDirty();
       this.forgotPasswordForm.controls[i].updateValueAndValidity();
     }
-    this.UserService.ForgotPassword(data).subscribe(data => {
+    this.UserService.ForgotPassword(data).subscribe((data) => {
       this.notificationService.success(MessageConstant.RegisterSucssec);
       this.isSend = true;
       setTimeout(() => {
-        this.route.queryParams.subscribe(params =>
+        this.route.queryParams.subscribe((params) =>
           this.router.navigate([params.redirect || RoutingConstant.Base], { replaceUrl: true })
         );
       }, 5000);
@@ -58,7 +58,7 @@ export class ForgotPasswordComponent extends AppComponentBase implements OnInit 
 
   createdFrom(): void {
     this.forgotPasswordForm = this.formBuilder.group({
-      email: [null, [Validators.required]]
+      email: [null, [Validators.required]],
     });
   }
 }

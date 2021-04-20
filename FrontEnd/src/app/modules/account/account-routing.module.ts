@@ -11,14 +11,14 @@ const routes: Routes = [
     component: AccountComponent,
     data: {
       title: extract('Thông tin tài khoản'),
-      urls: [{ title: 'Trang chính', url: '/' }, { title: 'Thông tin tài khoản' }]
-    }
-  }
+      urls: [{ title: 'Trang chính', url: '/' }, { title: 'Thông tin tài khoản' }],
+    },
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes), NzDropDownModule],
   exports: [RouterModule],
-  providers: []
+  providers: [],
 })
 export class AccountRoutingModule {}

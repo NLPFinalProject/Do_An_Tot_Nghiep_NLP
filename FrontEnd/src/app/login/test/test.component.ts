@@ -8,7 +8,7 @@ import { ScrollToService, ScrollToConfigOptions } from '@nicky-lenaers/ngx-scrol
 @Component({
   selector: 'app-test',
   templateUrl: './test.component.html',
-  styleUrls: ['./test.component.scss']
+  styleUrls: ['./test.component.scss'],
 })
 export class TestComponent implements OnInit {
   public data: string;
@@ -56,7 +56,7 @@ export class TestComponent implements OnInit {
       { id: 0, name: 'Tornado' },
       { id: 0, name: 'Tornado' },
       { id: 0, name: 'Tornado' },
-      { id: 0, name: 'Tornado' }
+      { id: 0, name: 'Tornado' },
     ];
     this.tdata;
     this.tdata = this.tempdata;
@@ -87,7 +87,7 @@ export class TestComponent implements OnInit {
     { id: 0, name: 'Tornado' },
     { id: 0, name: 'Tornado' },
     { id: 0, name: 'Tornado' },
-    { id: 0, name: 'Tornado' }
+    { id: 0, name: 'Tornado' },
   ];
 
   constructor(private viewportScroller: ViewportScroller) {}

@@ -18,14 +18,14 @@ const routes: Routes = [
       { path: 'forgot-password', component: ForgotPasswordComponent, data: { title: extract('Forgot Password') } },
       { path: 'reset-password', component: ResetPasswordComponent, data: { title: extract('Reset Password') } },
       { path: 'validate', component: ValidationComponent, data: { title: extract('Validate email code') } },
-      { path: 'fortest', component: TestComponent, data: { title: extract('test') } }
-    ]
-  }
+      { path: 'fortest', component: TestComponent, data: { title: extract('test') } },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: []
+  providers: [],
 })
 export class LoginRoutingModule {}

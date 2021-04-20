@@ -18,12 +18,12 @@ const MODULE = [
   RouterModule,
   NgZorroAntdModule,
   NzDropDownModule,
-  NzMenuModule
+  NzMenuModule,
 ];
 
 const COMPONENT = [HeaderComponent, ShellComponent];
 @NgModule({
   imports: [...MODULE],
-  declarations: [...COMPONENT, FooterComponent, BreadcrumbComponent, SidebarComponent]
+  declarations: [...COMPONENT, FooterComponent, BreadcrumbComponent, SidebarComponent],
 })
 export class ShellModule {}

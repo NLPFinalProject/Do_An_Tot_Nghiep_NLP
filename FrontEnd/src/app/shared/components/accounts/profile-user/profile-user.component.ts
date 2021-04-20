@@ -7,7 +7,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 @Component({
   selector: 'app-profile-user',
   templateUrl: './profile-user.component.html',
-  styleUrls: ['./profile-user.component.scss']
+  styleUrls: ['./profile-user.component.scss'],
 })
 export class ProfileUserComponent implements OnInit {
   validateForm: FormGroup;
@@ -39,7 +39,7 @@ export class ProfileUserComponent implements OnInit {
       phoneNumber: this.validateForm.value.phoneNumber,
 
       ngaySinh: this.validateForm.value.ngaySinh,
-      gioiTinh: this.validateForm.value.gioiTinh
+      gioiTinh: this.validateForm.value.gioiTinh,
       //captcha: [null, [Validators.required]],
     };
     //console.log(data);
@@ -50,12 +50,12 @@ export class ProfileUserComponent implements OnInit {
     console.log('data is');
     console.log(data);
     this.userService.updateUSer(data).subscribe(
-      data => {
+      (data) => {
         console.log('sucess');
         this.notification.success('Thành công', 'Đổi mật khẩu thành công');
         //     this.showErrorNotification(`${MessageConstant.LoginFailed}`);
       },
-      error => {
+      (error) => {
         console.log('Lỗi người dùng');
         this.notification.error('Thất bại', 'Đổi mật khẩu thất bại');
       }
@@ -97,7 +97,7 @@ export class ProfileUserComponent implements OnInit {
         emailOrganization: [this.data.EmailOrganization, [Validators.email]],
         phoneOrganization: [this.data.phonelOrganization],
         fullName: [this.data.name, [Validators.required]],
-        ngaySinh: [newDate, [Validators.required]]
+        ngaySinh: [newDate, [Validators.required]],
       });
     } else {
       this.validateForm = this.fb.group({
@@ -107,7 +107,7 @@ export class ProfileUserComponent implements OnInit {
         website: ['ACB', [Validators.required]],
         phoneOrganization: ['0123456789'],
         fullName: ['Nguyen Van A', [Validators.required]],
-        ngaySinh: ['1/1/2001', [Validators.required]]
+        ngaySinh: ['1/1/2001', [Validators.required]],
       });
     }
   }

@@ -6,7 +6,7 @@ import { UserService } from '@../../../src/app/login/user-authenticate-service';
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss']
+  styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent implements OnInit {
   constructor(
@@ -21,7 +21,7 @@ export class SidebarComponent implements OnInit {
   account() {
     console.log('account pass');
     let id = localStorage.getItem('username');
-    return this.userService.profile(id).subscribe(data => {
+    return this.userService.profile(id).subscribe((data) => {
       console.log(data);
       this.router.navigate(['account'], { replaceUrl: true, state: { data: data } });
     });

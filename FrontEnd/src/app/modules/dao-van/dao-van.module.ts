@@ -19,9 +19,9 @@ const MODULE = [CommonModule, DaoVanRoutingModule, NgZorroAntdModule, SharedModu
     ListFileSuccessComponent,
     DiffContentComponent,
     SectionDiffComponent,
-    ListFileDiffComponent
+    ListFileDiffComponent,
   ],
   imports: [...MODULE],
-  exports: [...COMPONENT]
+  exports: [...COMPONENT],
 })
 export class DaoVanModule {}
