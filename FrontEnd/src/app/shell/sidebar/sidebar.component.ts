@@ -9,7 +9,6 @@ import { UserService } from '@../../../src/app/login/user-authenticate-service';
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
-
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService,
@@ -18,8 +17,7 @@ export class SidebarComponent implements OnInit {
     private userService: UserService
   ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
   account() {
     console.log('account pass');
     let id = localStorage.getItem('username');

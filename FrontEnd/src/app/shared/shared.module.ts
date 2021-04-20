@@ -12,7 +12,7 @@ import { ErrorComponent } from './components/errors/error/error.component';
 const ACCOUNT = [ProfileUserComponent, ArticlesComponent];
 const MANAGER_FILE = [ListInputFileComponent];
 const COMPOENT = [LoaderComponent, ReportInputFileComponent, ErrorComponent];
-const MODULE = [CommonModule, NgZorroAntdModule, ReactiveFormsModule,NzNotificationModule];
+const MODULE = [CommonModule, NgZorroAntdModule, ReactiveFormsModule, NzNotificationModule];
 @NgModule({
   imports: [...MODULE],
   declarations: [...COMPOENT, ...ACCOUNT, ...MANAGER_FILE, ErrorComponent],

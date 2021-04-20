@@ -14,7 +14,12 @@ export class ProfileUserComponent implements OnInit {
 
   @Input() data: any;
   //@Input() userdata:any
-  constructor(private fb: FormBuilder, private router: Router, private userService: UserService,private notification:NzNotificationService) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private userService: UserService,
+    private notification: NzNotificationService
+  ) {
     console.log(this.data);
     //console.log(this.userdata);
   }
@@ -47,12 +52,12 @@ export class ProfileUserComponent implements OnInit {
     this.userService.updateUSer(data).subscribe(
       data => {
         console.log('sucess');
-        this.notification.success('Thành công',"Đổi mật khẩu thành công")
+        this.notification.success('Thành công', 'Đổi mật khẩu thành công');
         //     this.showErrorNotification(`${MessageConstant.LoginFailed}`);
       },
       error => {
         console.log('Lỗi người dùng');
-        this.notification.error('Thất bại',"Đổi mật khẩu thất bại");
+        this.notification.error('Thất bại', 'Đổi mật khẩu thất bại');
       }
     );
   }

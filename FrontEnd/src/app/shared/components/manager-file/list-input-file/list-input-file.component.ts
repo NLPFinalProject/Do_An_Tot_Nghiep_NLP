@@ -192,7 +192,7 @@ export class ListInputFileComponent implements OnInit {
     this.fileService.UploadFileList(this.ListFileToUpload).subscribe(data => {
       console.log(data);
     });
-   
+
     // tslint:disable-next-line:semicolon
   };
   invalid() {

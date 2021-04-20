@@ -31,15 +31,15 @@ export class ValidateResultComponent implements OnInit {
   public SelectedOption: number;
   public hitrate: any[];
   public trolling: boolean;
-  ListHitRate:any[];
-  public file1Name :any;
-  public ratio:any[];
-  HighestHitRate:any;
+  ListHitRate: any[];
+  public file1Name: any;
+  public ratio: any[];
+  HighestHitRate: any;
   ngOnInit() {
     //this.forgodTest();
     this.characterList1 = [];
     this.SelectedOption = 0;
-    this.ListHitRate=[];
+    this.ListHitRate = [];
     this.ratio = null;
     //this.characterList1 = ['kurogane yaiba', 'kurosaki ichigo', 'monkey D luffy', 'uzumaki naruto'];
     this.answer = {
@@ -105,7 +105,7 @@ export class ValidateResultComponent implements OnInit {
   }
   getFirstSentences() {
     if (this.data != null) {
-      this.file1Name=this.data.File1Name;
+      this.file1Name = this.data.File1Name;
       this.tempdata = [];
       let temp: {
         id: number;
@@ -127,7 +127,7 @@ export class ValidateResultComponent implements OnInit {
     private scrollToService: ScrollToService,
     private router: Router,
     private route: ActivatedRoute,
-    private fileService:FileService
+    private fileService: FileService
   ) {
     console.log(this.router.getCurrentNavigation());
     if (this.router.getCurrentNavigation().extras.state != null) {
@@ -168,9 +168,9 @@ export class ValidateResultComponent implements OnInit {
     //this.viewportScroller.scrollToAnchor(elementId);
   }
   triggerScrollTo(id: number) {
-    id = id-1;
+    id = id - 1;
     console.log(id);
-    
+
     let element = this.answer.ls3[id];
     console.log(element);
     this.ratio = element[3][0];
@@ -186,8 +186,8 @@ export class ValidateResultComponent implements OnInit {
     if (this.answer.ls3[id].length > 0) return true;
     else return false;
   }
- Comeback() {
-  this.router.navigate(['daovan'], { replaceUrl: true });
+  Comeback() {
+    this.router.navigate(['daovan'], { replaceUrl: true });
   }
   shouldHighlight(id: number) {
     /*if (this.answer.ls3[id].length > 0)
@@ -426,41 +426,34 @@ export class ValidateResultComponent implements OnInit {
     for (var i = 0; i < this.data.ListFile.length; i++) {
       temp = 0;
       for (var j = 0; j < this.data.ListFile[i].stt.length; j++) {
-        if (this.data.ListFile[i].stt[j][1] > 0) 
-        {
+        if (this.data.ListFile[i].stt[j][1] > 0) {
           temp = temp + 1;
-      
         }
       }
       countlist.push(temp);
       let totalrate = temp / this.answer.ls1.length;
       this.hitrate.push(totalrate * 100);
-      
     }
-   console.log('final result is');
-   console.log(this.hitrate);
-   let HighestHitRate = 0;
-   for(var i = 0; i < this.hitrate.length; i++)
-   {
-     if(this.hitrate[i]>=this.hitrate[HighestHitRate])
-     {
-       HighestHitRate = i;
-     }
-   }
-   
-   var result=
-   {
-     File1Name:this.file1Name,
-     name:this.data.ListFileName,
-     HitRate:this.hitrate,
-     Highest:HighestHitRate,
-     count:countlist,
-     id:localStorage.getItem('id')
-   }
-   
-   this.fileService.ExportResultToEmail(result).subscribe((data:any)=>
-   {
-     console.log('success');
-   })
+    console.log('final result is');
+    console.log(this.hitrate);
+    let HighestHitRate = 0;
+    for (var i = 0; i < this.hitrate.length; i++) {
+      if (this.hitrate[i] >= this.hitrate[HighestHitRate]) {
+        HighestHitRate = i;
+      }
+    }
+
+    var result = {
+      File1Name: this.file1Name,
+      name: this.data.ListFileName,
+      HitRate: this.hitrate,
+      Highest: HighestHitRate,
+      count: countlist,
+      id: localStorage.getItem('id')
+    };
+
+    this.fileService.ExportResultToEmail(result).subscribe((data: any) => {
+      console.log('success');
+    });
   }
 }

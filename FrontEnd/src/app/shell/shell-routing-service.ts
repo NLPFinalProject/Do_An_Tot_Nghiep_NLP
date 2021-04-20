@@ -16,10 +16,10 @@ export class FileService {
     return this.http.get(`${this.baseUrl}/api/file/test`);*/
     return this.http.get(`${this.baseUrl}/api/file/test2`);
   }
-  ExportResultToEmail(data:Object): Observable<Object> {
+  ExportResultToEmail(data: Object): Observable<Object> {
     /*console.log('there');
     return this.http.get(`${this.baseUrl}/api/file/test`);*/
-    return this.http.post(`${this.baseUrl}/api/mail-export/export-result`,data);
+    return this.http.post(`${this.baseUrl}/api/mail-export/export-result`, data);
   }
   UploadFile(file: File): Observable<Object> {
     const formData: FormData = new FormData();

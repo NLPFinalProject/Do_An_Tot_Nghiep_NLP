@@ -63,10 +63,10 @@ export class TeststepComponent implements OnInit {
       }
     }
   }
-  checkChoice2(value:string) {
+  checkChoice2(value: string) {
     console.log(value);
-   this.selectedOption = parseInt(value);
-   console.log(this.selectedOption);
+    this.selectedOption = parseInt(value);
+    console.log(this.selectedOption);
     //this.selectedOption=parseInt(this.selectedOption)
     switch (this.selectedOption) {
       case 1: {
@@ -75,20 +75,19 @@ export class TeststepComponent implements OnInit {
         this.nextstep();
         break;
       }
-      case 2:
-        {
-          let data = {
-            id: localStorage.getItem('id'),
-            filename1: localStorage.getItem('file'),
-            choice: this.selectedOption
-          };
-          this.fileService.checkPlagiasmUsingDatabase(data).subscribe((data:any)=>
-      {
-        console.log('data is');
+      case 2: {
+        let data = {
+          id: localStorage.getItem('id'),
+          filename1: localStorage.getItem('file'),
+          choice: this.selectedOption
+        };
+        this.fileService.checkPlagiasmUsingDatabase(data).subscribe((data: any) => {
+          console.log('data is');
           console.log(data);
           console.log('-----------');
-          this.router.navigate(['checkresult/result'], { replaceUrl: true, state: { data: data }})
-        })}
+          this.router.navigate(['checkresult/result'], { replaceUrl: true, state: { data: data } });
+        });
+      }
       case 3:
       case 4: {
         let id = localStorage.getItem('id');
@@ -155,15 +154,13 @@ export class TeststepComponent implements OnInit {
         // do not trigger navigation
         replaceUrl: true
       });
-      
-      
+
       /*this.router.navigate(['checkresult/step/3'], {
         // preserve the existing query params in the route
 
         // do not trigger navigation
         replaceUrl: true
       });*/
-      
     } else if (this.step == 3) {
       this.fileService.UploadFileList(this.ListFileToUpload).subscribe((data: any) => {
         console.log('hhhhh');

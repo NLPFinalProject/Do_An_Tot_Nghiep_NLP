@@ -17,7 +17,6 @@ import { LoginModule } from './login/login.module';
 import { ShellModule } from './shell/shell.module';
 import { VaildateResultModule } from './modules/validate-result/validate-result.module';
 
-
 @NgModule({
   imports: [
     BrowserModule,

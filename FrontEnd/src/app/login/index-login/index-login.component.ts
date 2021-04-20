@@ -114,7 +114,7 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
             }, 1000);
           } else {
             this.isLoading = false;
-            this.notificationService.error(value.toString()+"1");
+            this.notificationService.error(value.toString() + '1');
             this.loading = false;
           }
         },

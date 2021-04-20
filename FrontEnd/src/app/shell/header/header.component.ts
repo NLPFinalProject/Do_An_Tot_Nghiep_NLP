@@ -16,7 +16,6 @@ import { UserService } from '@../../../src/app/login/user-authenticate-service';
     `
   ]
 })
-
 export class HeaderComponent implements OnInit {
   menuHidden = true;
 
