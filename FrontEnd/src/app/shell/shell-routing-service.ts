@@ -49,6 +49,11 @@ export class FileService {
 
     return this.http.post(`${this.baseUrl}/api/file/final-check`, data);
   }
+  checkPlagiasmGetVersion(data: Object): Observable<Object> {
+    console.log('there');
+
+    return this.http.get(`${this.baseUrl}/api/file/test3`, data);
+  }
   UploadFileList(file: FileList): Observable<Object> {
     const formData: FormData = new FormData();
     var id = localStorage.getItem('id');

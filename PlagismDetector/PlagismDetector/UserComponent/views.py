@@ -116,8 +116,8 @@ def login(request):
     
     try:
         user = User.objects.get(username = request.data["username"])
-
-        if user.password == request.data["password"]:
+        
+        if user.check_password(request.data["password"]):
             if user.is_active == True:
                 users = UserSerializer(user)
                 return Response(users.data,status=status.HTTP_200_OK)

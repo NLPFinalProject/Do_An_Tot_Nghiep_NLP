@@ -8,7 +8,7 @@ class Document(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
 class DataDocument(models.Model):
-    DataDocumentName = models.CharField(max_length=200)
+    DataDocumentName = models.CharField(max_length=500)
     DataDocumentType = models.CharField(max_length=10)
     DataDocumentAuthor = models.ForeignKey(User, on_delete=models.CASCADE)
     DataDocumentFile = models.FileField(upload_to='DocumentFile/')
@@ -29,7 +29,7 @@ class DataDocumentFile(models.Model):
 
 class DataDocumentContent(models.Model):
     DataDocumentNo = models.ForeignKey(DataDocument, on_delete=models.CASCADE)
-    DataDocumentSentence = models.CharField(max_length=200)
+    DataDocumentSentence = models.CharField(max_length=500)
     DataDocumentSentenceLength = models.IntegerField(default=0)
     def __str__(self):
         return self.DataDocumentSentence

@@ -37,20 +37,21 @@ export class ValidateResultComponent implements OnInit {
   HighestHitRate: any;
   ngOnInit() {
     //this.forgodTest();
+
     this.characterList1 = [];
     this.SelectedOption = 0;
     this.ListHitRate = [];
     this.ratio = null;
-    //this.characterList1 = ['kurogane yaiba', 'kurosaki ichigo', 'monkey D luffy', 'uzumaki naruto'];
+
     this.answer = {
       ls1: null,
       ls2: null,
       ls3: null,
     };
 
-    this.getFirstSentences();
-    this.ShowResult(0);
     if (this.data != null) {
+      this.getFirstSentences();
+      this.ShowResult(0);
       console.log('escape success');
       this.createOptionList();
       console.log('this ls1 is');
@@ -127,13 +128,44 @@ export class ValidateResultComponent implements OnInit {
     private scrollToService: ScrollToService,
     private router: Router,
     private route: ActivatedRoute,
-    private fileService: FileService
+    private fileService: FileService,
+    private activatedRoute: ActivatedRoute
   ) {
-    console.log(this.router.getCurrentNavigation());
-    if (this.router.getCurrentNavigation().extras.state != null) {
-      this.data = this.router.getCurrentNavigation().extras.state.data;
-    }
-    this.trolling = false;
+    this.activatedRoute.queryParams.subscribe((params) => {
+      console.log('new file');
+      console.log(params);
+
+      if (params.filename1 != undefined) {
+        console.log(params.filename1);
+        console.log('true');
+        let temp = [];
+        temp.push(params.listfile);
+        let data = {
+          id: params.id,
+          filename1: params.filename1,
+          listfile: temp,
+          choice: 1,
+        };
+        console.log('data is');
+        console.log(data);
+        this.fileService.checkPlagiasm(data).subscribe((data: any) => {
+          console.log('new comer');
+
+          this.data = data;
+          this.trolling = false;
+          console.log(this.data);
+        });
+      } else {
+        console.log('false');
+        console.log(this.router.getCurrentNavigation());
+        if (this.router.getCurrentNavigation().extras.state != null) {
+          this.data = this.router.getCurrentNavigation().extras.state.data;
+          console.log(this.data);
+        }
+        this.trolling = false;
+      }
+      // Print the parameter to the console.
+    });
   }
 
   // get store number - the number of the current same line
@@ -172,7 +204,8 @@ export class ValidateResultComponent implements OnInit {
     console.log(id);
 
     let element = this.answer.ls3[id];
-    console.log(element);
+
+    console.log(this.ratio);
     this.ratio = element[3][0];
     if (element.length! > 0) {
       const config: ScrollToConfigOptions = {

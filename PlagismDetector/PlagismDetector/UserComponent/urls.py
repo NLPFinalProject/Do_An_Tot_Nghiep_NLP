@@ -19,7 +19,7 @@ urlpatterns = [
      url(r'SendMail',csrf_exempt(views.register)),
      
      url(r'^profile',views.GetProfile),
-     #url(r'^api/login',views.login),
+     #url(r'^login',views.login),
      url(r'^login', obtain_jwt_token),
      url(r'^refresh-token/', refresh_jwt_token),
      #url(r'^api/login',obtain_jwt_token),

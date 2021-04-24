@@ -110,7 +110,7 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [r'D:/study/PlagismDetector/PlagismDetector'],
+        'DIRS': [os.getcwd()+'/PlagismDetector/PlagismDetector'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

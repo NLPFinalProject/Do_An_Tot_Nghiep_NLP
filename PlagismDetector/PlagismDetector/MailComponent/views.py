@@ -39,7 +39,7 @@ def sendVerigicationMail(email):
     response = {'data' : None,'validCode' : number}
 
 def sendExportMail(data):
-    localsite = 'localhost:4200/checkresult/result'
+    localsite = 'http://localhost:4200/checkresult/result'
     print(data)
     linkfile = os.getcwd() + '/MailComponent/mail_template.html'
     dataname = data['name']
@@ -57,8 +57,8 @@ def sendExportMail(data):
         dicttmp['HitRate']=datahitrate[i]
         dicttmp['count']=datacount[i]
         link = localsite+'?filename1='+File1Name+'&listfile='+dataname[i]+'&id='+dataid
-        #dicttmp['link']=link
-        dicttmp['link']='http://google.com'
+        dicttmp['link']=link
+        #dicttmp['link']='localhost:/4200/daovan'
         tmp = dicttmp
         
         list.append(tmp)

@@ -35,7 +35,7 @@ from UserComponent.models import User
 #import cho tách câu
 import os
 import sys
-
+from collections import Counter
 sys.path.append(os.getcwd()+'\\polls\\preprocessing')
 #from .preprocessing import preprocessor as p
 # Create your views here.
@@ -109,6 +109,7 @@ def documentimportDatabase(request):
     ReportFileName2Sentence = []
     reportIdFile = []
     print(idStatistic)
+    fileName2=[]
     for idFile in idStatistic.items():
         print(idFile[0])
         if (countReport<1):
@@ -117,73 +118,81 @@ def documentimportDatabase(request):
             cursor.execute(queryRaw)
             fetchQuery = dictfetchall(cursor)
             fileName2Sentence = [a_dict["DataDocumentSentence"] for a_dict in fetchQuery]
-            result = ExportOrder4(fileName2Sentence, fileName1Sentence,70)
-            if (result[1]>=70 and countReport<1):
+            result = ExportOrder4(fileName2Sentence, fileName1Sentence,10)
+            if (result[1]>=10 and countReport<1):
                 countReport+=1
                 reportIdFile.append(idFile[0])
                 reportDataReadDoc.append(result[0])
                 ReportFileName2Sentence.append(fileName2Sentence)
-
+                queryRaw ="SELECT DataDocumentName FROM `filecomponent_datadocument` WHERE id="+str(idFile[0])+";"
+                print("=====",queryRaw)
+                cursor.execute(queryRaw)
+                fetchQuery = dictfetchall(cursor)
+                fileName2Name = [a_dict["DataDocumentName"] for a_dict in fetchQuery]
+                fileName2.append(fileName2Name)
     
     
     
-
+    myDict4=[]
     myDict = {}
     myDict2 = {}
-    myDict["file1"] = fileName1Sentence
+    myDict["File1Name"] = fileName1
     for i in range(countReport):
         mydic3={}
-        mydic3["list"+str(reportIdFile[i])]=ReportFileName2Sentence[i]
+        mydic3["data"]=ReportFileName2Sentence[i]
         mydic3["stt"]=reportDataReadDoc[i]
+        myDict4.append(mydic3)
         myDict2[str(reportIdFile[i])]=mydic3
     
-    # # report cac cau html
-    # dataReadDoc=[]
-    # for link in internetPage:
-    #     if(internetKeywordSearch.is_downloadable(link)):
-    #         #link_pdf.append(link)
-    #         file_pdf=internetKeywordSearch.download_document(link)
-    #         fName,lstSentence,lstLength = p.preprocess(file_pdf)
-    #         data = DataDocument(DataDocumentName=os.path.basename(file_pdf), DataDocumentAuthor_id=3,DataDocumentType="pdf", DataDocumentFile=file_pdf)
-    #         data.save()
-    #         dataReadDoc.append(lstSentence)
-    #         # length= len(lstSentence)
-    #         # for i in range(length):
-    #         #     c=data.datadocumentcontent_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=lstLength[i])
-    #         #     print(c)
+    # report cac cau html
+    dataReadDoc=[]
+    for link in internetPage:
+        if(internetKeywordSearch.is_downloadable(link)):
+            #link_pdf.append(link)
+            file_pdf=internetKeywordSearch.download_document(link)
+            fName,lstSentence,lstLength = p.preprocess(file_pdf)
+            data = DataDocument(DataDocumentName=os.path.basename(file_pdf), DataDocumentAuthor_id=userId,DataDocumentType="pdf", DataDocumentFile=file_pdf)
+            data.save()
+            dataReadDoc.append(lstSentence)
+            # length= len(lstSentence)
+            # for i in range(length):
+            #     c=data.datadocumentcontent_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=lstLength[i])
+            #     print(c)
             
-    #         os.remove(file_pdf)
-    #     else:
-    #         fName=os.path.basename(link)
-    #         lstSentence=internetKeywordSearch.crawl_web(link)
-    #         data = DataDocument(DataDocumentName=link, DataDocumentAuthor_id=3,DataDocumentType="internet", DataDocumentFile=link)
-    #         data.save()
-    #         dataReadDoc.append(lstSentence)
-    #         # length= len(lstSentence)
-    #         # for i in range(length):
-    #         #     c=data.datadocumentcontent_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=len(lstSentence[i]))
-    #         #     #print(c)
+            os.remove(file_pdf)
+        else:
+            fName=os.path.basename(link)
+            lstSentence=internetKeywordSearch.crawl_web(link)
+            data = DataDocument(DataDocumentName=link, DataDocumentAuthor_id=userId,DataDocumentType="internet", DataDocumentFile=link)
+            data.save()
+            dataReadDoc.append(lstSentence)
+            # length= len(lstSentence)
+            # for i in range(length):
+            #     c=data.datadocumentcontent_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=len(lstSentence[i]))
+            #     #print(c)
     
-    # #B2 trả json
-    # # result so sanh
-    # reportDataReadDoc=[]
-    # for i in range(len(dataReadDoc)):
-    #     result = ExportOrder2(fileName1Sentence, dataReadDoc[i],70)
-    #     reportDataReadDoc.append(result)
+    #B2 trả json
+    # result so sanh
+    reportDataReadDoc=[]
+    for i in range(len(dataReadDoc)):
+        result = ExportOrder(fileName1Sentence, dataReadDoc[i],70)
+        reportDataReadDoc.append(result)
 
-    # myDictHtml2 = {}
-    # myDict["file1"] = fileName1Sentence
-    # for i in range(len(internetPage)):
-    #     mydic3={}
-    #     mydic3["list"+internetPage[i]]=dataReadDoc[i]
-    #     mydic3["stt"]=reportDataReadDoc[i]
-    #     myDictHtml2[internetPage[i]]=mydic3
+    myDictHtml2 = []
+    fileName2.append(internetPage)
+    for i in range(len(internetPage)):
+        mydic3={}
+        mydic3["data"]=dataReadDoc[i]
+        mydic3["stt"]=reportDataReadDoc[i]
+        myDictHtml2.append(mydic3)
 
     #line length list
-    myDict["fileName2"]=myDict2
+    myDict["ListFileName"] = fileName2
+    myDict["ListFile"]=myDict4
+    print(myDict)
     # myDict["internet"]=myDictHtml2
     # print(connection.queries)
-    return render(request,'polls/output.html',{'data': myDict})
+    return Response(myDict, status=status.HTTP_200_OK)
 
 #import mới
 @api_view(('POST','GET'))
@@ -199,6 +208,7 @@ def documentimport2(request):
         fileName2 = request.data["listfile"]
         userId=int(request.data["id"])
     elif request.method =='GET':
+        print(request.GET)
         fileName1 = request.GET.get["filename1"]
         fileName2 = request.GET.get["listfile"]
         userId = int(request.GET.get["id"])
@@ -294,6 +304,7 @@ def documentimport2(request):
     print("===========",myDict)
     print("++++",dataReadDoc)
     print(connection.queries)
+    print(request.method)
     return Response(myDict, status=status.HTTP_200_OK)
 
 @api_view(('POST','GET'))
