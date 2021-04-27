@@ -43,7 +43,7 @@ def search_keyword(search):
     list_url.extend( Yahoo(search, userAgent))
     list_url.extend(Duckduckgo(search, userAgent))
     list_url.extend(Givewater(search, userAgent))
-    list_url.extend (Ecosia(search, userAgent))
+    # list_url.extend (Ecosia(search, userAgent))
     return list(dict.fromkeys(list_url))
 
 # download file downloadable such as: pdf, docx,...
@@ -56,11 +56,28 @@ def download_document(url):
 
 # crawl text from html website then preprocess and give output: list sentence after preprocessing.
 def crawl_web(url):
+    import platform
+    import ssl
+
+    # ...
+
+    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS)
+    ssl_context.verify_mode = ssl.CERT_REQUIRED
+    ssl_context.check_hostname = True
+    ssl_context.load_default_certs()
+
+    if platform.system().lower() == 'darwin':
+        import certifi
+        ssl_context.load_verify_locations(
+            cafile=os.path.relpath(certifi.where()),
+            capath=None,
+            cadata=None)
+
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)'
              ' Chrome/89.0.4389.114 Safari/537.36 Edg/89.0.774.68'}
     req=Request(url,headers=headers)
     html = urlopen(req).read()
-    soup = BeautifulSoup(html, features="html.parser")
+    soup = BeautifulSoup(html, features="html.parser", from_encoding="iso-8859-1")
 
     # kill all script and style elements
     for script in soup(["script", "style"]):

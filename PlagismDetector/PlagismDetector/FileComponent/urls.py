@@ -8,7 +8,7 @@ urlpatterns = [
     #url(r'^test2', views.documentimportTesting),
     url(r'^checkdatabase', csrf_exempt(views.documentimportDatabase)),
     url(r'^final-check', csrf_exempt(views.FinalCheck)),
-    
+    url(r'^checkinternet', csrf_exempt(views.documentimportInternet2)),
     url(r'^test3', csrf_exempt(views.documentimport2)),
     url(r'^test2', csrf_exempt(views.ff)),
     url(r'^test', views.test),
