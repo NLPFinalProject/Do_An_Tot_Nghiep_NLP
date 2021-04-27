@@ -90,6 +90,7 @@ export class TeststepComponent implements OnInit {
         break;
       }
       case 3:
+
       case 4: {
         let id = localStorage.getItem('id');
 
@@ -100,6 +101,7 @@ export class TeststepComponent implements OnInit {
         };
         console.log('hi');
         this.fileService.checkPlagiasmV2(data).subscribe((data: any) => {
+          console.log(data);
           this.router.navigate(['checkresult/result'], { replaceUrl: true, state: { data: data } });
         });
         break;
