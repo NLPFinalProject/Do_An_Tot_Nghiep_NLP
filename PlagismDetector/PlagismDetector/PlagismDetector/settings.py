@@ -74,8 +74,10 @@ REST_FRAMEWORK = {
     
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        
         #'rest_framework.permissions.AllowAny',
-        'rest_framework.authentication.BasicAuthentication',
+        #'rest_framework.authentication.BasicAuthentication',
     ),
     
 }
@@ -107,10 +109,12 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 "django.contrib.auth.backends.ModelBackend",
 "allauth.account.auth_backends.AuthenticationBackend"
 )"""
+dir = os.getcwd()+'/MailComponent/'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.getcwd()+'/PlagismDetector/PlagismDetector'],
+        'DIRS': [dir],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

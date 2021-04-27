@@ -17,6 +17,7 @@ from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import authentication_classes,permission_classes
 from rest_framework.authentication import TokenAuthentication
+from MailComponent import views as mail
 import random as rand
 
 @api_view([ 'POST'])
@@ -38,21 +39,15 @@ def register(request):
         EmailOrganization = request.data["emailOrganization"],
         phone = request.data["phoneNumber"],
         is_active = False,
-        DateOfBirth = request.data["ngaySinh"],)
-        number = CreateValidateCode()
-        email = EmailMessage(
-        'Hello',
-        'this is a confirmnation mail, please enter the code below'+str(number),
-        'kaitouthuan@gmail.com',
-        [user.username], 
-        headers={'Message-ID': 'foo'},)
-        email.send()
+        DateOfBirth = request.data["ngaySinh"])
+        number = mail.sendVerificationMail(request.data["email"])
         user.set_password(user.password)
         user.save()
         users = UserSerializer(user)
         users.data.key = '1243'
         print(users.data)
-        response = {'data' : users.data,'validCode' : '1243'}
+        print(number)
+        response = {'data' : users.data,'validCode' : number}
         return JsonResponse(response,status = status.HTTP_200_OK)
     #else:
         
@@ -61,20 +56,83 @@ def register(request):
     
         #return HttpResponse(status=status.HTTP_204_NO_CONTENT)
         # In order to serialize objects, we must set 'safe=False'
+@api_view([ 'POST','GET','PUT'])
+def APIUser(request):
+    #post user = save user with user
+    if request.method =='POST':
+    
+        try:
+            user = User.objects.get(username = request.data["email"])
+            content = {'data': 'username is existed'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            
+        except ObjectDoesNotExist:
+            print(request.data["phoneNumber"])
+            user = User.objects.create(username = request.data["email"],
+            password = request.data["password"],
+            name = request.data["fullName"],
+            EmailOrganization = request.data["emailOrganization"],
+            phone = request.data["phoneNumber"],
+            is_active = False,
+            DateOfBirth = request.data["ngaySinh"],)
+            number = CreateValidateCode()
+            user.set_password(user.password)
+            user.save()
+            users = UserSerializer(user)
+            print(users.data)
+            response = {'data' : users.data,'validCode' : number}
+            return JsonResponse(response,status = status.HTTP_200_OK)
+        
+            #return HttpResponse(status=status.HTTP_200_OK)
+        #get user = get user based on id
+    elif request.method == 'GET':
+        try:
+            #if get user successfull
+            user = User.objects.get(username = request.data["id"])
+            return JsonResponse(user,status=status.HTTP_200_OK)
+        #in case we don't have any user match the request
+        except ObjectDoesNotExist:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+        #put user = change user profile
+    elif request.method == 'PUT':
+        try:
+            user = User.objects.get(username = request.PUT["email"])
+            #password = request.data["password"],
+            user.name = request.PUT["fullName"],
+            user.EmailOrganization = request.PUT["emailOrganization"],
+            user.phone = request.PUT["phoneNumber"],
+            user.DateOfBirth = request.PUT["ngaySinh"]
+            
+            #user.set_password(user.password)
+            user.save()
+            users = UserSerializer(user)
+            print(users.data)
+            response = {'data' : users.data}
+            return JsonResponse(response,status = status.HTTP_200_OK)
+        except ObjectDoesNotExist:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+        
+
 
 @api_view([ 'POST'])
 def ActivateUser(request):
     #if(request.data not None)
+    print(request.data)
+    userinfo =  request.data["userinfo"]
+    print(request.data['confirmpassword'])
+    print( request.data['valicode'])
+    print(type(request.data['valicode']))
+    print(type(request.data['confirmpassword']))
+    if request.data['confirmpassword'] == str(request.data['valicode']):
+        user = User.objects.get(username = userinfo['username'])
+        print(user.username)
+        user.is_active = True
+        user.active = True
+        user.save()
     
-    
-    user = User.objects.get(username = request.data["username"])
-    print(user.username)
-    user.is_active = True
-    user.active = True
-    user.save()
-   
-    return HttpResponse(status=status.HTTP_200_OK)
-
+        return HttpResponse(status=status.HTTP_200_OK)
+    else:
+        return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
 @api_view([ 'POST'])
 def ResetPassword(request):
     #if(request.data not None)
@@ -95,7 +153,8 @@ def ForgetPassword(request):
     
     user = User.objects.get(username = request.data["username"])
     print(user.username)
-    user.password = '12543'
+    
+    user.set_password('12543')
     user.save()
     email = EmailMessage(
     'Hello,Your new password is now 12543',

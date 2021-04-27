@@ -11,7 +11,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 })
 export class ProfileUserComponent implements OnInit {
   validateForm: FormGroup;
-
+  dateFormat = 'dd/MM/yyyy';
   @Input() data: any;
   //@Input() userdata:any
   constructor(
@@ -61,9 +61,9 @@ export class ProfileUserComponent implements OnInit {
       }
     );
   }
-  updateUserData() {
+  /*updateUserData() {
     this.submitForm();
-  }
+  }*/
   Clicked() {
     console.log('yeah here I clicked');
     this.router.navigate(['reset-password'], { replaceUrl: true });
@@ -97,7 +97,7 @@ export class ProfileUserComponent implements OnInit {
         emailOrganization: [this.data.EmailOrganization, [Validators.email]],
         phoneOrganization: [this.data.phonelOrganization],
         fullName: [this.data.name, [Validators.required]],
-        ngaySinh: [newDate, [Validators.required]],
+        ngaySinh: [this.data.DateOfBirth, [Validators.required]],
       });
     } else {
       this.validateForm = this.fb.group({

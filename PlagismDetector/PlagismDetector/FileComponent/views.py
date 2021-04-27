@@ -476,6 +476,8 @@ def documentimport(request):
 #upload 1 file
 @api_view(('POST',))
 def uploadDoc(request):
+    print('user is')
+    print(request.user)
     content = None
     if request.method=='POST':
         print(request.data)

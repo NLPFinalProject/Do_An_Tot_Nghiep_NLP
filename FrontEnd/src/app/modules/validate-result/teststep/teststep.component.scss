@@ -3,14 +3,26 @@ div.container {
 
   align-items: center;
 }
-#center {
+.center {
   align-items: center;
+  font-family: "Times New Roman", Times, serif;
+
+  font-size: 16px;
 }
 .file {
   opacity: 0;
   width: 0.1px;
   height: 0.1px;
   position: absolute;
+}
+.inside-item {
+  text-align: center;
+}
+.file-input {
+  text-align: center;
+}
+.material-icons {
+  font-size: 30px;
 }
 .file-input label {
   display: block;

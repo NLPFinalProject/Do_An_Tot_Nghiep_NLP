@@ -45,15 +45,22 @@ export class ForgotPasswordComponent extends AppComponentBase implements OnInit 
       this.forgotPasswordForm.controls[i].markAsDirty();
       this.forgotPasswordForm.controls[i].updateValueAndValidity();
     }
-    this.UserService.ForgotPassword(data).subscribe((data) => {
-      this.notificationService.success(MessageConstant.RegisterSucssec);
-      this.isSend = true;
-      setTimeout(() => {
-        this.route.queryParams.subscribe((params) =>
-          this.router.navigate([params.redirect || RoutingConstant.Base], { replaceUrl: true })
-        );
-      }, 5000);
-    });
+    this.UserService.ForgotPassword(data).subscribe(
+      (data) => {
+        this.notificationService.success(MessageConstant.RegisterSucssec);
+        this.isSend = true;
+        setTimeout(() => {
+          this.route.queryParams.subscribe((params) =>
+            this.router.navigate([params.redirect || RoutingConstant.Base], { replaceUrl: true })
+          );
+        }, 5000);
+      },
+      (error) => {
+        this.errors = error;
+        //this.notificationService.error("Tài khoản hoặc mật khẩu không chính xác");
+        this.showErrorNotification(`${MessageConstant.LoginFailed}`);
+      }
+    );
   }
 
   createdFrom(): void {

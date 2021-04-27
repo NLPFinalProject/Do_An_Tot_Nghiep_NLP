@@ -35,6 +35,7 @@ export class ValidateResultComponent implements OnInit {
   public file1Name: any;
   public ratio: any[];
   HighestHitRate: any;
+  public params: any;
   ngOnInit() {
     //this.forgodTest();
 
@@ -48,8 +49,29 @@ export class ValidateResultComponent implements OnInit {
       ls2: null,
       ls3: null,
     };
+    if (this.params != undefined) {
+      console.log(this.params.filename1);
+      console.log('true');
+      let temp = [];
+      temp.push(this.params.listfile);
+      let data = {
+        id: this.params.id,
+        filename1: this.params.filename1,
+        listfile: temp,
+        choice: 1,
+      };
+      console.log('data is');
+      console.log(data);
+      this.fileService.checkPlagiasm(data).subscribe((data: any) => {
+        this.data = data;
+        this.trolling = false;
 
-    if (this.data != null) {
+        this.getFirstSentences();
+
+        this.ShowResult(0);
+        this.createOptionList();
+      });
+    } else if (this.data != null) {
       this.getFirstSentences();
       this.ShowResult(0);
       console.log('escape success');
@@ -57,6 +79,7 @@ export class ValidateResultComponent implements OnInit {
       console.log('this ls1 is');
       console.log(this.answer.ls1);
     } else {
+      console.log('not really');
       this.ChangeOption();
     }
   }
@@ -134,28 +157,8 @@ export class ValidateResultComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe((params) => {
       console.log('new file');
       console.log(params);
-
-      if (params.filename1 != undefined) {
-        console.log(params.filename1);
-        console.log('true');
-        let temp = [];
-        temp.push(params.listfile);
-        let data = {
-          id: params.id,
-          filename1: params.filename1,
-          listfile: temp,
-          choice: 1,
-        };
-        console.log('data is');
-        console.log(data);
-        this.fileService.checkPlagiasm(data).subscribe((data: any) => {
-          console.log('new comer');
-
-          this.data = data;
-          this.trolling = false;
-          console.log(this.data);
-        });
-      } else {
+      this.params = params;
+      if (params.filename1 == undefined) {
         console.log('false');
         console.log(this.router.getCurrentNavigation());
         if (this.router.getCurrentNavigation().extras.state != null) {

@@ -14,7 +14,7 @@ import { UserService } from '@../../../src/app/login/user-authenticate-service';
   templateUrl: './validation.component.html',
   styleUrls: ['./validation.component.scss'],
 })
-export class ValidationComponent implements OnInit {
+export class ValidationComponent extends AppComponentBase implements OnInit {
   version: string = environment.version;
   error: string;
   validateForm: FormGroup;
@@ -37,7 +37,7 @@ export class ValidationComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private UserService: UserService
   ) {
-    //super(injector);
+    super(injector);
     this.createForm();
     this.loading = true;
 
@@ -69,12 +69,19 @@ export class ValidationComponent implements OnInit {
     if (this.userinfo == null) {
       console.log('there is nothing we can do');
     } else {
-      var data = {};
-      data = this.userinfo;
       console.log(data);
+      console.log(this.validateForm.value.username);
+      console.log(this.validateForm);
+      var data = {
+        valicode: this.validCode,
+        userinfo: this.userinfo,
+        confirmpassword: this.validateForm.value.username,
+      };
+      //data = this.userinfo;
+
       this.UserService.ActivateUser(data).subscribe(
         //data=> {console.log(data)};
-        (data) => {
+        (data: any) => {
           console.log('we success');
           console.log(data);
           //this.notificationService.success(MessageConstant.RegisterSucssec);
@@ -83,6 +90,9 @@ export class ValidationComponent implements OnInit {
             this.router.navigate(['login'], { replaceUrl: true });
           }, 1000);
           //this.notificationService.warning(MessageConstant.LoginFailed);
+        },
+        (error) => {
+          this.notificationService.error('Bạn đa nhập sai mã xác thực, vui lòng thử lại');
         }
       );
     }

@@ -79,7 +79,7 @@ export class ResetPasswordComponent extends AppComponentBase implements OnInit {
       //userId: [null, [Validators.required]],
       password: [null, [Validators.required]],
       checkPassword: [null, [Validators.required, this.confirmationValidator]],
-      recheckPassword: [null, [Validators.required, this.confirmationValidator]],
+      recheckPassword: [null, [Validators.required]],
     });
   }
 }
