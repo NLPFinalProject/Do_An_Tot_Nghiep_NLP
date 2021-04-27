@@ -22,7 +22,7 @@
                 </div>
               </div>
             </td>
-            <div style="width: 40px">Tỉ lệ {{ ratio }}%</div>
+            <div style="width: 100px; text-align: center">Tỉ lệ {{ ratio }}%</div>
             <td>
               <div contenteditable="true" id="ex2">
                 <div class="inlinetable" *ngFor="let temp of answer.ls2">
@@ -43,6 +43,7 @@
         <div *ngIf="trolling == false">
           <tr>
             <td><div contenteditable="true" id="ex1"></div></td>
+            <div style="width: 100px; text-align: center">Tỉ lệ</div>
             <td>
               <div contenteditable="true" id="ex2"></div>
             </td>
@@ -50,6 +51,11 @@
         </div>
       </tbody>
     </table>
+    <div class="autocenter">
+      <a id="previous" (click)="scrollPrevious()">Trước</a>
+      &nbsp;&nbsp;
+      <a id="next" (click)="scrollNext()">Sau</a>
+    </div>
     <button nz-button nzType="primary" nzShape="omitted" class="autocenter" (click)="ExportEmail()">
       Xuất kết quả ra email
     </button>

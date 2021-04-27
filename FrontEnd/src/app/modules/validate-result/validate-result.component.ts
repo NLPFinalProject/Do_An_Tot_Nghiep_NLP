@@ -20,8 +20,8 @@ export class ValidateResultComponent implements OnInit {
   public data: any;
   public tdata: any;
   private tempdata: any;
-  private currentId: string;
-  private StoreNumber: number;
+  public currentId: number;
+  public StoreNumber: number;
   public characterList1: any[];
   public characterList2: any[];
   public listchar: any[];
@@ -43,13 +43,15 @@ export class ValidateResultComponent implements OnInit {
     this.SelectedOption = 0;
     this.ListHitRate = [];
     this.ratio = null;
-
+    this.StoreNumber = 0;
+    this.currentId = -1;
     this.answer = {
       ls1: null,
       ls2: null,
       ls3: null,
     };
-    if (this.params != undefined) {
+
+    if (this.params.filename1 != undefined) {
       console.log(this.params.filename1);
       console.log('true');
       let temp = [];
@@ -172,25 +174,26 @@ export class ValidateResultComponent implements OnInit {
   }
 
   // get store number - the number of the current same line
-  public getCurrentStoreNumber() {
-    return this.StoreNumber;
-  }
-  // get the current line id
-  public getCurrentId() {
-    return this.currentId;
-  }
-  public tranformCurrentId(id: string, number: string) {
-    if (id == this.currentId) this.tranformCurrentId(id, number);
-    else {
-      this.currentId = id;
-      this.StoreNumber = 0;
-    }
-  }
-  //transform store number to suit the number of the same line
-  public TransformMultipleId(str: string, length: number) {
-    if (length == 1) return str + '-' + 1;
-    else return str + '-' + (this.StoreNumber + 1);
-  }
+  // public getCurrentStoreNumber() {
+  //   return this.StoreNumber;
+  // }
+  // // get the current line id
+  // public getCurrentId() {
+  //   return this.currentId;
+  // }
+  // public tranformCurrentId(id: string, number: string) {
+  //   if (id == this.currentId)
+  //     this.tranformCurrentId(id, number);
+  //   else {
+  //     this.currentId = id;
+  //     this.StoreNumber = 0;
+  //   }
+  // }
+  // //transform store number to suit the number of the same line
+  // public TransformMultipleId(str: string, length: number) {
+  //   if (length == 1) return str + '-' + 1;
+  //   else return str + '-' + (this.StoreNumber + 1);
+  // }
   public onClick(elementId: string): void {
     console.log('here I can');
 
@@ -205,11 +208,16 @@ export class ValidateResultComponent implements OnInit {
   triggerScrollTo(id: number) {
     id = id - 1;
     console.log(id);
+    if (this.currentId != id) {
+      this.currentId = id;
+      this.StoreNumber = 0;
+    }
 
     let element = this.answer.ls3[id];
 
     console.log(this.ratio);
-    this.ratio = element[3][0];
+    this.ratio = element[3][0].toFixed(2);
+    this.currentId = id;
     if (element.length! > 0) {
       const config: ScrollToConfigOptions = {
         target: element[2][0],
@@ -217,6 +225,42 @@ export class ValidateResultComponent implements OnInit {
 
       this.scrollToService.scrollTo(config);
     }
+  }
+  triggerScrollToV2(id: number, datavalue: number) {
+    if (id <= 0) {
+      return;
+    } else {
+      id = id - 1;
+      console.log(id);
+      if (datavalue > 0) {
+        this.StoreNumber = this.StoreNumber + 1;
+      }
+      if (datavalue < 0) {
+        this.StoreNumber = this.StoreNumber - 1;
+      }
+
+      let element = this.answer.ls3[id];
+      console.log(element);
+      if ((this.StoreNumber >= element[3].length && datavalue > 0) || (this.StoreNumber <= 0 && datavalue < 0)) return;
+      else {
+        console.log(this.ratio);
+        this.ratio = element[3][this.StoreNumber].toFixed(2);
+        this.currentId = id;
+        if (element.length! > 0) {
+          const config: ScrollToConfigOptions = {
+            target: element[2][this.StoreNumber],
+          };
+
+          this.scrollToService.scrollTo(config);
+        }
+      }
+    }
+  }
+  scrollPrevious() {
+    this.triggerScrollToV2(this.currentId, -1);
+  }
+  scrollNext() {
+    this.triggerScrollToV2(this.currentId, 1);
   }
   checkline(id: number) {
     if (this.answer.ls3[id].length > 0) return true;

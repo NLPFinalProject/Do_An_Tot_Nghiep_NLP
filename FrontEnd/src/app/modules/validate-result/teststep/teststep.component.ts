@@ -87,6 +87,7 @@ export class TeststepComponent implements OnInit {
           console.log('-----------');
           this.router.navigate(['checkresult/result'], { replaceUrl: true, state: { data: data } });
         });
+        break;
       }
       case 3:
       case 4: {
@@ -139,13 +140,17 @@ export class TeststepComponent implements OnInit {
     //check which step it is
     if (this.step == 1) {
       this.step = this.step + 1;
-      this.uploadFile();
-      this.isvalid = false;
-      this.router.navigate(['checkresult/step/2'], {
-        // preserve the existing query params in the route
+      this.fileService.UploadFile(this.FileToUpload).subscribe((data: string) => {
+        console.log('data is');
 
-        // do not trigger navigation
-        replaceUrl: true,
+        localStorage.setItem('file', data);
+        this.isvalid = false;
+        this.router.navigate(['checkresult/step/2'], {
+          // preserve the existing query params in the route
+
+          // do not trigger navigation
+          replaceUrl: true,
+        });
       });
     } else if (this.step == 2) {
       this.router.navigate(['checkresult/step/3'], {
@@ -168,13 +173,14 @@ export class TeststepComponent implements OnInit {
         let choice = parseInt(localStorage.getItem('choice'));
         let filename1 = localStorage.getItem('file');
         this.fileList = data.data;
+        console.log(data);
         let tempdata = {
           id: id,
           filename1: filename1,
           listfile: this.fileList,
           choice: choice,
         };
-
+        console.log(tempdata);
         this.fileService.checkPlagiasm(tempdata).subscribe((data: any) => {
           console.log('data is');
           console.log(data);
@@ -189,65 +195,13 @@ export class TeststepComponent implements OnInit {
     console.log('welcome');
     console.log(file.name);
     console.log(file);
-    /*setTimeout(() => {
-    file.onProgress({ percent: 50 });
-    setTimeout(() => {
-      const dataFile = {
-        name: file.file.name,
-        status: 'Thành công'
-      };
-      this.data.push(dataFile);
-      // notify success
-      file.onSuccess();
-      this.displayData = [...this.data];
-      this.messageService.success('Thêm tệp tin thành công');
-    }, 500);
-  }, 10);*/
+
     // tslint:disable-next-line:semicolon
     this.fileService.UploadFile(file);
   };
   uploadFile = () => {
     console.log('welcome');
-    /*console.log(file.name);
-  console.log(file);
-  this.FileToUpload = file;*/
 
-    /*setTimeout(() => {
-    file.onProgress({ percent: 50 });
-    setTimeout(() => {
-      const dataFile = {
-        name: file.file.name,
-        status: 'Thành công'
-      };
-      this.data.push(dataFile);
-      // notify success
-      file.onSuccess();
-      this.displayData = [...this.data];
-      this.messageService.success('Thêm tệp tin thành công');
-    }, 500);
-  }, 10);*/
-    this.fileService.UploadFile(this.FileToUpload).subscribe((data: string) => {
-      console.log('data is');
-
-      localStorage.setItem('file', data);
-    });
-    // tslint:disable-next-line:semicolon
-  };
-  uploadFileList = () => {
-    /*setTimeout(() => {
-    file.onProgress({ percent: 50 });
-    setTimeout(() => {
-      const dataFile = {
-        name: file.file.name,
-        status: 'Thành công'
-      };
-      this.data.push(dataFile);
-      // notify success
-      file.onSuccess();
-      this.displayData = [...this.data];
-      this.messageService.success('Thêm tệp tin thành công');
-    }, 500);
-  }, 10);*/
     this.fileService.UploadFileList(this.ListFileToUpload).subscribe((data: any) => {
       console.log('hhhhh');
 
@@ -257,17 +211,6 @@ export class TeststepComponent implements OnInit {
     // tslint:disable-next-line:semicolon
   };
 
-  /*handleChange(info: UploadChangeParam): void {
-  this.uploadFileList(null);
-  if (info.file.status !== 'uploading') {
-    console.log(info.file, info.fileList);
-  }
-  if (info.file.status === 'done') {
-    this.msg.success(`${info.file.name} file uploaded successfully`);
-  } else if (info.file.status === 'error') {
-    this.msg.error(`${info.file.name} file upload failed.`);
-  }
-}*/
   handleChangeFile(file: FileList): void {
     console.log('hi there');
     this.FileToUpload = file.item(0);
