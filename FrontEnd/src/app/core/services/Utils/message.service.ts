@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NzMessageService } from 'ng-zorro-antd';
+import { NzMessageService, UploadFile } from 'ng-zorro-antd';
 import { Subject } from 'rxjs';
 
 @Injectable()

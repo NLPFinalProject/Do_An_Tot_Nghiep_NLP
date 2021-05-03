@@ -8,7 +8,7 @@ describe('IndexLoginComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [IndexLoginComponent]
+      declarations: [IndexLoginComponent],
     }).compileComponents();
   }));
 

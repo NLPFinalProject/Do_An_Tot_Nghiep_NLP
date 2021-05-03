@@ -13,7 +13,7 @@ const log = new Logger('Login');
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent extends AppComponentBase implements OnInit {
   isLoading = false;

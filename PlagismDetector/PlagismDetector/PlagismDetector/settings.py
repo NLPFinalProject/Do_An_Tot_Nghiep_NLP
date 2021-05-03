@@ -11,10 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-<<<<<<< HEAD
 from datetime import timedelta
-=======
->>>>>>> branch-3--database
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -67,6 +64,9 @@ CORS_ORIGIN_WHITELIST = (
 
 )
 MEDIA_ROOT = os.path.join(BASE_DIR, 'DEF')
+TEMPLATE_DIRS = (
+    os.path.join(BASE_DIR ),
+)
 
 MEDIA_URL = '/DEF/'
 REST_FRAMEWORK = {
@@ -74,11 +74,7 @@ REST_FRAMEWORK = {
     
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-       
-        'rest_framework.authentication.BasicAuthentication',
-    ),
-    
-}
+
 CSRF_COOKIE_SECURE = False
 # JWT settings
 AUTH_USER_MODEL = 'UserComponent.User'
@@ -86,7 +82,6 @@ JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True,
     'JWT_EXPIRATION_DELTA': timedelta(days=2),
 }
-MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -101,15 +96,18 @@ REST_USE_JWT = True
 SITE_ID = 1
 
 ACCOUNT_EMAIL_VERIFICATION = 'none'
+"django.contrib.auth.backends.ModelBackend",
+"allauth.account.auth_backends.AuthenticationBackend"
+)"""
+dir = os.getcwd()+'/MailComponent/'
 
 AUTHENTICATION_BACKENDS = (
-"django.contrib.auth.backends.ModelBackend",
 "allauth.account.auth_backends.AuthenticationBackend"
 )
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [dir],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -132,7 +130,7 @@ WSGI_APPLICATION = 'PlagismDetector.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'test2',
+        'NAME': 'test4',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': '127.0.0.1',

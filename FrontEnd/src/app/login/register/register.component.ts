@@ -5,11 +5,11 @@ import { AppComponentBase, I18nService } from '@app/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MessageConstant } from '@app/shared';
 import { HttpClient } from '@angular/common/http';
-import {UserService} from '@../../../src/app/login/user-authenticate-service'
+import { UserService } from '@../../../src/app/login/user-authenticate-service';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent extends AppComponentBase implements OnInit {
   errors = MessageError.Errors;
@@ -17,6 +17,7 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
   passwordVisible = false;
   checkPasswordVisible = false;
   isLoading = true;
+  dateFormat = 'dd/MM/yyyy';
 
   constructor(
     injector: Injector,
@@ -24,7 +25,7 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private i18nService: I18nService,
-    private UserService:UserService,
+    private UserService: UserService
   ) {
     super(injector);
   }
@@ -64,57 +65,52 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
     console.log(this.registerForm.controls.password.value);
 
     for (const i in this.registerForm.controls) {
-     
       this.registerForm.controls[i].markAsDirty();
       this.registerForm.controls[i].updateValueAndValidity();
-      
     }
-    
-    console.log(this.registerForm.controls.email.value);
-    // this here will send email
-    var data = 
-    {
-      email : this.registerForm.controls.email.value,
-      emailOrganization: this.registerForm.controls.emailOrganization.value,
-      organization: this.registerForm.controls.organization.value,
-      address: this.registerForm.controls.address.value,
-      phoneOrganization: this.registerForm.controls.phoneOrganization.value,
-     
-      fullName: this.registerForm.controls.fullName.value,
-      userId: this.registerForm.controls.userId.value,
-      password: this.registerForm.controls.password.value,
-     
-      phoneNumber: this.registerForm.controls.phoneNumber.value,
-     
-      ngaySinh: this.registerForm.controls.ngaySinh.value,
-      gioiTinh: this.registerForm.controls.gioiTinh.value,
-      //captcha: [null, [Validators.required]],
-      
 
+    if (this.registerForm.controls.password.value.length < 6)
+      this.notificationService.warning('Mật khẩu không được ít hơn 6 sử cái');
+    else {
+      // this here will send email
+      var data = {
+        email: this.registerForm.controls.email.value,
+        emailOrganization: this.registerForm.controls.emailOrganization.value,
+        organization: this.registerForm.controls.organization.value,
+        address: this.registerForm.controls.address.value,
+        phoneOrganization: this.registerForm.controls.phoneOrganization.value,
 
+        fullName: this.registerForm.controls.fullName.value,
+        userId: this.registerForm.controls.userId.value,
+        password: this.registerForm.controls.password.value,
+
+        phoneNumber: this.registerForm.controls.phoneNumber.value,
+
+        ngaySinh: this.registerForm.controls.ngaySinh.value,
+        gioiTinh: this.registerForm.controls.gioiTinh.value,
+        //captcha: [null, [Validators.required]],
+      };
+
+      console.log(data);
+      this.UserService.register(data).subscribe(
+        //data=> {console.log(data)};
+        (data: any) => {
+          console.log('we success');
+          if (data.data != 'username is existed') {
+          }
+          console.log(data);
+          this.notificationService.success(MessageConstant.RegisterSucssec);
+          setTimeout(() => {
+            //this.router.navigate(['validate'], { replaceUrl: true })
+            this.router.navigate(['validate'], { replaceUrl: true, state: { active: data } });
+          }, 1000);
+          //this.notificationService.warning(MessageConstant.LoginFailed);
+        },
+        (error) => {
+          this.notificationService.error('Tài khoản đã bị được sử dụng');
+        }
+      );
     }
-    console.log(data);
-    this.UserService.SendEmail(data)
-    
-    .subscribe(
-      //data=> {console.log(data)};
-      data=>{
-        console.log("we success");
-        console.log(data);
-        this.notificationService.success(MessageConstant.RegisterSucssec);
-        setTimeout(() => {
-          //this.router.navigate(['validate'], { replaceUrl: true })
-          this.router.navigate(['validate'], { replaceUrl: true,state:{active: data} })
-        
-        }, 1000);
-        //this.notificationService.warning(MessageConstant.LoginFailed);
-        
-      }
-     
-
-     );
-  
-    
   }
 
   createdFrom(): void {
@@ -133,7 +129,7 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
       ngaySinh: [null, [Validators.required]],
       gioiTinh: [true],
       //captcha: [null, [Validators.required]],
-      agree: [false]
+      agree: [false],
     });
   }
 }

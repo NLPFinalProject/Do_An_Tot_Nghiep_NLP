@@ -17,9 +17,6 @@ from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import authentication_classes,permission_classes
 from rest_framework.authentication import TokenAuthentication
-import random as rand
-
-@api_view([ 'POST'])
 #@permission_classes ( (AllowAny, ))
 
 @csrf_exempt
@@ -27,32 +24,26 @@ def register(request):
     
     try:
         user = User.objects.get(username = request.data["email"])
-        content = {'please move along': 'have the same username'}
-        return Response(content, status=status.HTTP_204_NO_CONTENT)
+        content = {'data': 'username is existed'}
+        return Response(content, status=status.HTTP_400_BAD_REQUEST)
         
     except ObjectDoesNotExist:
-        
+        print(request.data["phoneNumber"])
         user = User.objects.create(username = request.data["email"],
         password = request.data["password"],
         name = request.data["fullName"],
         EmailOrganization = request.data["emailOrganization"],
         phone = request.data["phoneNumber"],
         is_active = False,
-        DateOfBirth = request.data["ngaySinh"],)
-        number = CreateValidateCode()
-        email = EmailMessage(
-        'Hello',
-        'this is a confirmnation mail, please enter the code below'+str(number),
-        'kaitouthuan@gmail.com',
-        [user.username], 
-        headers={'Message-ID': 'foo'},)
-        email.send()
+        DateOfBirth = request.data["ngaySinh"])
+        number = mail.sendVerificationMail(request.data["email"])
         user.set_password(user.password)
         user.save()
         users = UserSerializer(user)
         users.data.key = '1243'
         print(users.data)
-        response = {'data' : users.data,'validCode' : '1243'}
+        print(number)
+        response = {'data' : users.data,'validCode' : number}
         return JsonResponse(response,status = status.HTTP_200_OK)
     #else:
         
@@ -61,41 +52,90 @@ def register(request):
     
         #return HttpResponse(status=status.HTTP_204_NO_CONTENT)
         # In order to serialize objects, we must set 'safe=False'
+@api_view([ 'POST','GET','PUT'])
+def APIUser(request):
+    #post user = save user with user
+    if request.method =='POST':
+    
+        try:
+            user = User.objects.get(username = request.data["email"])
+            content = {'data': 'username is existed'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            
+        except ObjectDoesNotExist:
+            print(request.data["phoneNumber"])
+            user = User.objects.create(username = request.data["email"],
+            password = request.data["password"],
+            name = request.data["fullName"],
+            EmailOrganization = request.data["emailOrganization"],
+            phone = request.data["phoneNumber"],
+            is_active = False,
+            DateOfBirth = request.data["ngaySinh"],)
+            number = CreateValidateCode()
+            user.set_password(user.password)
+            user.save()
+            users = UserSerializer(user)
+            print(users.data)
+            response = {'data' : users.data,'validCode' : number}
+            return JsonResponse(response,status = status.HTTP_200_OK)
+        
+            #return HttpResponse(status=status.HTTP_200_OK)
+        #get user = get user based on id
+    elif request.method == 'GET':
+        try:
+            #if get user successfull
+            user = User.objects.get(username = request.data["id"])
+            return JsonResponse(user,status=status.HTTP_200_OK)
+        #in case we don't have any user match the request
+        except ObjectDoesNotExist:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+        #put user = change user profile
+    elif request.method == 'PUT':
+        try:
+            user = User.objects.get(username = request.PUT["email"])
+            #password = request.data["password"],
+            user.name = request.PUT["fullName"],
+            user.EmailOrganization = request.PUT["emailOrganization"],
+            user.phone = request.PUT["phoneNumber"],
+            user.DateOfBirth = request.PUT["ngaySinh"]
+            
+            #user.set_password(user.password)
+            user.save()
+            users = UserSerializer(user)
+            print(users.data)
+            response = {'data' : users.data}
+            return JsonResponse(response,status = status.HTTP_200_OK)
+        except ObjectDoesNotExist:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+        
+
 
 @api_view([ 'POST'])
 def ActivateUser(request):
     #if(request.data not None)
+    print(request.data)
+    userinfo =  request.data["userinfo"]
+    print(request.data['confirmpassword'])
+    print( request.data['valicode'])
+    print(type(request.data['valicode']))
+    print(type(request.data['confirmpassword']))
+    if request.data['confirmpassword'] == str(request.data['valicode']):
+        user = User.objects.get(username = userinfo['username'])
+        print(user.username)
+        user.is_active = True
+        user.active = True
+        user.save()
     
-    
-    user = User.objects.get(username = request.data["username"])
-    print(user.username)
-    user.is_active = True
-    user.active = True
-    user.save()
-   
-    return HttpResponse(status=status.HTTP_200_OK)
-
-@api_view([ 'POST'])
-def ResetPassword(request):
-    #if(request.data not None)
-    
-    
-    user = User.objects.get(username = request.data["username"])
-    print(user.username)
-    user.password = request.data.password
-    user.save()
-    return HttpResponse(status=status.HTTP_200_OK)
-@api_view([ 'POST'])
 def ForgetPassword(request):
     #if(request.data not None)
     
-    
     user = User.objects.get(username = request.data["username"])
     print(user.username)
-    user.password = '12543'
+    
+    user.set_password('12543')
     user.save()
     email = EmailMessage(
-    'Hello,Yourn new password is now 12543',
+    'Hello,Your new password is now 12543',
     
     'kaitouthuan@gmail.com',
     [user.username], 
@@ -113,18 +153,8 @@ def login(request):
     
     try:
         user = User.objects.get(username = request.data["username"])
-
-        if user.password == request.data["password"]:
-            if user.is_active == True:
-                users = UserSerializer(user)
-                return Response(users.data,status=status.HTTP_200_OK)
             else:
-                content="account hasn't been active yet,please activate it"
                 return JsonResponse(content, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
-        else:
-            content = "wrong password, please try again"
-            return Response(content, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
-    except ObjectDoesNotExist:
         content = "username or password is wrong, please try again"
         return Response(content, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
     # In order to serialize objects, we must set 'safe=False'
@@ -166,3 +196,32 @@ def ConvertData(request):
 def CreateValidateCode():
     number = rand.randrange(1000, 9999)
     return number
+@api_view([ 'POST'])
+@csrf_exempt
+def UpdateUser(request):
+    
+    try:
+        print(request.data)
+        user = User.objects.get(username = request.data["email"])
+        
+        
+        user.name = request.data["fullName"]
+        user.EmailOrganization = request.data["emailOrganization"]
+        user.phone = request.data["phoneNumber"]
+        
+        user.DateOfBirth = request.data["ngaySinh"]
+        
+        
+        user.save()
+        users = UserSerializer(user)
+        users.data.key = '1243'
+        print(users.data)
+        response = {'data' : users.data,'validCode' : '1243'}
+        return JsonResponse(response,status = status.HTTP_200_OK)
+        
+    except ObjectDoesNotExist:
+        
+        
+        content = {'please move along': 'have the same username'}
+        return Response(content, status=status.HTTP_204_NO_CONTENT)
+    #else:

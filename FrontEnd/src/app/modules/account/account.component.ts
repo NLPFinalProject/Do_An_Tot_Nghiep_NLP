@@ -1,25 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-
+import { Router, ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
-  styleUrls: ['./account.component.scss']
+  styleUrls: ['./account.component.scss'],
 })
 export class AccountComponent implements OnInit {
   searchNameList: any;
   searchAddressList: any;
+  userdata2: any;
   filterNameList = [
     { text: 'Joe', value: 'Joe' },
-    { text: 'Jim', value: 'Jim' }
+    { text: 'Jim', value: 'Jim' },
   ];
   filterAddressList = [
     { text: 'London', value: 'London' },
-    { text: 'Sidney', value: 'Sidney' }
+    { text: 'Sidney', value: 'Sidney' },
   ];
   sortMap = {
     name: '',
     age: '',
-    address: ''
+    address: '',
   };
   sortName: string = null;
   sortValue: string = null;
@@ -28,26 +29,32 @@ export class AccountComponent implements OnInit {
     {
       name: 'John Brown',
       age: 32,
-      address: 'New York No. 1 Lake Park'
+      address: 'New York No. 1 Lake Park',
     },
     {
       name: 'Jim Green',
       age: 42,
-      address: 'London No. 1 Lake Park'
+      address: 'London No. 1 Lake Park',
     },
     {
       name: 'Joe Black',
       age: 32,
-      address: 'Sidney No. 1 Lake Park'
+      address: 'Sidney No. 1 Lake Park',
     },
     {
       name: 'Jim Red',
       age: 32,
-      address: 'London No. 2 Lake Park'
-    }
+      address: 'London No. 2 Lake Park',
+    },
   ];
   displayData = [...this.data];
-
+  constructor(private router: Router) {
+    if (this.router.getCurrentNavigation() != undefined) {
+      this.userdata2 = this.router.getCurrentNavigation().extras.state.data;
+    } else {
+      this.router.navigate(['login'], { replaceUrl: true });
+    }
+  }
   ngOnInit(): void {}
 
   sort(sortName: string, value: string): void {
@@ -67,7 +74,7 @@ export class AccountComponent implements OnInit {
         ? this.searchAddressList.some((address: any) => item.address.indexOf(address) !== -1)
         : true) &&
       (this.searchNameList.length ? this.searchNameList.some((name: any) => item.name.indexOf(name) !== -1) : true);
-    const data = this.data.filter(item => filterFunc(item));
+    const data = this.data.filter((item) => filterFunc(item));
     if (this.sortName && this.sortValue) {
       this.displayData = data.sort((a, b) =>
         this.sortValue === 'ascend'
@@ -86,11 +93,11 @@ export class AccountComponent implements OnInit {
   resetFilters(): void {
     this.filterNameList = [
       { text: 'Joe', value: 'Joe' },
-      { text: 'Jim', value: 'Jim' }
+      { text: 'Jim', value: 'Jim' },
     ];
     this.filterAddressList = [
       { text: 'London', value: 'London' },
-      { text: 'Sidney', value: 'Sidney' }
+      { text: 'Sidney', value: 'Sidney' },
     ];
     this.searchNameList = [];
     this.searchAddressList = [];
@@ -103,7 +110,7 @@ export class AccountComponent implements OnInit {
     this.sortMap = {
       name: null,
       age: null,
-      address: null
+      address: null,
     };
     this.resetFilters();
     this.search(this.searchNameList, this.searchAddressList);

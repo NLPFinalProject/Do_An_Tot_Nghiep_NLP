@@ -3,13 +3,13 @@ export class MessageError {
     {
       name: 'required',
       text: 'This field is required',
-      rules: ['touched']
+      rules: ['touched'],
     },
-    { name: 'minlength', text: 'Min length is ', rules: ['dirty'] }
+    { name: 'minlength', text: 'Min length is ', rules: ['dirty'] },
   ];
   static TextError = [
     {
-      password: 'Password is required'
-    }
+      password: 'Password is required',
+    },
   ];
 }

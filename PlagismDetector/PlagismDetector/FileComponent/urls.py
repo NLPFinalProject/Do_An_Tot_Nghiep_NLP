@@ -8,13 +8,19 @@ urlpatterns = [
     url(r'^test2', views.documentimport),
     url(r'^test', views.test),
    
-<<<<<<< HEAD
-    url(r'^uploadfile',csrf_exempt(views.uploadDoc))
     
-=======
     url(r'^uploadfile',csrf_exempt(views.uploadDoc)),
     url(r'^uploadfilelist',csrf_exempt(views.uploadDoc)),
->>>>>>> branch-3--database
+    #url(r'^test2', views.documentimportTesting),
+    url(r'^checkdatabase', csrf_exempt(views.documentimportDatabase)),
+    url(r'^final-check', csrf_exempt(views.FinalCheck)),
+    url(r'^checkinternet', csrf_exempt(views.documentimportInternet2)),
+    url(r'^test3', csrf_exempt(views.documentimport2)),
+    url(r'^test2', csrf_exempt(views.ff)),
+    url(r'^test', views.test),
+    url(r'^uploadfilelist',csrf_exempt(views.uploadDocList)),
+    url(r'^uploadfile',csrf_exempt(views.uploadDoc)),
+
     #url(r'^', include('UserComponent.urls')), 
     #url(r'^$', views.home, name='home'),
    # url(r'^uploads/simple/$', views.simple_upload, name='simple_upload'),

@@ -4,7 +4,7 @@ import { MessageService } from '@app/core/services/Utils/message.service';
 @Component({
   selector: 'app-list-file-success',
   templateUrl: './list-file-success.component.html',
-  styleUrls: ['./list-file-success.component.scss']
+  styleUrls: ['./list-file-success.component.scss'],
 })
 export class ListFileSuccessComponent implements OnInit {
   sortValue: any = null;
@@ -15,17 +15,17 @@ export class ListFileSuccessComponent implements OnInit {
   loading = true;
   data = [
     {
-      name: 'Hoàn thiện các giải pháp QLNN đối với các hoạt động tôn giáo ở Việt Nam trong thời kỳ đổi mới.docx'
+      name: 'Hoàn thiện các giải pháp QLNN đối với các hoạt động tôn giáo ở Việt Nam trong thời kỳ đổi mới.docx',
     },
     {
-      name: 'Quản lý nhà nước đối với tập đoàn kinh tế tư nhân ở Việt Nam hiện nay.pdf'
+      name: 'Quản lý nhà nước đối với tập đoàn kinh tế tư nhân ở Việt Nam hiện nay.pdf',
     },
     {
-      name: 'Quản lý nhà nước về văn thư, lưu trữ.docx'
+      name: 'Quản lý nhà nước về văn thư, lưu trữ.docx',
     },
     {
-      name: 'Quản lý nhà nước về quy hoạch xây dựng nông thôn mới.docx'
-    }
+      name: 'Quản lý nhà nước về quy hoạch xây dựng nông thôn mới.docx',
+    },
   ];
   fileList: Array<object> = [];
   constructor(private messageService: MessageService) {}
@@ -53,7 +53,7 @@ export class ListFileSuccessComponent implements OnInit {
       (this.listOfSearchName.length
         ? this.listOfSearchName.some((name: string) => item.name.indexOf(name) !== -1)
         : true);
-    const data = this.data.filter(item => filterFunc(item));
+    const data = this.data.filter((item) => filterFunc(item));
     // sort data
     if (this.sortName && this.sortValue) {
       this.displayData = data.sort((a, b) =>

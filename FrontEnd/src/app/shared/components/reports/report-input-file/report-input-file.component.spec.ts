@@ -8,7 +8,7 @@ describe('ReportInputFileComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ReportInputFileComponent]
+      declarations: [ReportInputFileComponent],
     }).compileComponents();
   }));
 

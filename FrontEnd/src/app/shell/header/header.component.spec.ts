@@ -14,7 +14,7 @@ describe('HeaderComponent', () => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, NgbModule, TranslateModule.forRoot()],
       declarations: [HeaderComponent],
-      providers: [{ provide: AuthenticationService, useClass: MockAuthenticationService }, I18nService]
+      providers: [{ provide: AuthenticationService, useClass: MockAuthenticationService }, I18nService],
     }).compileComponents();
   }));
 

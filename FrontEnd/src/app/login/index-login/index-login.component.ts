@@ -7,13 +7,13 @@ import { CommonConstant, MessageConstant } from '@app/shared';
 import { RoutingConstant } from '@app/shared/commons/routing.constant';
 import { environment } from '@env/environment';
 import { finalize } from 'rxjs/operators';
-import {UserService} from '@../../../src/app/login/user-authenticate-service'
+import { UserService } from '@../../../src/app/login/user-authenticate-service';
 const log = new Logger('Login');
 
 @Component({
   selector: 'app-index-login',
   templateUrl: './index-login.component.html',
-  styleUrls: ['./index-login.component.scss']
+  styleUrls: ['./index-login.component.scss'],
 })
 export class IndexLoginComponent extends AppComponentBase implements OnInit {
   version: string = environment.version;
@@ -33,8 +33,7 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
     private formBuilder: FormBuilder,
     private i18nService: I18nService,
     private authenticationService: AuthenticationService,
-    private UserService:UserService,
-
+    private UserService: UserService
   ) {
     super(injector);
     this.createForm();
@@ -50,7 +49,7 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
     this.optionAccounts = value === true ? 'Client' : 'Administator';
     this.statusAccount = value;
   }
-/*
+  /*
   login() {
     this.isLoading = true;
     this.authenticationService
@@ -90,32 +89,45 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
   login() {
     this.isLoading = true;
     var data = {
-      username:this.loginForm.controls.username.value,
-      password:this.loginForm.controls.password.value
-    }
-    this.UserService
+      username: this.loginForm.controls.username.value,
+      password: this.loginForm.controls.password.value,
+    };
+    //this.UserService
+
+    this.authenticationService
       .login(data)
-      
-      .subscribe( (value:Data )=> {
-          console.log("sucess ");
-          console.log(data);
+
+      .subscribe(
+        (value: Data) => {
+          console.log('sucess ');
+          this.isLoading = false;
+          this.loading = false;
+          this.authenticationService.setSession(value);
           //const rememberValue = this.loginForm.get('remember').value;
           //this.authenticationService.setCredentials(credentials, rememberValue);
-          const url = this.statusAccount ? RoutingConstant.DaoVan : RoutingConstant.Admin;
-          if (value.username!=null) {
-            
+          //const url = this.statusAccount ? RoutingConstant.DaoVan : RoutingConstant.Admin;
+          console.log(value);
+
+          if (value.token != null) {
             setTimeout(() => {
-              
-                this.router.navigate(['daovan'], { replaceUrl: true })
-              
+              this.router.navigate(['daovan'], { replaceUrl: true, state: { user: value } });
             }, 1000);
-          }
-          else{
+          } else {
             this.isLoading = false;
-            this.notificationService.error(value.toString());
+            this.notificationService.error(value.toString() + '1');
+            this.loading = false;
           }
+        },
+        (error) => {
+          this.isLoading = false;
+
+          this.loading = false;
+          log.debug(`Login error: ${error}`);
+          this.error = error;
+          //this.notificationService.error("Tài khoản hoặc mật khẩu không chính xác");
+          this.showErrorNotification(`${MessageConstant.LoginFailed}`);
         }
-        )
+      );
   }
   //#endregion
 
@@ -123,7 +135,7 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
-      remember: true
+      remember: true,
     });
   }
 

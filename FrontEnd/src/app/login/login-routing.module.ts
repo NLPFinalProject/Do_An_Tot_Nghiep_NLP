@@ -5,6 +5,8 @@ import { IndexLoginComponent, RegisterComponent, ForgotPasswordComponent } from 
 import { LoginComponent } from './login.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ValidationComponent } from './validation/validation.component';
+
+import { TestComponent } from './test/test.component';
 const routes: Routes = [
   {
     path: '',
@@ -15,14 +17,15 @@ const routes: Routes = [
       { path: 'register', component: RegisterComponent, data: { title: extract('Register') } },
       { path: 'forgot-password', component: ForgotPasswordComponent, data: { title: extract('Forgot Password') } },
       { path: 'reset-password', component: ResetPasswordComponent, data: { title: extract('Reset Password') } },
-      { path: 'validate', component: ValidationComponent, data: { title: extract('Validate email code') } }
-    ]
-  }
+      { path: 'validate', component: ValidationComponent, data: { title: extract('Validate email code') } },
+      { path: 'fortest', component: TestComponent, data: { title: extract('test') } },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: []
+  providers: [],
 })
 export class LoginRoutingModule {}

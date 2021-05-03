@@ -6,12 +6,12 @@ import { AdministratorComponent } from './administrator.component';
 
 const routes: Routes = [
   // Module is lazy loaded, see app-routing.module.ts
-  { path: '', component: AdministratorComponent, data: { title: extract('Administrator') } }
+  { path: '', component: AdministratorComponent, data: { title: extract('Administrator') } },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: []
+  providers: [],
 })
 export class AdministratorRoutingModule {}

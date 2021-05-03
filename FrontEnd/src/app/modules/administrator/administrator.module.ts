@@ -15,10 +15,10 @@ const MODULE = [
   NgZorroAntdModule,
   SharedModule,
   AdministratorRoutingModule,
-  ReactiveFormsModule
+  ReactiveFormsModule,
 ];
 @NgModule({
   declarations: [AdministratorComponent, ListAccountComponent],
-  imports: [...MODULE]
+  imports: [...MODULE],
 })
 export class AdministratorModule {}
