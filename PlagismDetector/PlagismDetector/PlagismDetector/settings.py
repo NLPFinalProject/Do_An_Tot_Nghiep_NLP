@@ -74,6 +74,13 @@ REST_FRAMEWORK = {
     
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        
+        #'rest_framework.permissions.AllowAny',
+        #'rest_framework.authentication.BasicAuthentication',
+    ),
+    
+}
 
 CSRF_COOKIE_SECURE = False
 # JWT settings
@@ -82,6 +89,7 @@ JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True,
     'JWT_EXPIRATION_DELTA': timedelta(days=2),
 }
+MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -96,14 +104,13 @@ REST_USE_JWT = True
 SITE_ID = 1
 
 ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+"""AUTHENTICATION_BACKENDS = (
 "django.contrib.auth.backends.ModelBackend",
 "allauth.account.auth_backends.AuthenticationBackend"
 )"""
 dir = os.getcwd()+'/MailComponent/'
 
-AUTHENTICATION_BACKENDS = (
-"allauth.account.auth_backends.AuthenticationBackend"
-)
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -186,8 +193,3 @@ EMAIL_HOST_USER = 'kaitouthuan@gmail.com'
 EMAIL_HOST_PASSWORD = 'kyonaruto'
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-
-#vị trí lưu file trong thư mục media
-MEDIA_ROOT = os.path.join(BASE_DIR, 'UserDocumentMedia')
-
-MEDIA_URL = '/UserDocumentMedia/'

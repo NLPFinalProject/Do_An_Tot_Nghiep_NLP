@@ -23,6 +23,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='User',
             fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
                 ('username', models.CharField(default='', max_length=30, unique=True)),
                 ('password', models.CharField(default='', max_length=150)),
@@ -31,3 +32,10 @@ class Migration(migrations.Migration):
                 ('DateOfBirth', models.DateTimeField(blank=True, null=True)),
                 ('is_active', models.BooleanField(default=False)),
                 ('is_admin', models.BooleanField(default=False)),
+                ('phone', models.CharField(blank=True, default='', max_length=15, null=True)),
+            ],
+            options={
+                'db_table': 'user',
+            },
+        ),
+    ]

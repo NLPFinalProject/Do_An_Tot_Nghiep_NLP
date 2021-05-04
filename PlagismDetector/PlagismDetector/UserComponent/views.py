@@ -17,6 +17,10 @@ from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import authentication_classes,permission_classes
 from rest_framework.authentication import TokenAuthentication
+from MailComponent import views as mail
+import random as rand
+
+@api_view([ 'POST'])
 #@permission_classes ( (AllowAny, ))
 
 @csrf_exempt
@@ -126,8 +130,26 @@ def ActivateUser(request):
         user.active = True
         user.save()
     
+        return HttpResponse(status=status.HTTP_200_OK)
+    else:
+        return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+@api_view([ 'POST'])
+def ResetPassword(request):
+    #if(request.data not None)
+    
+    
+    user = User.objects.get(username = request.data["username"])
+    print(user.username)
+    print(user.password)
+
+    
+    user.password = request.data.password
+    user.save()
+    return HttpResponse(status=status.HTTP_200_OK)
+@api_view([ 'POST'])
 def ForgetPassword(request):
     #if(request.data not None)
+    
     
     user = User.objects.get(username = request.data["username"])
     print(user.username)
@@ -153,8 +175,18 @@ def login(request):
     
     try:
         user = User.objects.get(username = request.data["username"])
+        
+        if user.check_password(request.data["password"]):
+            if user.is_active == True:
+                users = UserSerializer(user)
+                return Response(users.data,status=status.HTTP_200_OK)
             else:
+                content="account hasn't been active yet,please activate it"
                 return JsonResponse(content, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        else:
+            content = "wrong password, please try again"
+            return Response(content, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+    except ObjectDoesNotExist:
         content = "username or password is wrong, please try again"
         return Response(content, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
     # In order to serialize objects, we must set 'safe=False'

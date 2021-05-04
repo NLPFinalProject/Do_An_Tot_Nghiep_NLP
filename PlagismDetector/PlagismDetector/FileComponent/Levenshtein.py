@@ -1,11 +1,7 @@
-
-def String_insert(string, text, position):
-
 import json
 #----------------Thêm, xóa, thay thế chữ"----------------#
 
 """def String_insert(string, text, position):
-
     return string[:position] + text + string[position:]
 
 
@@ -53,7 +49,6 @@ def Create_Matrix(str1, str2):
             matrix[current_row].append(value)
 
         previous_row += 1
-
     return matrix
 
 
@@ -122,7 +117,6 @@ def Levenshtein_distance(str1, str2):
 # Input: 2 chuỗi (String)
 #    + Str1 (String)
 #    + Str2 (String)
-
 # Output: Tỉ lệ tương đồng bao nhiêu % (Float)
 def Matching_ratio(str1, str2):
     l = Levenshtein_distance(str1, str2)
@@ -134,41 +128,6 @@ def Matching_ratio(str1, str2):
     return ratio
 
 
-    l = Levenshtein_distance(str1, str2)
-    lensum = len(str1) + len(str2)
-    return round((100 * (lensum - l) / lensum), 3)
-
-    # m = len(str1)
-    # if m < len(str2):
-    #     m = len(str2)
-    # return (1 - l/m) * 100
-
-
-
-# Tính tỉ lệ tương đồng của từng câu trong mảng 1 với từng câu trong mảng 2
-# Input: 
-#    + Lst_1 (String)
-#    + Lst_2 (String)
-# Output: List của các dictionary. Với mỗi dictionary có format:
-#    + 'senA': <câu A>
-#    + 'senB': <câu B>
-#    + 'ratio': <tỉ lệ tương đồng (ratio)> [kiểu float]
-def Matching_ratio_dict(lst_1, lst_2):
-    result = []
-
-    key_1 = "senA"
-    key_2 = "senB"
-    key_3 = "ratio"
-
-    for str1 in lst_1:
-        for str2 in lst_2:
-            dic = {}
-            dic[key_1] = str1
-            dic[key_2] = str2
-            dic[key_3] = Matching_ratio(str1, str2)
-            result.append(dic)
-
-    return result
 
 # Tính tỉ lệ tương đồng của từng câu trong mảng 1 với từng câu trong mảng 2
 # Input: 
@@ -184,7 +143,6 @@ def Matching_ratio_list(lst_1, lst_2):
             result.append(ratio)
 
     return result
-
 
 
 
@@ -210,6 +168,10 @@ def Export(result_list, lst_1, lst_2):
             report_list.append(string)
             index += 1
     return report_list
+def ExportResultByJson(result_list, lst_1, lst_2,ratio)
+    len_result = len(result_list):
+    
+    #len_2 = len(lst2)
 
     index = 0
     #tra ket qua ve list
@@ -228,6 +190,7 @@ def main():
     lst1 = ['Python', 'C-Sharp', 'Java']
     lst2 = ["JavaScript", "Swift", "C++", "Python"]
 
+    result = Matching_ratio_list(lst1, lst2)
     temp = Export(result, lst1, lst2)
     print(temp)
 
@@ -236,7 +199,6 @@ if __name__ == "__main__":
     main()
 
 # CHỈ CẦN CHẠY THÔI LÀ SẼ XUẤT KẾT QUẢ, KHÔNG CẦN CHỈNH SỬA GÌ.
-
 """
 
 
@@ -397,6 +359,8 @@ def Matching_ratio_dict(lst_1, lst_2):
 
     return result
 
+
+
 # Xuất kết quả theo format: [thứ tự câu trong lst_1, số câu trùng với câu trong lst_1, [các câu trùng theo thứ tự]]
 # Ví dụ: [5, 3, [1, 6, 7]]: Ứng với câu thứ 5 trong lst_1, có 3 câu trùng, các câu trùng là 1, 6, 7
 # Input: 
@@ -411,11 +375,6 @@ def ExportOrder(lst_1, lst_2, ratio):
     for i in range(len(lst_1)):
         export = []
         similar_sent = []
-        count = 0
-        for j in range(len(lst_2)):
-            if Matching_ratio(lst_1[i], lst_2[j]) >= ratio:
-                count += 1
-                similar_sent.append(j + 1)
         similar_ratio = []
         count = 0
         for j in range(len(lst_2)):
@@ -428,11 +387,6 @@ def ExportOrder(lst_1, lst_2, ratio):
         export.append(i + 1)
         export.append(count)
         export.append(similar_sent)
-        result.append(export)
-    
-    return result
-
-
         export.append(similar_ratio)
         result.append(export)
     
