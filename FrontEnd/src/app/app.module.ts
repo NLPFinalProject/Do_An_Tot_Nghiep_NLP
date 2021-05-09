@@ -15,6 +15,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginModule } from './login/login.module';
 import { ShellModule } from './shell/shell.module';
+import { VaildateResultModule } from './modules/validate-result/validate-result.module';
 
 @NgModule({
   imports: [
@@ -29,11 +30,12 @@ import { ShellModule } from './shell/shell.module';
     CoreModule,
     ShellModule,
     LoginModule,
-    AppRoutingModule
+    AppRoutingModule,
+    VaildateResultModule,
     // must be imported as the last module as it contains the fallback route
   ],
   declarations: [AppComponent],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

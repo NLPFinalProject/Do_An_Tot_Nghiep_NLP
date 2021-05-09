@@ -8,7 +8,7 @@ describe('SectionDiffComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [SectionDiffComponent]
+      declarations: [SectionDiffComponent],
     }).compileComponents();
   }));
 

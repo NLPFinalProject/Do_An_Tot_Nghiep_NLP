@@ -4,7 +4,7 @@ import { MessageService } from '@app/core/services/Utils/message.service';
 @Component({
   selector: 'app-section-diff',
   templateUrl: './section-diff.component.html',
-  styleUrls: ['./section-diff.component.scss']
+  styleUrls: ['./section-diff.component.scss'],
 })
 export class SectionDiffComponent implements OnInit {
   sortValue: any = null;
@@ -15,17 +15,17 @@ export class SectionDiffComponent implements OnInit {
   loading = true;
   data = [
     {
-      name: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...'
+      name: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...',
     },
     {
-      name: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...'
+      name: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...',
     },
     {
-      name: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...'
+      name: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...',
     },
     {
-      name: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...'
-    }
+      name: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...',
+    },
   ];
   fileList: Array<object> = [];
   constructor(private messageService: MessageService) {}
@@ -53,7 +53,7 @@ export class SectionDiffComponent implements OnInit {
       (this.listOfSearchName.length
         ? this.listOfSearchName.some((name: string) => item.name.indexOf(name) !== -1)
         : true);
-    const data = this.data.filter(item => filterFunc(item));
+    const data = this.data.filter((item) => filterFunc(item));
     // sort data
     if (this.sortName && this.sortValue) {
       this.displayData = data.sort((a, b) =>

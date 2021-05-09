@@ -8,7 +8,7 @@ describe('ListInputFileComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ListInputFileComponent]
+      declarations: [ListInputFileComponent],
     }).compileComponents();
   }));
 

@@ -4,7 +4,7 @@ import { MessageService } from '@app/core/services/Utils/message.service';
 @Component({
   selector: 'app-list-file-diff',
   templateUrl: './list-file-diff.component.html',
-  styleUrls: ['./list-file-diff.component.scss']
+  styleUrls: ['./list-file-diff.component.scss'],
 })
 export class ListFileDiffComponent implements OnInit {
   sortValue: any = null;
@@ -16,20 +16,20 @@ export class ListFileDiffComponent implements OnInit {
   data = [
     {
       name: 'Hoàn thiện các giải pháp QLNN đối với các hoạt động tôn giáo ở Việt Nam trong thời kỳ đổi mới.docx',
-      count: 80
+      count: 80,
     },
     {
       name: 'Quản lý nhà nước đối với tập đoàn kinh tế tư nhân ở Việt Nam hiện nay.pdf',
-      count: 60
+      count: 60,
     },
     {
       name: 'Quản lý nhà nước về văn thư, lưu trữ.docx',
-      count: 40
+      count: 40,
     },
     {
       name: 'Quản lý nhà nước về quy hoạch xây dựng nông thôn mới.docx',
-      count: 6
-    }
+      count: 6,
+    },
   ];
   fileList: Array<object> = [];
   constructor(private messageService: MessageService) {}
@@ -57,7 +57,7 @@ export class ListFileDiffComponent implements OnInit {
       (this.listOfSearchName.length
         ? this.listOfSearchName.some((name: string) => item.name.indexOf(name) !== -1)
         : true);
-    const data = this.data.filter(item => filterFunc(item));
+    const data = this.data.filter((item) => filterFunc(item));
     // sort data
     if (this.sortName && this.sortValue) {
       this.displayData = data.sort((a, b) =>

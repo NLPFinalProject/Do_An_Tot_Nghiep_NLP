@@ -13,7 +13,7 @@ describe('AuthenticationGuard', () => {
 
   beforeEach(() => {
     mockRouter = {
-      navigate: jasmine.createSpy('navigate')
+      navigate: jasmine.createSpy('navigate'),
     };
     mockSnapshot = jasmine.createSpyObj<RouterStateSnapshot>('RouterStateSnapshot', ['toString']);
 
@@ -21,8 +21,8 @@ describe('AuthenticationGuard', () => {
       providers: [
         AuthenticationGuard,
         { provide: AuthenticationService, useClass: MockAuthenticationService },
-        { provide: Router, useValue: mockRouter }
-      ]
+        { provide: Router, useValue: mockRouter },
+      ],
     });
   });
 
@@ -52,7 +52,7 @@ describe('AuthenticationGuard', () => {
     // Assert
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
       queryParams: { redirect: undefined },
-      replaceUrl: true
+      replaceUrl: true,
     });
     expect(result).toBe(false);
   });
@@ -65,7 +65,7 @@ describe('AuthenticationGuard', () => {
     authenticationGuard.canActivate(null, mockSnapshot);
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
       queryParams: { redirect: mockRouter.url },
-      replaceUrl: true
+      replaceUrl: true,
     });
   });
 });

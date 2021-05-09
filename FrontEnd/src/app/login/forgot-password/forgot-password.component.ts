@@ -4,11 +4,11 @@ import { MessageError } from '@app/core/common/errorMessage';
 import { FormGroup, FormBuilder, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MessageConstant, RoutingConstant } from '@app/shared';
-import {UserService} from '@../../../src/app/login/user-authenticate-service'
+import { UserService } from '@../../../src/app/login/user-authenticate-service';
 @Component({
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.component.html',
-  styleUrls: ['./forgot-password.component.scss']
+  styleUrls: ['./forgot-password.component.scss'],
 })
 export class ForgotPasswordComponent extends AppComponentBase implements OnInit {
   errors = MessageError.Errors;
@@ -22,7 +22,7 @@ export class ForgotPasswordComponent extends AppComponentBase implements OnInit 
     private formBuilder: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private UserService:UserService,
+    private UserService: UserService
   ) {
     super(injector);
   }
@@ -36,30 +36,36 @@ export class ForgotPasswordComponent extends AppComponentBase implements OnInit 
   }
 
   submitForm(): void {
-    var data ={
-      username : this.forgotPasswordForm.controls.email.value
+    var data = {
+      username: this.forgotPasswordForm.controls.email.value,
     };
-     
+
     console.log(data);
     for (const i in this.forgotPasswordForm.controls) {
       this.forgotPasswordForm.controls[i].markAsDirty();
       this.forgotPasswordForm.controls[i].updateValueAndValidity();
     }
-    this.UserService.ForgotPassword(data).subscribe(data=>{
-      this.notificationService.success(MessageConstant.RegisterSucssec);
-      this.isSend = true;
-      setTimeout(() => {
-        this.route.queryParams.subscribe(params =>
-          this.router.navigate([params.redirect || RoutingConstant.Base], { replaceUrl: true })
-        );
-      }, 5000);
-    })
-   
+    this.UserService.ForgotPassword(data).subscribe(
+      (data) => {
+        this.notificationService.success(MessageConstant.RegisterSucssec);
+        this.isSend = true;
+        setTimeout(() => {
+          this.route.queryParams.subscribe((params) =>
+            this.router.navigate([params.redirect || RoutingConstant.Base], { replaceUrl: true })
+          );
+        }, 5000);
+      },
+      (error) => {
+        this.errors = error;
+        //this.notificationService.error("Tài khoản hoặc mật khẩu không chính xác");
+        this.showErrorNotification(`${MessageConstant.LoginFailed}`);
+      }
+    );
   }
 
   createdFrom(): void {
     this.forgotPasswordForm = this.formBuilder.group({
-      email: [null, [Validators.required]]
+      email: [null, [Validators.required]],
     });
   }
 }

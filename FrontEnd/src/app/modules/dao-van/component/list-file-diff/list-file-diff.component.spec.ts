@@ -8,7 +8,7 @@ describe('ListFileDiffComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ListFileDiffComponent]
+      declarations: [ListFileDiffComponent],
     }).compileComponents();
   }));
 

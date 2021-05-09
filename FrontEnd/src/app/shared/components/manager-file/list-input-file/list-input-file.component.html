@@ -1,33 +1,7 @@
-<div nz-row nzType="flex" nzJustify="center" nzAlign="top">
-  <nz-upload [nzCustomRequest]="upload" [nzSize]="15" [nzShowUploadList]="false" [nzData]="fileList">
-    <button nz-button><i nz-icon type="upload"></i><span>Tải lên tệp tin</span></button>
-  </nz-upload>
-</div>
-<br />
-
-<nz-table #filterTable [nzData]="displayData" [nzLoading]="loading" nzSize="small">
-  <thead (nzSortChange)="sort($event)" nzSingleSort>
-    <tr>
-      <th nzShowSort nzSortKey="name">Tên tệp tin</th>
-      <th
-        nzShowSort
-        nzSortKey="address"
-        nzShowFilter
-        [nzFilters]="statusList"
-        (nzFilterChange)="filter($event, searchAddress)"
-      >
-        Trạng thái
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let data of filterTable.data">
-      <td>
-        <span class="d-inline-block text-truncate" style="max-width: 150px;" nz-tooltip nzTitle="{{ data.name }}">
-          {{ data.name }}
-        </span>
-      </td>
-      <td>{{ data.status }}</td>
-    </tr>
-  </tbody>
-</nz-table>
+<nz-content>
+  <div nz-row nzType="flex" nzJustify="center" nzAlign="top">
+    <button nz-button class="w-100" nzType="primary" nzShape="omitted" (click)="checkPlagism()">
+      <i theme="outline"></i> <span translate>Kiểm tra đạo văn</span>
+    </button>
+  </div>
+</nz-content>

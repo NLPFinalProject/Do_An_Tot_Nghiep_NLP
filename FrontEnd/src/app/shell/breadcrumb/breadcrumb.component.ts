@@ -9,7 +9,7 @@ const log = new Logger('App');
 @Component({
   selector: 'app-breadcrumb',
   templateUrl: './breadcrumb.component.html',
-  styleUrls: ['./breadcrumb.component.scss']
+  styleUrls: ['./breadcrumb.component.scss'],
 })
 export class BreadcrumbComponent implements OnInit {
   pageInfo: any;
@@ -20,19 +20,19 @@ export class BreadcrumbComponent implements OnInit {
 
   getPageInfo(): void {
     this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
+      .pipe(filter((event) => event instanceof NavigationEnd))
       .pipe(map(() => this.activatedRoute))
       .pipe(
-        map(route => {
+        map((route) => {
           while (route.firstChild) {
             route = route.firstChild;
           }
           return route;
         })
       )
-      .pipe(filter(route => route.outlet === 'primary'))
-      .pipe(mergeMap(route => route.data))
-      .subscribe(event => {
+      .pipe(filter((route) => route.outlet === 'primary'))
+      .pipe(mergeMap((route) => route.data))
+      .subscribe((event) => {
         this.pageInfo = event;
         console.log(this.pageInfo);
       });

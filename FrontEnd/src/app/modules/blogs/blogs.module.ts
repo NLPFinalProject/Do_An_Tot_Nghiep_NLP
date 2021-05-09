@@ -11,6 +11,6 @@ const MODULE = [CommonModule, BlogsRoutingModule, NgZorroAntdModule, SharedModul
 
 @NgModule({
   declarations: [...COMPONENT],
-  imports: [...MODULE]
+  imports: [...MODULE],
 })
 export class BlogsModule {}

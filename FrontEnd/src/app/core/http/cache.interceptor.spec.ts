@@ -26,9 +26,9 @@ describe('CacheInterceptor', () => {
           provide: HTTP_INTERCEPTORS,
           useFactory: createInterceptor,
           deps: [HttpCacheService],
-          multi: true
-        }
-      ]
+          multi: true,
+        },
+      ],
     });
   });
 
@@ -68,7 +68,7 @@ describe('CacheInterceptor', () => {
       httpCacheService.setCacheData('/toto', new HttpResponse({ body: 'cachedData' }));
 
       // Act
-      http.get('/toto').subscribe(response => {
+      http.get('/toto').subscribe((response) => {
         // Assert
         expect(response).toEqual('cachedData');
       });
@@ -88,7 +88,7 @@ describe('CacheInterceptor', () => {
 
       httpMock.expectOne({}).flush(null, {
         status: 404,
-        statusText: 'error'
+        statusText: 'error',
       });
     });
   });
@@ -118,7 +118,7 @@ describe('CacheInterceptor', () => {
       cacheInterceptor.configure({ update: true });
 
       // Act
-      http.get('/toto').subscribe(response => {
+      http.get('/toto').subscribe((response) => {
         // Assert
         expect(response).toEqual('newData');
       });

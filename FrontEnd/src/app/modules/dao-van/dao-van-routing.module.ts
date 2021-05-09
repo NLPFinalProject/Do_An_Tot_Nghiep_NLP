@@ -17,25 +17,25 @@ const routes: Routes = [
         component: DaoVanControlComponent,
         data: {
           title: extract('Home'),
-          urls: [{ title: 'Home', url: '/' }]
-        }
+          urls: [{ title: 'Home', url: '/' }],
+        },
       },
       {
         path: 'daovan/:id',
         component: DaoVanDetailComponent,
         data: {
           title: extract('Detail'),
-          urls: [{ title: 'DaoVan', url: '/daovan' }, { title: 'Detail' }]
-        }
-      }
+          urls: [{ title: 'DaoVan', url: '/daovan' }, { title: 'Detail' }],
+        },
+      },
       // { path: 'control/:id', component: DetailDaoVanComponent },
-    ]
-  }
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: []
+  providers: [],
 })
 export class DaoVanRoutingModule {}

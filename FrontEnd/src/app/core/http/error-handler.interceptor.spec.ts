@@ -21,9 +21,9 @@ describe('ErrorHandlerInterceptor', () => {
         {
           provide: HTTP_INTERCEPTORS,
           useFactory: createInterceptor,
-          multi: true
-        }
-      ]
+          multi: true,
+        },
+      ],
     });
   });
 
@@ -53,7 +53,7 @@ describe('ErrorHandlerInterceptor', () => {
 
     httpMock.expectOne({}).flush(null, {
       status: 404,
-      statusText: 'error'
+      statusText: 'error',
     });
   });
 });

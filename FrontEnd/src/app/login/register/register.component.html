@@ -92,7 +92,7 @@
       <nz-form-control [nzOffset]="6" [nzSm]="14" [nzXs]="24">
         <div nz-row [nzGutter]="8">
           <div nz-col [nzSpan]="12">
-            <nz-date-picker formControlName="ngaySinh"></nz-date-picker>
+            <nz-date-picker formControlName="ngaySinh" [nzFormat]="dateFormat"></nz-date-picker>
           </div>
           <div nz-col [nzSpan]="12">
             <label nz-checkbox formControlName="gioiTinh">
@@ -107,7 +107,7 @@
       <nz-form-control [nzOffset]="6" [nzSm]="14" [nzXs]="24" [nzValidateStatus]="registerForm.controls['phoneNumber']">
         <nz-input-group [nzAddOnBefore]="addOnBeforeTemplate">
           <ng-template #addOnBeforeTemplate>
-            <nz-select formControlName="phoneNumberPrefix" style="width: 70px;">
+            <nz-select formControlName="phoneNumberPrefix" style="width: 70px">
               <nz-option nzLabel="+84" nzValue="+84"></nz-option>
             </nz-select>
           </ng-template>
@@ -187,16 +187,16 @@
       </nz-form-control>
     </nz-form-item>
   </section>
-  
-  <nz-form-item nz-row style="margin-bottom:8px;">
+
+  <nz-form-item nz-row style="margin-bottom: 8px">
     <nz-form-control [nzSpan]="14" [nzOffset]="6">
       <label nz-checkbox formControlName="agree">
         <span>I have read the <a>agreement</a></span>
       </label>
     </nz-form-control>
   </nz-form-item>
-  <nz-form-item nz-row style="margin-bottom:8px;">
-    <nz-form-item nz-row style="margin-bottom:8px;">
+  <nz-form-item nz-row style="margin-bottom: 8px">
+    <nz-form-item nz-row style="margin-bottom: 8px">
       <nz-form-control [nzOffset]="16" [nzSpan]="8">
         <button [routerLink]="['/login']" routerLinkActive="router-link-active" nz-button nzType="default" translate>
           {{ 'Back' | translate }}

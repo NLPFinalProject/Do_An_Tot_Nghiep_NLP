@@ -8,7 +8,7 @@ describe('DaoVanComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [DaoVanComponent]
+      declarations: [DaoVanComponent],
     }).compileComponents();
   }));
 
