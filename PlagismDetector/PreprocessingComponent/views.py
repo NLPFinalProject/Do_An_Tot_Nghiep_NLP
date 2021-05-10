@@ -2,7 +2,7 @@ import os, sys
 from pptx import Presentation
 import pandas as pd
 from vncorenlp import VnCoreNLP
-#from pyvi import ViTokenizer, ViPosTagger, ViUtils
+from pyvi import ViTokenizer, ViPosTagger, ViUtils
 from docx_utils.flatten import opc_to_flat_opc
 from xml.dom import minidom
 import win32com.client
@@ -13,12 +13,12 @@ import csv
 sys.path.insert(1, os.getcwd() + "/PreprocessingComponent")
 
 from PreprocessingComponent.pdfminer3 import Pdf_extract
-
-if ("PreprocessingComponent" in os.getcwd()):
-    vncorenlp_file = os.getcwd() + '/VnCoreNLP/VnCoreNLP-1.1.1.jar'
-else:
-    vncorenlp_file = os.getcwd() + '/PreprocessingComponent/VnCoreNLP/VnCoreNLP-1.1.1.jar'
-vncorenlp = VnCoreNLP(vncorenlp_file, annotators="wseg,pos,ner,parse", max_heap_size='-Xmx4g', port=6000)
+#
+# if ("PreprocessingComponent" in os.getcwd()):
+#     vncorenlp_file = os.getcwd() + '/VnCoreNLP/VnCoreNLP-1.1.1.jar'
+# else:
+#     vncorenlp_file = os.getcwd() + '/PreprocessingComponent/VnCoreNLP/VnCoreNLP-1.1.1.jar'
+# vncorenlp = VnCoreNLP(vncorenlp_file, annotators="wseg,pos,ner,parse", max_heap_size='-Xmx4g', port=6000)
 #annotator = VnCoreNLP(vncorenlp_file, annotators="wseg,pos,ner,parse", max_heap_size='-Xmx2g',port=6000)
 
 
@@ -248,25 +248,25 @@ def num_of_word(list_sentences):
 
 # hàm dùng để tách từ các đoạn văn para sang pos_tag
 def list_para2txt(list_para):
-    split_sentence = []  ## list chứa danh sách câu được tách ra. mỗi phần tử là 1 câu.
-    for para in list_para:
-        split_sentence.extend(vncorenlp.pos_tag(para))
-    return split_sentence  # update: trả ra pos_tag là có gán nhãn cho tưng từ về loại từ.
     # split_sentence = []  ## list chứa danh sách câu được tách ra. mỗi phần tử là 1 câu.
     # for para in list_para:
-    #     c = ViPosTagger.postagging(ViTokenizer.tokenize(para))
-    #     a = list(zip(c[0], c[1]))
-    #     temp = []
-    #     flag = 0
-    #     for i in a:
-    #         if (flag == 1):
-    #             temp = []
-    #             flag = 0
-    #         temp.append(i)
-    #         if (i[0] == "."):
-    #             flag = 1
-    #             split_sentence.append(temp)
+    #     split_sentence.extend(vncorenlp.pos_tag(para))
     # return split_sentence  # update: trả ra pos_tag là có gán nhãn cho tưng từ về loại từ.
+    split_sentence = []  ## list chứa danh sách câu được tách ra. mỗi phần tử là 1 câu.
+    for para in list_para:
+        c = ViPosTagger.postagging(ViTokenizer.tokenize(para))
+        a = list(zip(c[0], c[1]))
+        temp = []
+        flag = 0
+        for i in a:
+            if (flag == 1):
+                temp = []
+                flag = 0
+            temp.append(i)
+            if (i[0] == "."):
+                flag = 1
+                split_sentence.append(temp)
+    return split_sentence  # update: trả ra pos_tag là có gán nhãn cho tưng từ về loại từ.
 
 
 def preprocess(filename):
@@ -319,7 +319,7 @@ def preprocess(filename):
         num_word = num_of_word(list_sentence)  # số từ của câu đầu tiên tương tự cho a[1],....
 
     elif (file_extension.lower() == ".txt"):
-        f = open("docFile_test/sample.txt", "r", encoding="utf8")
+        f = open(filename, "r", encoding="utf8")
         text = f.read()
         list_para = text.split("\n")  # list para: ds các
         pos_tag = list_para2txt(list_para)  # postag của đoạn

@@ -97,7 +97,7 @@ def pdf2txt(file_path, pages=None):
     infile.close()
     converter.close()
     text = output.getvalue()
-    print(text)
+    #print(text)
     output.close
     list_para = split_text(text)
 

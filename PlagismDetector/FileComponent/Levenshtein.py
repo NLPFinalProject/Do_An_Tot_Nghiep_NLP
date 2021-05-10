@@ -1,4 +1,7 @@
 import json
+import time
+#import Levenshtein
+
 #----------------Thêm, xóa, thay thế chữ"----------------#
 
 """def String_insert(string, text, position):
@@ -309,7 +312,9 @@ def Create_Backtrace_List(str1, str2, matrix):
 #    + Str2 (String)
 # Output: Khoảng cách Levenshtein (kiểu Int)
 def Levenshtein_distance(str1, str2):
+    #time3=time.time()
     matrix = Create_Matrix(str1, str2)
+    #print("line 315 create matrix mất %s seconds ---" % (time.time() - time3))
     rows = len(matrix)
     cols = len(matrix[0])
     return matrix[rows - 1][cols - 1]
@@ -371,25 +376,31 @@ def Matching_ratio_dict(lst_1, lst_2):
 # Ví dụ: [[5, 3, [1, 6, 7]], [6, 1, [6]] , [4, 0, []]]
 def ExportOrder(lst_1, lst_2, ratio):
     result = []
-
+    time1=time.time()
+    print("độ dài 2 lst là: ",len(lst_1),len(lst_2))
     for i in range(len(lst_1)):
+        s=time.time()
         export = []
         similar_sent = []
         similar_ratio = []
         count = 0
         for j in range(len(lst_2)):
+            #time2 = time.time()
             CurrentRatio = Matching_ratio(lst_1[i], lst_2[j])
+            #CurrentRatio = Levenshtein.ratio(lst_1[i], lst_2[j])
+            #print("line 384 mất %s seconds ---" % (time.time() - time2))
             if CurrentRatio >= ratio:
                 count += 1
                 similar_sent.append(j + 1)
                 similar_ratio.append(CurrentRatio)
-
+        print("line 393 câu: ",lst_1[i]," so với mất cả list 2 mất %s seconds ---"
+              % (time.time() - s))
         export.append(i + 1)
         export.append(count)
         export.append(similar_sent)
         export.append(similar_ratio)
         result.append(export)
-    
+    print("line 395 export mất %s seconds ---" % (time.time() - time1))
     return result
 def ExportOrder2(lst_1, lst_2, ratio):
     result = []
@@ -433,6 +444,7 @@ def ExportOrder3(lst_1, lst_2, ratio):
 
 # them ham exportorder3 vao levenshtein
 def ExportOrder4(lst_1, lst_2, ratio):
+    print("độ dài 2 list là: ",len(lst_1),len(lst_2))
     result = []
     length = 0
     similar_sent = []
@@ -454,7 +466,7 @@ def ExportOrder4(lst_1, lst_2, ratio):
             export['lst'] =similar_sent
             export['ratio']=similar_ratio
             result.append(export)
-    
+    print("số câu file 1: ",length,len(lst_1))
     return result, length/len(lst_1)*100
 def main():   
     lst1 = ['Không có kính không phải vì xe không có kính', 'Bom giật bom run kính vỡ đi rồi', 'Ung dung buồng lái ta ngồi']

@@ -277,12 +277,12 @@ def get_link(postag, filename, sentences, numofwords):
     #N giá trị cao nhất
     N = 20
     N_keywords = get_top(tfidf, N)
-    print(N_keywords, '\n')
+    #print(N_keywords, '\n')
 
     kw_index = 0
     keyword_list = list(N_keywords.keys())
     testdata = tag_statistic(keyword_list[kw_index], postag)
-    print(testdata)
+    #print(testdata)
     tag = tag_statistic(keyword_list[kw_index], postag)[0][0]
 
     sentences_index = find_sentence_index(keyword_list[kw_index], tag, postag)

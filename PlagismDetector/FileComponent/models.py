@@ -26,9 +26,9 @@ class DataDocumentFile(models.Model):
     DataDocumentFile = models.FileField(upload_to='DocumentFile/')
 
 # nội dung file được tách thành các câu
-class ReportDocument(models.Model):
-    DataDocumentName=models.ForeignKey(DataDocument, on_delete=models.CASCADE)
-    DataDocumentReport = models.TextField(max_length=700)
+# class ReportDocument(models.Model):
+#     DataDocumentName=models.ForeignKey(DataDocument, on_delete=models.CASCADE)
+#     DataDocumentReport = models.TextField(max_length=700)
 
 class DataDocumentContent(models.Model):
     DataDocumentNo = models.ForeignKey(DataDocument, on_delete=models.CASCADE)

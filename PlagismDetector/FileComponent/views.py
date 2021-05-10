@@ -31,8 +31,11 @@ import os
 import sys
 from collections import Counter
 import json
+import time
 
-
+numPageSearch=5
+resultRatio = 10
+maxFile = 1
 # from .preprocessing import preprocessor as p
 # Create your views here.
 
@@ -42,7 +45,7 @@ import json
 
 
 # result
-# them ham tim kiem he thong + internet
+# them ham tim kiem he thong
 # systemSearch
 @api_view(('POST',))
 def documentimportDatabase(request):
@@ -65,33 +68,24 @@ def documentimportDatabase(request):
     fetchQuery = querys[0].DataDocumentFile
     fName, lstSentence, lstLength = p.preprocess(
         settings.MEDIA_ROOT + '/DocumentFile/' + os.path.basename(str(fetchQuery)))
-    # return tag preprocess
-    tagPage, fName, lstSentence, lstLength = p.preprocess_link(
-        settings.MEDIA_ROOT + '\\DocumentFile/' + os.path.basename(documentNameLink[0]))
-    # internet search
-    internetPage2 = internetKeywordSearch.get_link(tagPage, fName, lstSentence, lstLength)
     fileName1Sentence = lstSentence
-    internetPage = [internetPage2[i] for i in range(3)]
 
     # database search
     documentName = []
     documentNameId = []
-    for i in fileName1Sentence:
-        sentence = chr(34) + i.replace(chr(34), "") + chr(34)
+    for fileSentence in fileName1Sentence:
+        sentence = chr(34) + fileSentence.replace(chr(34), "") + chr(34)
         queryRaw = "SELECT id FROM `filecomponent_datadocumentcontent` WHERE MATCH(DataDocumentSentence) Against(" + sentence + ")"
         cursor.execute(queryRaw)
         fetchQuery = dictfetchall(cursor)
         documentNameFind = [a_dict["id"] for a_dict in fetchQuery]
         documentNameId.extend(documentNameFind)
-
     documentNameId = list(dict.fromkeys(documentNameId))
+
     for idDoc in documentNameId:
-        queryRaw = "SELECT id FROM `filecomponent_datadocument` WHERE id=(SELECT DataDocumentNo_id FROM `filecomponent_datadocumentcontent` WHERE id=" + str(
-            idDoc) + ");"
-        cursor.execute(queryRaw)
-        fetchQuery = dictfetchall(cursor)
-        documentNameFind = [a_dict["id"] for a_dict in fetchQuery]
-        documentName.extend(documentNameFind)
+        querys = DataDocumentContent.objects.filter(id=str(idDoc))
+        querys = DataDocument.objects.filter(id=querys[0].DataDocumentNo_id)
+        documentName.append(str(querys[0].id))
 
     # thong ke
     idStatistic = Counter(documentName)
@@ -101,34 +95,23 @@ def documentimportDatabase(request):
     reportIdFile = []
     fileName2 = []
     for idFile in idStatistic.items():
-        if (countReport < 1):
-            # querys = DataDocumentContent.objects.filter(
-            #     DataDocumentAuthor=str(userId)) \
-            #     .filter(DataDocumentName=fileUName.split(".")[0]) \
-            #     .filter(DataDocumentType=fileUName.split(".")[1])
-            # fetchQuery = querys[0].DataDocumentFile
-            # fName, lstSentence, lstLength = p.preprocess(
-            #     settings.MEDIA_ROOT + '/DocumentFile/' + os.path.basename(str(fetchQuery)))
-            queryRaw = "SELECT DataDocumentSentence FROM `filecomponent_datadocumentcontent` WHERE DataDocumentNo_id=" + str(
-                idFile[0]) + ";"
-            cursor.execute(queryRaw)
-            fetchQuery = dictfetchall(cursor)
-            fileName2Sentence = [a_dict["DataDocumentSentence"] for a_dict in fetchQuery]
-            result = ExportOrderExportOrder4(fileName2Sentence, fileName1Sentence, 10)
-            if (result[1] >= 10 and countReport < 1):
+        if (countReport < maxFile):
+            querys = DataDocumentContent.objects.filter(DataDocumentNo_id=int(idFile[0])).order_by('id')
+            fileName2Sentence = [querys[i].DataDocumentSentence for i in range(len(querys))]
+            result = ExportOrder4(fileName2Sentence, fileName1Sentence, resultRatio)
+            if (result[1] >= resultRatio and countReport < maxFile):
                 countReport += 1
                 reportIdFile.append(idFile[0])
                 reportDataReadDoc.append(result[0])
                 ReportFileName2Sentence.append(fileName2Sentence)
-                queryRaw = "SELECT DataDocumentName FROM `filecomponent_datadocument` WHERE id=" + str(idFile[0]) + ";"
-                cursor.execute(queryRaw)
-                fetchQuery = dictfetchall(cursor)
-                fileName2Name = [a_dict["DataDocumentName"] for a_dict in fetchQuery]
+                # querys = DataDocument.objects.filter(id=str(idFile[0]))
+                # fileName2Name = querys[0].DataDocumentName
+                fileName2Name = querys[0].DataDocumentNo
                 fileName2.extend(fileName2Name)
 
     myDict4 = []
     myDict = {}
-    myDict2 = {}
+    #myDict2 = {}
     myDict["File1Name"] = fileName1
 
     for i in range(countReport):
@@ -136,48 +119,7 @@ def documentimportDatabase(request):
         mydic3["data"] = ReportFileName2Sentence[i]
         mydic3["stt"] = reportDataReadDoc[i]
         myDict4.append(mydic3)
-        myDict2[str(reportIdFile[i])] = mydic3
-    # # report cac cau html
-    # dataReadDoc = []
-    # for link in internetPage:
-    #     if (internetKeywordSearch.is_downloadable(link)):
-    #         # link_pdf.append(link)
-    #         file_pdf = internetKeywordSearch.download_document(link)
-    #         fName, lstSentence, lstLength = p.preprocess(file_pdf)
-    #         data = DataDocument(DataDocumentName=os.path.basename(file_pdf), DataDocumentAuthor_id=userId,
-    #                             DataDocumentType="pdf", DataDocumentFile=file_pdf)
-    #         data.save()
-    #         dataReadDoc.append(lstSentence)
-    #         # length= len(lstSentence)
-    #         # for i in range(length):
-    #         #     c=data.datadocumentcontent_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=lstLength[i])
-    #
-    #         os.remove(file_pdf)
-    #     else:
-    #         fName = os.path.basename(link)
-    #         lstSentence = internetKeywordSearch.crawl_web(link)
-    #         data = DataDocument(DataDocumentName=link, DataDocumentAuthor_id=userId, DataDocumentType="internet",
-    #                             DataDocumentFile=link)
-    #         data.save()
-    #         dataReadDoc.append(lstSentence)
-    #         # length= len(lstSentence)
-    #         # for i in range(length):
-    #         #     c=data.datadocumentcontent_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=len(lstSentence[i]))
-
-    # # B2 trả json
-    # # result so sanh
-    # reportDataReadDoc = []
-    # for i in range(len(dataReadDoc)):
-    #     result = ExportOrder(fileName1Sentence, dataReadDoc[i], 70)
-    #     reportDataReadDoc.append(result)
-    #
-    # myDictHtml2 = []
-    # fileName2.extend(internetPage)
-    # for i in range(len(internetPage)):
-    #     mydic3 = {}
-    #     mydic3["data"] = dataReadDoc[i]
-    #     mydic3["stt"] = reportDataReadDoc[i]
-    #     myDictHtml2.append(mydic3)
+        #myDict2[str(reportIdFile[i])] = mydic3
 
     # line length list
     myDict["ListFileName"] = fileName2
@@ -188,8 +130,137 @@ def documentimportDatabase(request):
     # myDict["internet"]=myDictHtml2
     return Response(myDict, status=status.HTTP_200_OK)
 
+@api_view(('POST',))
+def documentimportDatabaseInternet(request):
+    fileName1 = request.data["filename1"]
+    userId = int(request.data["id"])
+
+    fileName2Sentence = []
+
+    cursor = connections['default'].cursor()
+    # queryRaw ="ALTER TABLE filecomponent_datadocumentcontent ADD FULLTEXT (DataDocumentSentence);"
+    # cursor.execute(queryRaw)
+    # fileName1
+    querys = DataDocument.objects.filter(
+        DataDocumentAuthor=str(userId)) \
+        .filter(DataDocumentName=fileName1.split(".")[0]) \
+        .filter(DataDocumentType=fileName1.split(".")[1])
+    fetchQuery = querys[0].DataDocumentFile
+    # return tag preprocess
+    tagPage, fName, lstSentence, lstLength = p.preprocess_link(
+        settings.MEDIA_ROOT + '/DocumentFile/' + os.path.basename(str(fetchQuery)))
+    # internet search
+    internetPage = internetKeywordSearch.get_link(tagPage, fName, lstSentence, lstLength)
+    if(len(internetPage)>numPageSearch):
+        internetPage=internetPage[:numPageSearch]
+    fileName1Sentence = lstSentence
+    # database search
+    documentName = []
+    documentNameId = []
+    for fileSentence in fileName1Sentence:
+        sentence = chr(34) + fileSentence.replace(chr(34), "") + chr(34)
+        queryRaw = "SELECT id FROM `filecomponent_datadocumentcontent` WHERE MATCH(DataDocumentSentence) Against(" + sentence + ")"
+        cursor.execute(queryRaw)
+        fetchQuery = dictfetchall(cursor)
+        documentNameFind = [a_dict["id"] for a_dict in fetchQuery]
+        documentNameId.extend(documentNameFind)
+
+    documentNameId = list(dict.fromkeys(documentNameId))
+    for idDoc in documentNameId:
+        querys = DataDocumentContent.objects.filter(id=str(idDoc))
+        querys = DataDocument.objects.filter(
+            id=querys[0].DataDocumentNo_id
+        )
+        documentName.append(str(querys[0].id))
+
+    # thong ke
+    idStatistic = Counter(documentName)
+    countReport = 0
+    reportDataReadDoc = []
+    ReportFileName2Sentence = []
+    reportIdFile = []
+    fileName2 = []
+    for idFile in idStatistic.items():
+        if (countReport < maxFile):
+            querys = DataDocumentContent.objects.filter(DataDocumentNo_id=int(idFile[0])).order_by('id')
+            fileName2Sentence = [querys[i].DataDocumentSentence for i in range(len(querys))]
+            result = ExportOrder4(fileName2Sentence, fileName1Sentence, resultRatio)
+            if (result[1] >= resultRatio and countReport < maxFile):
+                countReport += 1
+                reportIdFile.append(idFile[0])
+                reportDataReadDoc.append(result[0])
+                ReportFileName2Sentence.append(fileName2Sentence)
+                # querys = DataDocument.objects.filter(id=str(idFile[0]))
+                # fileName2Name = querys[0].DataDocumentName
+                fileName2Name = str(querys[0].DataDocumentNo)
+                fileName2.append(fileName2Name)
+
+    myDict4 = []
+    myDict = {}
+    # myDict2 = {}
+    myDict["File1Name"] = fileName1
+
+    for i in range(countReport):
+        mydic3 = {}
+        mydic3["data"] = ReportFileName2Sentence[i]
+        mydic3["stt"] = reportDataReadDoc[i]
+        myDict4.append(mydic3)
+        # myDict2[str(reportIdFile[i])] = mydic3
+
+    # report cac cau html
+    dataReadDoc = []
+    for link in internetPage:
+        if (internetKeywordSearch.is_downloadable(link)):
+            # link_pdf.append(link)
+            file_pdf = internetKeywordSearch.download_document(link)
+            fName, lstSentence, lstLength = p.preprocess(file_pdf)
+            data = DataDocument(DataDocumentName=os.path.basename(file_pdf), DataDocumentAuthor_id=userId,
+                                DataDocumentType="pdf", DataDocumentFile=file_pdf)
+            data.save()
+            dataReadDoc.append(lstSentence)
+            # length= len(lstSentence)
+            # for i in range(length):
+            #     c=data.datadocumentcontent_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=lstLength[i])
+
+            os.remove(file_pdf)
+        else:
+            fName = os.path.basename(link)
+            lstSentence = internetKeywordSearch.crawl_web(link)
+            data = DataDocument(DataDocumentName=link, DataDocumentAuthor_id=userId, DataDocumentType="internet",
+                                DataDocumentFile=link)
+            data.save()
+            dataReadDoc.append(lstSentence)
+            # length= len(lstSentence)
+            # for i in range(length):
+            #     c=data.datadocumentcontent_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=len(lstSentence[i]))
+
+    # B2 trả json
+    # result so sanh
+    reportDataReadDoc = []
+    for i in range(len(dataReadDoc)):
+        result = ExportOrder(fileName1Sentence, dataReadDoc[i], 70)
+        reportDataReadDoc.append(result)
+
+    myDictHtml2 = []
+    fileName2.extend(internetPage)
+    for i in range(len(internetPage)):
+        mydic3 = {}
+        mydic3["data"] = dataReadDoc[i]
+        mydic3["stt"] = reportDataReadDoc[i]
+        myDictHtml2.append(mydic3)
+
+    # line length list
+    myDict["ListFileName"] = fileName2
+    myDict["ListFile"] = myDict4
+    myDict["file1"] = fileName1Sentence
+    myDict["ListFile"].extend(myDictHtml2)
+
+    myDict["internet"] = myDictHtml2
+    return Response(myDict, status=status.HTTP_200_OK)
+
 
 # import mới
+#dùng kiểm với data ng dùng
 @api_view(('POST', 'GET'))
 def documentimport2(request):
     fileName1 = None
@@ -314,7 +385,7 @@ def FinalCheck(request):
 
     return Response(status=status.HTTP_200_OK)
 
-
+#kiểm vs internet
 def documentimportInternet2(data):
     fileName1 = data['fileName1']
     userId = data['id']
@@ -331,7 +402,9 @@ def documentimportInternet2(data):
     fileName1Sentence = lstSentence
 
     # internet search
-    internetPage = internetKeywordSearch.get_link(tagPage, fName, lstSentence, lstLength)[:1]
+    internetPage = internetKeywordSearch.get_link(tagPage, fName, lstSentence, lstLength)
+    if(len(internetPage) > numPageSearch):
+        internetPage=internetPage[:numPageSearch]
     dataReadDoc = []
     for link in internetPage:
         if (internetKeywordSearch.is_downloadable(link)):
@@ -365,8 +438,11 @@ def documentimportInternet2(data):
     # reportDataReadDoc.append(fileName1Sentence)
     # eportDataReadDoc.append(dataReadDoc)
     for i in range(len(dataReadDoc)):
+        print("tao report ",i)
+        start_time = time.time()
         result = ExportOrder(fileName1Sentence, dataReadDoc[i], 80)
         reportDataReadDoc.append(result)
+        print("---tao report ",i," nay mất %s seconds ---" % (time.time() - start_time))
 
     # list of dicts to list of value end
     # fileName1 = "fileDocA.doc"
