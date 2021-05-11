@@ -1,5 +1,6 @@
 from operator import itemgetter
 import math
+from django.conf import settings
 import string
 
 #import preprocessor as p
@@ -17,7 +18,7 @@ from ScrapeSearchEngine.ScrapeSearchEngine import Givewater
 from ScrapeSearchEngine.ScrapeSearchEngine import Bing
 from ScrapeSearchEngine.ScrapeSearchEngine import Yahoo
 from ScrapeSearchEngine.ScrapeSearchEngine import Ecosia
-
+import urllib.request
 userAgent = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)'
              ' Chrome/89.0.4389.114 Safari/537.36 Edg/89.0.774.68')
 #search on google "my user agent"
@@ -36,13 +37,48 @@ def is_downloadable(url):
         return False
     return True
 # search keyword from multiple search engine include
+#
+# def tiny_url(url):
+#     apiurl = "http://tinyurl.com/api-create.php?url="
+#     tinyurl = urllib.request.urlopen(apiurl + url).read()
+#     return tinyurl.decode("utf-8")
+
+import requests
+import sys
+import traceback
+import urllib
+
+
+# class UrlShortenTinyurl:
+#     URL = "http://tinyurl.com/api-create.php"
+#
+#     def shorten(self, url_long):
+#         try:
+#             url = self.URL + "?" \
+#                 + urllib.parse.urlencode({"url": url_long})
+#             res = requests.get(url)
+#             # print("STATUS CODE:", res.status_code)
+#             # print("   LONG URL:", url_long)
+#             # print("  SHORT URL:", res.text)
+#         except Exception as e:
+#             raise
+#         return res.text
+
+
 def search_keyword(search):
     list_url = []
+    res=[]
     list_url.extend(Google(search, userAgent))
     list_url.extend(Bing(search, userAgent))
     list_url.extend( Yahoo(search, userAgent))
     list_url.extend(Duckduckgo(search, userAgent))
     list_url.extend(Givewater(search, userAgent))
+    #list_url=list(dict.fromkeys(list_url))
+    #obj = UrlShortenTinyurl()
+
+    # for i in range(len(list_url)):
+    #     res.append( obj.shorten(list_url[i]))
+
     # list_url.extend (Ecosia(search, userAgent))
     return list(dict.fromkeys(list_url))
 
@@ -51,8 +87,8 @@ def download_document(url):
     if (is_downloadable(url)):
         name = os.path.basename(url)
         r = requests.get(url, allow_redirects=True)
-        open("file_downloaded\\" + name, 'wb').write(r.content)
-        return "file_downloaded\\" + name
+        open(settings.MEDIA_ROOT+'/DocumentFile/file_downloaded/' + name, 'wb').write(r.content)
+        return settings.MEDIA_ROOT+'/DocumentFile/file_downloaded/' + name
 
 # crawl text from html website then preprocess and give output: list sentence after preprocessing.
 def crawl_web(url):

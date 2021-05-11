@@ -15,7 +15,7 @@ from .models import *
 from django.db import connections, connection
 from django.db.models import Q
 # can import cho levenshtein
-from .Levenshtein import *
+from .levenshtein import *
 from PreprocessingComponent.views import *
 # cần import cho up file
 from django.core.files.storage import FileSystemStorage
@@ -33,9 +33,13 @@ from collections import Counter
 import json
 import time
 
-numPageSearch=5
-resultRatio = 10
+numPageSearch = 5
+resultRatio = 50
 maxFile = 1
+
+rat = 50
+
+
 # from .preprocessing import preprocessor as p
 # Create your views here.
 
@@ -98,7 +102,7 @@ def documentimportDatabase(request):
         if (countReport < maxFile):
             querys = DataDocumentContent.objects.filter(DataDocumentNo_id=int(idFile[0])).order_by('id')
             fileName2Sentence = [querys[i].DataDocumentSentence for i in range(len(querys))]
-            result = ExportOrder4(fileName2Sentence, fileName1Sentence, resultRatio)
+            result = ExportOrder4(fileName1Sentence, fileName2Sentence, resultRatio)
             if (result[1] >= resultRatio and countReport < maxFile):
                 countReport += 1
                 reportIdFile.append(idFile[0])
@@ -106,12 +110,12 @@ def documentimportDatabase(request):
                 ReportFileName2Sentence.append(fileName2Sentence)
                 # querys = DataDocument.objects.filter(id=str(idFile[0]))
                 # fileName2Name = querys[0].DataDocumentName
-                fileName2Name = querys[0].DataDocumentNo
-                fileName2.extend(fileName2Name)
+                fileName2Name = str(querys[0].DataDocumentNo)
+                fileName2.append(fileName2Name)
 
     myDict4 = []
     myDict = {}
-    #myDict2 = {}
+    # myDict2 = {}
     myDict["File1Name"] = fileName1
 
     for i in range(countReport):
@@ -119,7 +123,7 @@ def documentimportDatabase(request):
         mydic3["data"] = ReportFileName2Sentence[i]
         mydic3["stt"] = reportDataReadDoc[i]
         myDict4.append(mydic3)
-        #myDict2[str(reportIdFile[i])] = mydic3
+        # myDict2[str(reportIdFile[i])] = mydic3
 
     # line length list
     myDict["ListFileName"] = fileName2
@@ -129,6 +133,7 @@ def documentimportDatabase(request):
 
     # myDict["internet"]=myDictHtml2
     return Response(myDict, status=status.HTTP_200_OK)
+
 
 @api_view(('POST',))
 def documentimportDatabaseInternet(request):
@@ -151,8 +156,8 @@ def documentimportDatabaseInternet(request):
         settings.MEDIA_ROOT + '/DocumentFile/' + os.path.basename(str(fetchQuery)))
     # internet search
     internetPage = internetKeywordSearch.get_link(tagPage, fName, lstSentence, lstLength)
-    if(len(internetPage)>numPageSearch):
-        internetPage=internetPage[:numPageSearch]
+    if (len(internetPage) > numPageSearch):
+        internetPage = internetPage[:numPageSearch]
     fileName1Sentence = lstSentence
     # database search
     documentName = []
@@ -184,7 +189,7 @@ def documentimportDatabaseInternet(request):
         if (countReport < maxFile):
             querys = DataDocumentContent.objects.filter(DataDocumentNo_id=int(idFile[0])).order_by('id')
             fileName2Sentence = [querys[i].DataDocumentSentence for i in range(len(querys))]
-            result = ExportOrder4(fileName2Sentence, fileName1Sentence, resultRatio)
+            result = ExportOrder4(fileName1Sentence, fileName2Sentence, resultRatio)
             if (result[1] >= resultRatio and countReport < maxFile):
                 countReport += 1
                 reportIdFile.append(idFile[0])
@@ -238,7 +243,7 @@ def documentimportDatabaseInternet(request):
     # result so sanh
     reportDataReadDoc = []
     for i in range(len(dataReadDoc)):
-        result = ExportOrder(fileName1Sentence, dataReadDoc[i], 70)
+        result = ExportOrder( fileName1Sentence,dataReadDoc[i], rat)
         reportDataReadDoc.append(result)
 
     myDictHtml2 = []
@@ -260,7 +265,7 @@ def documentimportDatabaseInternet(request):
 
 
 # import mới
-#dùng kiểm với data ng dùng
+# dùng kiểm với data ng dùng
 @api_view(('POST', 'GET'))
 def documentimport2(request):
     fileName1 = None
@@ -280,12 +285,13 @@ def documentimport2(request):
     # fileName1
     # query trên database
     querys = DataDocument.objects.filter(
-        DataDocumentAuthor=str(userId))\
-        .filter(DataDocumentName=fileName1.split(".")[0])\
+        DataDocumentAuthor=str(userId)) \
+        .filter(DataDocumentName=fileName1.split(".")[0]) \
         .filter(DataDocumentType=fileName1.split(".")[1]
-    )
+                )
     fetchQuery = querys[0].DataDocumentFile
-    fName, lstSentence, lstLength = p.preprocess(settings.MEDIA_ROOT + '/DocumentFile/' + os.path.basename(str(fetchQuery)))
+    fName, lstSentence, lstLength = p.preprocess(
+        settings.MEDIA_ROOT + '/DocumentFile/' + os.path.basename(str(fetchQuery)))
     # danh sách các câu trong file1 theo thứ tự
     fileName1Sentence = lstSentence
 
@@ -298,7 +304,6 @@ def documentimport2(request):
     #                    1] + "' AND DataDocumentAuthor_id=" + str(userId) + ";"
     dataReadDoc = []
 
-
     for fileUName in fileName2:
         try:
             # query database
@@ -307,7 +312,8 @@ def documentimport2(request):
                 .filter(DataDocumentName=fileUName.split(".")[0]) \
                 .filter(DataDocumentType=fileUName.split(".")[1])
             fetchQuery = querys[0].DataDocumentFile
-            fName, lstSentence, lstLength = p.preprocess(settings.MEDIA_ROOT + '/DocumentFile/' + os.path.basename(str(fetchQuery)))
+            fName, lstSentence, lstLength = p.preprocess(
+                settings.MEDIA_ROOT + '/DocumentFile/' + os.path.basename(str(fetchQuery)))
             lst2 = lstSentence
             dataReadDoc.append(lst2)
         except Exception:
@@ -322,7 +328,8 @@ def documentimport2(request):
     # eportDataReadDoc.append(dataReadDoc)
 
     for i in range(len(dataReadDoc)):
-        result = ExportOrder(fileName1Sentence, dataReadDoc[i], 75)
+        result = ExportOrder(fileName1Sentence,dataReadDoc[i], rat)
+
         reportDataReadDoc.append(result)
 
     # list of dicts to list of value end
@@ -385,7 +392,8 @@ def FinalCheck(request):
 
     return Response(status=status.HTTP_200_OK)
 
-#kiểm vs internet
+
+# kiểm vs internet
 def documentimportInternet2(data):
     fileName1 = data['fileName1']
     userId = data['id']
@@ -403,8 +411,9 @@ def documentimportInternet2(data):
 
     # internet search
     internetPage = internetKeywordSearch.get_link(tagPage, fName, lstSentence, lstLength)
-    if(len(internetPage) > numPageSearch):
-        internetPage=internetPage[:numPageSearch]
+    if (len(internetPage) > numPageSearch):
+        internetPage = internetPage[:numPageSearch]
+    print("Link: ", internetPage)
     dataReadDoc = []
     for link in internetPage:
         if (internetKeywordSearch.is_downloadable(link)):
@@ -412,19 +421,20 @@ def documentimportInternet2(data):
             file_pdf = internetKeywordSearch.download_document(link)
             fName, lstSentence, lstLength = p.preprocess(file_pdf)
             data = DataDocument(DataDocumentName=os.path.basename(file_pdf), DataDocumentAuthor_id=userId,
-                                DataDocumentType="pdf", DataDocumentFile=file_pdf)
+                                DataDocumentType="internetPdf", DataDocumentFile=link)
             data.save()
             dataReadDoc.append(lstSentence)
             # length= len(lstSentence)
             # for i in range(length):
             #     c=data.datadocumentcontent_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=lstLength[i])
 
-            os.remove(file_pdf)
+            # os.remove(file_pdf)
         else:
             fName = os.path.basename(link)
             lstSentence = internetKeywordSearch.crawl_web(link)
             data = DataDocument(DataDocumentName=link, DataDocumentAuthor_id=userId, DataDocumentType="internet",
                                 DataDocumentFile=link)
+            print("length of link: ", len(link))
             data.save()
             dataReadDoc.append(lstSentence)
             # length= len(lstSentence)
@@ -438,11 +448,11 @@ def documentimportInternet2(data):
     # reportDataReadDoc.append(fileName1Sentence)
     # eportDataReadDoc.append(dataReadDoc)
     for i in range(len(dataReadDoc)):
-        print("tao report ",i)
+        print("tao report ", i)
         start_time = time.time()
-        result = ExportOrder(fileName1Sentence, dataReadDoc[i], 80)
+        result = ExportOrder(fileName1Sentence,dataReadDoc[i], rat)
         reportDataReadDoc.append(result)
-        print("---tao report ",i," nay mất %s seconds ---" % (time.time() - start_time))
+        print("---tao report ", i, " nay mất %s seconds ---" % (time.time() - start_time))
 
     # list of dicts to list of value end
     # fileName1 = "fileDocA.doc"
@@ -796,18 +806,19 @@ def uploadMultipleDocumentSentenceToDatabase(request):
 
 # up 1 file vao user db
 # uploadDoc3 old -> uploadOneDocUser (change name only)
-def jsonFile(request,file_name,userId):
-    filename = settings.MEDIA_ROOT+"/result/"+file_name+userId
-    print("fullpath:          ",filename)
+def jsonFile(request, file_name, userId):
+    filename = settings.MEDIA_ROOT + "/result/" + file_name + userId
+    print("fullpath:          ", filename)
     mydict = request
     with open(filename + ".json", "w") as f:
         json.dump(mydict, f)
-    fileJson=open(filename+".json","r")
-    reportData=json.loads(fileJson.read())
+    fileJson = open(filename + ".json", "r")
+    reportData = json.loads(fileJson.read())
     print(fileJson.name)
     fileJson.close()
     # os.remove(fileJson.name)
     return fileJson.name
+
 
 @api_view(['GET'])
 def test(self):
@@ -815,8 +826,6 @@ def test(self):
     print('done')
     content = {'please move along': 'have the same username222'}
     return Response(content, status=status.HTTP_200_OK)
-
-
 
 # def testting(request):
 #     fileName1 = "bacho.docx"

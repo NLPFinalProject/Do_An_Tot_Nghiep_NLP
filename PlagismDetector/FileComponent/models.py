@@ -9,7 +9,7 @@ class Document(models.Model):
 
 class DataDocument(models.Model):
     DataDocumentName = models.CharField(max_length=1000)
-    DataDocumentType = models.CharField(max_length=10)
+    DataDocumentType = models.CharField(max_length=20)
     DataDocumentAuthor = models.ForeignKey(User, on_delete=models.CASCADE)
     DataDocumentFile = models.FileField(upload_to='DocumentFile/',max_length=1000)
     def __str__(self):

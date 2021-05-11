@@ -1,6 +1,5 @@
-import json
 import time
-#import Levenshtein
+import Levenshtein as L
 
 #----------------Thêm, xóa, thay thế chữ"----------------#
 
@@ -377,31 +376,29 @@ def Matching_ratio_dict(lst_1, lst_2):
 def ExportOrder(lst_1, lst_2, ratio):
     result = []
     time1=time.time()
-    print("độ dài 2 lst là: ",len(lst_1),len(lst_2))
+    #print("độ dài 2 lst là: ",len(lst_1),len(lst_2))
     for i in range(len(lst_1)):
-        s=time.time()
         export = []
         similar_sent = []
         similar_ratio = []
         count = 0
         for j in range(len(lst_2)):
             #time2 = time.time()
-            CurrentRatio = Matching_ratio(lst_1[i], lst_2[j])
-            #CurrentRatio = Levenshtein.ratio(lst_1[i], lst_2[j])
+            #CurrentRatio = Matching_ratio(lst_1[i], lst_2[j])
+            CurrentRatio = L.ratio(lst_1[i], lst_2[j])*100
             #print("line 384 mất %s seconds ---" % (time.time() - time2))
             if CurrentRatio >= ratio:
                 count += 1
                 similar_sent.append(j + 1)
                 similar_ratio.append(CurrentRatio)
-        print("line 393 câu: ",lst_1[i]," so với mất cả list 2 mất %s seconds ---"
-              % (time.time() - s))
         export.append(i + 1)
         export.append(count)
         export.append(similar_sent)
         export.append(similar_ratio)
         result.append(export)
-    print("line 395 export mất %s seconds ---" % (time.time() - time1))
+    #print("line 395 export mất %s seconds ---" % (time.time() - time1))
     return result
+
 def ExportOrder2(lst_1, lst_2, ratio):
     result = []
 
@@ -410,7 +407,7 @@ def ExportOrder2(lst_1, lst_2, ratio):
         similar_sent = []
         count = 0
         for j in range(len(lst_2)):
-            if Matching_ratio(lst_1[i], lst_2[j]) >= ratio:
+            if L.ratio(lst_1[i], lst_2[j])*100 >= ratio:
                 count += 1
                 similar_sent.append(j + 1)
 
@@ -429,7 +426,7 @@ def ExportOrder3(lst_1, lst_2, ratio):
         similar_ratio =[]
         count = 0
         for j in range(len(lst_2)):
-            CurrentRatio = Matching_ratio(lst_1[i], lst_2[j])
+            CurrentRatio = L.ratio(lst_1[i], lst_2[j])*100
             if CurrentRatio >= ratio:
                 count += 1
                 similar_sent.append(j + 1)
@@ -444,30 +441,39 @@ def ExportOrder3(lst_1, lst_2, ratio):
 
 # them ham exportorder3 vao levenshtein
 def ExportOrder4(lst_1, lst_2, ratio):
-    print("độ dài 2 list là: ",len(lst_1),len(lst_2))
+    #print("độ dài 2 list là: ",len(lst_1),len(lst_2))
     result = []
     length = 0
-    similar_sent = []
-    similar_ratio =[]
     for i in range(len(lst_1)):
-        export = {}
+        export = []
         similar_sent = []
+        similar_ratio = []
         count = 0
         for j in range(len(lst_2)):
-            CurrentRatio = Matching_ratio(lst_1[i], lst_2[j])
+            CurrentRatio = L.ratio(lst_1[i], lst_2[j])*100
             if CurrentRatio >= ratio:
                 count += 1
                 similar_sent.append(j + 1)
                 similar_ratio.append(CurrentRatio)
+        #print("Count: ",count)
         if count != 0:
             length += 1
-            export['line'] = i + 1
-            export['count'] = count
-            export['lst'] =similar_sent
-            export['ratio']=similar_ratio
-            result.append(export)
-    print("số câu file 1: ",length,len(lst_1))
+        #     export['line'] = i + 1
+        #     export['count'] = count
+        #     export['lst'] =similar_sent
+        #     export['ratio']=similar_ratio
+        #     result.append(export)
+        export.append(i + 1)
+        export.append(count)
+        export.append(similar_sent)
+        export.append(similar_ratio)
+        result.append(export)
+    #print("số câu file 1: ",length,len(lst_1))
     return result, length/len(lst_1)*100
+
+
+
+
 def main():   
     lst1 = ['Không có kính không phải vì xe không có kính', 'Bom giật bom run kính vỡ đi rồi', 'Ung dung buồng lái ta ngồi']
     lst2 = ['Nhìn đất nhìn trời nhìn thẳng', 'Nhìn thấy gió vào xoa mắt đắng', 'Nhìn thấy con đường chạy thẳng vào tim']

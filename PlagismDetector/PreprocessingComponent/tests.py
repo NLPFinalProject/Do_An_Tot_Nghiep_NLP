@@ -40,11 +40,9 @@ def para_string(para):
 
     return string
 
-
 # Get table string. Input is table element
 def table_string(table):
     string = ""
-
     wp = table.getElementsByTagName('w:p')
     column = len(table.getElementsByTagName('w:tc')) / len(table.getElementsByTagName('w:tr'))
     c = 1
@@ -67,12 +65,6 @@ def get_all_elements(lst, type_of_element):
             elements_list.append(elm)
 
     return elements_list
-
-
-def para2text(p):
-    rs = p._element.xpath('.//w:t')
-    return u" ".join([r.text for r in rs])
-
 
 # -------------------------------------các function hỗ trợ cho pdf2txt ------------------------------
 
@@ -241,8 +233,14 @@ def num_of_word(list_sentences):
 
 # hàm dùng để tách từ các đoạn văn para sang pos_tag
 def list_para2txt(list_para):
+
+
+
     split_sentence = []  ## list chứa danh sách câu được tách ra. mỗi phần tử là 1 câu.
     for para in list_para:
+        para=' '.join(para.split())
+        if(len(para.split())<2):
+            continue
         c = ViPosTagger.postagging(ViTokenizer.tokenize(para))
         a = list(zip(c[0], c[1]))
         temp = []
@@ -287,13 +285,11 @@ def preprocess(filename):
     elif (file_extension.lower() == ".pdf"):
         list_para = Pdf_extract.pdf2txt(filename)  # list para: ds các
         pos_tag = list_para2txt(list_para)  # postag của đoạn
-        list_sentence = convert2listsentence(
-            pos_tag)  # đay là list các câu.  list_sentence [0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
+        list_sentence = convert2listsentence(pos_tag)  # đay là list các câu.  list_sentence [0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
         num_word = num_of_word(list_sentence)  # số từ của câu đầu tiên tương tự cho a[1],....
 
     elif (file_extension.lower() == ".csv"):
-        list_sentence = csv2txt(
-            filename)  # đay là list các câu.  list_sentence [0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
+        list_sentence = csv2txt(filename)  # đay là list các câu.  list_sentence [0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
         num_word = num_of_word(list_sentence)  # số từ của câu đầu tiên tương tự cho a[1],....
 
     elif (file_extension.lower() == ".xlsx"):
@@ -390,10 +386,12 @@ def rtf2txt(filename):
 
 
 if __name__ == '__main__':
-
+    filename="P:\Document\ProjectTotNghiep\code\docFile_test/related.pdf"
     # ViTokenizer.tokenize(u"Trường đại học bách khoa hà nội")
-    a=preprocess("project_doc.docx")
-    print(a)
+    #a=preprocess("P:\Document\ProjectTotNghiep\code\docFile_test/sample.pdf")
+    a=Pdf_extract.pdf2txt(filename)
+    for i in a:
+        print(' '.join(i.split()))
     #print("pyvi: **** ",a)
     # ViUtils.remove_accents(u"Trường đại học bách khoa hà nội")
     #
