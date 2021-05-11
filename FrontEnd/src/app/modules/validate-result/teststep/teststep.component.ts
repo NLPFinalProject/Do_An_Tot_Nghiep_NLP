@@ -92,7 +92,19 @@ export class TeststepComponent implements OnInit {
         break;
       }
       case 3:
+        let id = localStorage.getItem('id');
 
+        let data = {
+          id: id,
+          fileName1: localStorage.getItem('file'),
+          choice: this.selectedOption,
+        };
+        console.log('hi');
+        this.fileService.checkPlagiasmUsingInternet(data).subscribe((data: any) => {
+          console.log(data);
+          this.router.navigate(['checkresult/result'], { replaceUrl: true, state: { data: data } });
+        });
+        break;
       case 4: {
         let id = localStorage.getItem('id');
 
@@ -102,7 +114,7 @@ export class TeststepComponent implements OnInit {
           choice: this.selectedOption,
         };
         console.log('hi');
-        this.fileService.checkPlagiasmV2(data).subscribe((data: any) => {
+        this.fileService.checkPlagiasmUsingAll(data).subscribe((data: any) => {
           console.log(data);
           this.router.navigate(['checkresult/result'], { replaceUrl: true, state: { data: data } });
         });

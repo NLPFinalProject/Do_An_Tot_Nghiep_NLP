@@ -44,10 +44,15 @@ export class FileService {
     return this.http.get(`${this.baseUrl}/api/file/test`);*/
     return this.http.post(`${this.baseUrl}/api/file/checkdatabase`, data);
   }
-  checkPlagiasmInternet(data: Object): Observable<Object> {
+  checkPlagiasmUsingAll(data: Object): Observable<Object> {
     /*console.log('there');
     return this.http.get(`${this.baseUrl}/api/file/test`);*/
-    return this.http.post(`${this.baseUrl}/api/file/checkdatabase`, data);
+    return this.http.post(`${this.baseUrl}/api/file/checkdatabaseinternet`, data);
+  }
+  checkPlagiasmUsingInternet(data: Object): Observable<Object> {
+    /*console.log('there');
+    return this.http.get(`${this.baseUrl}/api/file/test`);*/
+    return this.http.post(`${this.baseUrl}/api/file/checkinternet`, data);
   }
   checkPlagiasmV2(data: Object): Observable<Object> {
     console.log('there');
