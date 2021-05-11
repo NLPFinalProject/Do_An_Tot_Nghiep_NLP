@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { I18nService, Logger } from '@app/core';
+
 import { environment } from '@env/environment';
 import { TranslateService } from '@ngx-translate/core';
 import { merge } from 'rxjs';
 import { filter, map, mergeMap } from 'rxjs/operators';
-
+import '@angular/localize/init';
 const log = new Logger('App');
 
 @Component({
@@ -21,7 +22,10 @@ export class AppComponent implements OnInit {
     private titleService: Title,
     private translateService: TranslateService,
     private i18nService: I18nService
-  ) {}
+  ) {
+    this.translateService.setDefaultLang('en-US');
+    this.translateService.use('en-US');
+  }
 
   ngOnInit() {
     // Setup logger
@@ -35,7 +39,9 @@ export class AppComponent implements OnInit {
     this.i18nService.init(environment.defaultLanguage, environment.supportedLanguages);
 
     const onNavigationEnd = this.router.events.pipe(filter((event) => event instanceof NavigationEnd));
-
+    this.translateService.setDefaultLang('en-US');
+    this.translateService.use('en');
+    console.log('set successful');
     // Change page title on navigation or language change, based on route data
     merge(this.translateService.onLangChange, onNavigationEnd)
       .pipe(

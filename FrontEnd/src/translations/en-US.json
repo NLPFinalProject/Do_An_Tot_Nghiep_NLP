@@ -37,5 +37,7 @@
   "FullName": "Full Name",
   "FullName is required": "Full Name is required",
   "UserId": "User Id",
-  "Blog": "Blog"
+  "Blog": "Blog",
+  "Account": "Account",
+  "Select file": "Select file"
 }

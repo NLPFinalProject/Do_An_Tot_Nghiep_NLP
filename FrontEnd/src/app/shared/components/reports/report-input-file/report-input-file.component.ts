@@ -30,10 +30,14 @@ export class ReportInputFileComponent implements OnInit {
   }
 
   getReportInputFile(): void {
-    this.reportInputFileService.getJSON().subscribe((res: ReportInputFileDto[]) => {
+    this.reportInputFileService.getJSON().subscribe((res: any) => {
       setTimeout(() => {
         this.loading = false;
+        console.log(res);
         this.reportInputFile = res;
+        for (var i = 0; i < this.reportInputFile.length; i++) {
+          console.log(this.reportInputFile[i]);
+        }
       }, 3000);
     });
   }

@@ -5,7 +5,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxErrorsModule } from '@polarcape/ngx-errors';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
-
+import { NzIconModule } from 'ng-zorro-antd/icon';
 import { LoginRoutingModule } from './login-routing.module';
 import { LoginComponent } from './login.component';
 import { RegisterComponent } from './register/register.component';
@@ -25,6 +25,7 @@ import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
     LoginRoutingModule,
     NgZorroAntdModule,
     NgxErrorsModule,
+    NzIconModule,
     ScrollToModule.forRoot(),
   ],
   declarations: [

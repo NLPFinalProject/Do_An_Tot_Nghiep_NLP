@@ -9,6 +9,7 @@ export const environment = {
   version: env.npm_package_version + '-dev',
   //serverUrl: 'https://reqres.in/api',
   serverUrl: 'http://localhost:5000',
+  clientUrl: 'http://localhost:4200',
   defaultLanguage: 'vn-VN',
   supportedLanguages: ['en-US', 'vn-VN'],
 };

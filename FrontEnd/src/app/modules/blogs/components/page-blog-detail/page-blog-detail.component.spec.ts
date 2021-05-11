@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PageBlogDetailComponent } from './page-blog-detail.component';
 
@@ -6,11 +6,13 @@ describe('PageBlogDetailComponent', () => {
   let component: PageBlogDetailComponent;
   let fixture: ComponentFixture<PageBlogDetailComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [PageBlogDetailComponent],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [PageBlogDetailComponent],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(PageBlogDetailComponent);

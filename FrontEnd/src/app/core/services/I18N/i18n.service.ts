@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { includes } from 'lodash';
 
-import enUS from '../../../../translations/en-US.json';
-import vnVN from '../../../../translations/vn-VN.json';
+import * as enUS from '../../../../translations/en-US.json';
+import * as vnVN from '../../../../translations/vn-VN.json';
 
 // const log = new Logger('I18nService');
 const languageKey = 'language';

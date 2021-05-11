@@ -1,8 +1,5 @@
 <nz-header>
- 
-  <ul nz-menu [nzTheme]="'dark'" [nzMode]="'horizontal'" style="line-height: 64px;" [nzSelectable]="false" class="right">
-   
-   
+  <ul nz-menu [nzTheme]="'dark'" [nzMode]="'horizontal'" style="line-height: 64px" [nzSelectable]="false" class="right">
     <!-- <li nz-menu-item>
       <nz-dropdown>
         <a nz-dropdown>
@@ -16,23 +13,16 @@
       </nz-dropdown>
     </li> -->
     <li nz-menu-item>
-      <nz-dropdown>
-        <a nz-dropdown style ="color: white;">
-          Tài khoản: {{ username }} <i nz-icon type="down"></i>
-        </a>
-        <ul nz-menu nzSelectable>
-         
-          
+      <a nz-dropdown style="color: white" [nzDropdownMenu]="menu">
+        Tài khoản: {{ username }} <i nz-icon nzType="down" nzTheme="outline"></i>
+      </a>
+      <nz-dropdown-menu style="color: white" #menu="nzDropdownMenu">
+        <ul nz-menu>
           <li nz-menu-item>
             <a (click)="logout()" translate>Logout</a>
           </li>
-         
         </ul>
-      </nz-dropdown>
+      </nz-dropdown-menu>
     </li>
-    
   </ul>
-  
-  
-
 </nz-header>

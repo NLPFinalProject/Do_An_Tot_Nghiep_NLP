@@ -4,12 +4,13 @@ import { CommonModule } from '@angular/common';
 import { ViewportScroller } from '@angular/common';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { SharedModule } from '@app/shared/shared.module';
-import { stringify } from '@angular/core/src/util';
+//import { stringify } from '@angular/core/src/util';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ScrollToService, ScrollToConfigOptions } from '@nicky-lenaers/ngx-scroll-to';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { identity } from 'lodash';
-import throttleByAnimationFrame from 'ng-zorro-antd/core/util/throttleByAnimationFrame';
+//import throttleByAnimationFrame from 'ng-zorro-antd/core/util/throttleByAnimationFrame';
 import { FileService } from '@../../../src/app/shell/shell-routing-service';
 @Component({
   selector: 'app-validate-result',
@@ -64,15 +65,18 @@ export class ValidateResultComponent implements OnInit {
       };
       console.log('data is');
       console.log(data);
-      this.fileService.checkPlagiasm(data).subscribe((data: any) => {
-        this.data = data;
-        this.trolling = false;
+      this.fileService.checkPlagiasm(data).subscribe(
+        (data: any) => {
+          this.data = data;
+          this.trolling = false;
 
-        this.getFirstSentences();
+          this.getFirstSentences();
 
-        this.ShowResult(0);
-        this.createOptionList();
-      });
+          this.ShowResult(0);
+          this.createOptionList();
+        },
+        (error) => {}
+      );
     } else if (this.data != null) {
       this.getFirstSentences();
       this.ShowResult(0);
@@ -154,7 +158,7 @@ export class ValidateResultComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private fileService: FileService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute //private matDialog: MatDialog
   ) {
     this.activatedRoute.queryParams.subscribe((params) => {
       console.log('new file');

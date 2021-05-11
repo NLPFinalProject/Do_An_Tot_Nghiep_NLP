@@ -38,5 +38,7 @@
   "FullName": "Họ tên",
   "FullName is required": "Họ tên là bắt buộc",
   "UserId": "Id người dùng",
-  "Blog": "Liên hệ"
+  "Blog": "Liên hệ",
+  "Account": "Tài khoàn",
+  "Select file": "Chọn file"
 }

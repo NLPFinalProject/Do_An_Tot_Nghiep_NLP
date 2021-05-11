@@ -2,7 +2,7 @@ import { HttpClient, HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpH
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import jwt_decode from 'jwt-decode';
-import * as moment from 'moment';
+import moment from 'moment';
 import { tap, shareReplay } from 'rxjs/operators';
 //import { Credentials } from 'crypto';
 export interface Credentials {

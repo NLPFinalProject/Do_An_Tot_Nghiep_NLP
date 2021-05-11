@@ -5,3 +5,6 @@
 .ng-invalid.ng-touched:not(form) {
   border-right: 4px solid theme-color("danger");
 }
+.centerclick {
+  justify-content: center;
+}

@@ -1,23 +1,14 @@
-
-<nz-layout class = "layoutoutside">
-  
-  <nz-sider>
-    <app-sidebar></app-sidebar>
-  </nz-sider>
-  
+<nz-layout class="layoutoutside">
+  <nz-header>
+    <app-header></app-header>
+  </nz-header>
   <nz-layout class="layoutinside">
-    
-    <nz-header>
-      <app-header></app-header>
-    </nz-header>
-    <nz-content style="padding:0 40px;">
+    <nz-sider>
+      <app-sidebar></app-sidebar>
+    </nz-sider>
+    <nz-content style="padding: 0 40px">
       <app-breadcrumb></app-breadcrumb>
       <router-outlet></router-outlet>
-      
     </nz-content>
-   
   </nz-layout>
-  
-  
 </nz-layout>
-
