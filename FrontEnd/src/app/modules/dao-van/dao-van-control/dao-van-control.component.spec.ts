@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DaoVanControlComponent } from './dao-van-control.component';
 
@@ -6,11 +6,13 @@ describe('DaoVanControlComponent', () => {
   let component: DaoVanControlComponent;
   let fixture: ComponentFixture<DaoVanControlComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [DaoVanControlComponent],
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [DaoVanControlComponent],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(DaoVanControlComponent);

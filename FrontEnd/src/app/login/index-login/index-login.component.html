@@ -6,19 +6,6 @@
     <hr />
     <form nz-form [formGroup]="loginForm" (ngSubmit)="login()">
       <nz-spin [nzSpinning]="isLoading">
-        <nz-dropdown nz-row nzType="flex" nzJustify="end">
-          <a nz-button nz-dropdown>
-            <span translate>{{ optionAccounts }}</span> <i nz-icon type="down"></i>
-          </a>
-          <ul nz-menu>
-            <li nz-menu-item>
-              <a (click)="optionAccount(true)" translate>Client</a>
-            </li>
-            <li nz-menu-item>
-              <a (click)="optionAccount(false)" translate>Administator</a>
-            </li>
-          </ul>
-        </nz-dropdown>
         <nz-form-item>
           <nz-form-control>
             <nz-input-group [nzPrefix]="prefixUser">
@@ -76,7 +63,7 @@
             type="submit"
             [disabled]="loginForm.invalid || isLoading"
           >
-            <i nz-icon type="login" theme="outline"></i> <span translate>Login</span>
+            <i nz-icon [nzType]="'login'" theme="outline"></i> <span translate>Login</span>
           </button>
           <nz-form-explain *ngIf="isError" class="errors">
             {{ 'Username or password incorrect.' | translate }}
@@ -84,10 +71,10 @@
         </nz-form-control>
       </nz-form-item>
     </form>
-    <ng-template #prefixUser><i nz-icon type="user"></i></ng-template>
-    <ng-template #prefixLock><i nz-icon type="lock"></i></ng-template>
-    <nz-form-item>
-      <span nz-row nzType="flex" nzJustify="center">
+    <ng-template #prefixUser><i nz-icon [nzType]="'user'"></i></ng-template>
+    <ng-template #prefixLock><i nz-icon [nzType]="'lock'"></i></ng-template>
+    <nz-form-item class="centerclick">
+      <span nz-row nzType="'flex'" nzJustify="center">
         <a [routerLink]="['/register']" routerLinkActive="router-link-active">{{ 'CreateAccount' | translate }}</a>
         <nz-divider nzType="vertical"></nz-divider>
         <a [routerLink]="['/forgot-password']" routerLinkActive="router-link-active" class="forgot forget-password"

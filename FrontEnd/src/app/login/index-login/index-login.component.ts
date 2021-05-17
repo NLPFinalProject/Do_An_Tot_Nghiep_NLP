@@ -7,7 +7,10 @@ import { CommonConstant, MessageConstant } from '@app/shared';
 import { RoutingConstant } from '@app/shared/commons/routing.constant';
 import { environment } from '@env/environment';
 import { finalize } from 'rxjs/operators';
+
+import { NzIconModule } from 'ng-zorro-antd/icon';
 import { UserService } from '@../../../src/app/login/user-authenticate-service';
+
 const log = new Logger('Login');
 
 @Component({

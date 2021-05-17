@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '@../../../src/app/login/user-authenticate-service';
-import * as moment from 'moment';
+import moment from 'moment';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 @Component({
   selector: 'app-profile-user',

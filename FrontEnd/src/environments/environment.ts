@@ -7,7 +7,8 @@ import env from './.env';
 export const environment = {
   production: false,
   version: env.npm_package_version + '-dev',
-  //serverUrl: 'https://reqres.in/api',
+  //clientUrl: 'https://reqres.in/api',
+  clientUrl: 'https://localhost:4200',
   serverUrl: 'http://localhost:5000',
   defaultLanguage: 'vn-VN',
   supportedLanguages: ['en-US', 'vn-VN'],

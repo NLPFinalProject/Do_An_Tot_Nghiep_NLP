@@ -3,15 +3,21 @@
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
+    "downlevelIteration": true,
     "declaration": false,
     "moduleResolution": "node",
+    "importHelpers": true,
     "emitDecoratorMetadata": true,
+    "module": "esnext",
     "experimentalDecorators": true,
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
-    "target": "es5",
+    "target": "es2015",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+
     "typeRoots": ["node_modules/@types"],
-    "lib": ["es2018", "dom"],
+    "lib": ["es2015", "es2018", "dom"],
     "baseUrl": "src",
     "paths": {
       "@app/*": ["app/*"],

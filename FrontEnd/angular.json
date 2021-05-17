@@ -10,7 +10,7 @@
       "prefix": "app",
       "schematics": {
         "@schematics/angular:component": {
-          "styleext": "scss"
+          "style": "scss"
         }
       },
       "architect": {
@@ -24,6 +24,7 @@
             "polyfills": "src/polyfills.ts",
             "assets": [
               "src/favicon.ico",
+              "src/translations",
               "src/apple-touch-icon.png",
               "src/robots.txt",
               "src/manifest.json",
@@ -35,16 +36,15 @@
               }
             ],
             "styles": ["src/main.scss", "node_modules/ng-zorro-antd/ng-zorro-antd.min.css"],
-            "scripts": []
+            "scripts": [],
+            "aot": true
           },
           "configurations": {
             "production": {
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -53,6 +53,12 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             }
@@ -123,5 +129,8 @@
       }
     }
   },
-  "defaultProject": "clc-dao-van"
+  "defaultProject": "clc-dao-van",
+  "cli": {
+    "analytics": false
+  }
 }

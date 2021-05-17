@@ -4,6 +4,7 @@ import { FileService } from '@../../../src/app/shell/shell-routing-service';
 import { FormControl } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { UploadChangeParam } from 'ng-zorro-antd/upload';
+import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
 @Component({
   selector: 'app-teststep',
   templateUrl: './teststep.component.html',
@@ -14,6 +15,7 @@ export class TeststepComponent implements OnInit {
   isvalid: boolean = false;
   public step: number;
   public UploadedFileConfirmed: false;
+  public isSpinning: boolean = false;
   FileToUpload: File = null;
   ListFileToUpload: FileList = null;
   fileList: any[];
@@ -34,35 +36,7 @@ export class TeststepComponent implements OnInit {
   HandleSelectionChange(id: string) {
     this.option = id;
   }
-  checkChoice() {
-    this.selectedOption = parseInt(this.option);
-    console.log(this.selectedOption);
-    //this.selectedOption=parseInt(this.selectedOption)
-    switch (this.selectedOption) {
-      case 1: {
-        localStorage.setItem('userchoice', this.selectedOption.toString());
-        //get next move
-        this.nextstep();
-        break;
-      }
-      case 2:
-      case 3:
-      case 4: {
-        let id = localStorage.getItem('id');
 
-        let data = {
-          id: id,
-          fileName1: localStorage.getItem('file'),
-          choice: this.selectedOption,
-        };
-        console.log('hi');
-        this.fileService.checkPlagiasmV2(data).subscribe((data: any) => {
-          this.router.navigate(['checkresult/result'], { replaceUrl: true, state: { data: data } });
-        });
-        break;
-      }
-    }
-  }
   checkChoice2(value: string) {
     console.log(value);
     this.selectedOption = parseInt(value);
@@ -89,7 +63,21 @@ export class TeststepComponent implements OnInit {
         });
         break;
       }
-      case 3:
+      case 3: {
+        let id = localStorage.getItem('id');
+
+        let data = {
+          id: id,
+          fileName1: localStorage.getItem('file'),
+          choice: this.selectedOption,
+        };
+        console.log('hi');
+        this.fileService.checkPlagiasmUsingInternet(data).subscribe((data: any) => {
+          console.log(data);
+          this.router.navigate(['checkresult/result'], { replaceUrl: true, state: { data: data } });
+        });
+        break;
+      }
 
       case 4: {
         let id = localStorage.getItem('id');
@@ -100,7 +88,7 @@ export class TeststepComponent implements OnInit {
           choice: this.selectedOption,
         };
         console.log('hi');
-        this.fileService.checkPlagiasmV2(data).subscribe((data: any) => {
+        this.fileService.checkPlagiasmUsingAll(data).subscribe((data: any) => {
           console.log(data);
           this.router.navigate(['checkresult/result'], { replaceUrl: true, state: { data: data } });
         });
@@ -141,10 +129,12 @@ export class TeststepComponent implements OnInit {
   nextstep() {
     //check which step it is
     if (this.step == 1) {
+      this.isSpinning = true;
       this.step = this.step + 1;
       this.fileService.UploadFile(this.FileToUpload).subscribe((data: string) => {
         console.log('data is');
-
+        this.isSpinning = false;
+        console.log(this.isSpinning);
         localStorage.setItem('file', data);
         this.isvalid = false;
         this.router.navigate(['checkresult/step/2'], {
@@ -169,8 +159,10 @@ export class TeststepComponent implements OnInit {
         replaceUrl: true
       });*/
     } else if (this.step == 3) {
+      this.isSpinning = true;
       this.fileService.UploadFileList(this.ListFileToUpload).subscribe((data: any) => {
         console.log('hhhhh');
+
         let id = localStorage.getItem('id');
         let choice = parseInt(localStorage.getItem('choice'));
         let filename1 = localStorage.getItem('file');
@@ -184,6 +176,7 @@ export class TeststepComponent implements OnInit {
         };
         console.log(tempdata);
         this.fileService.checkPlagiasm(tempdata).subscribe((data: any) => {
+          this.isSpinning = false;
           console.log('data is');
           console.log(data);
           console.log('-----------');
@@ -212,13 +205,19 @@ export class TeststepComponent implements OnInit {
     console.log('fail');
     // tslint:disable-next-line:semicolon
   };
+  uploadFileV1 = () => {
+    console.log('welcome');
+
+    this.fileService.UploadFile(this.FileToUpload).subscribe((data: any) => {
+      console.log('hhhhh');
+
+      this.fileList = data.data;
+    });
+    console.log('fail');
+    // tslint:disable-next-line:semicolon
+  };
 
   handleChangeFile(file: FileList): void {
-    console.log('hi there');
-    this.FileToUpload = file.item(0);
-    this.uploadFile();
-  }
-  handleChangeFileV1(file: FileList): void {
     this.FileToUpload = file.item(0);
     this.isvalid = true;
   }

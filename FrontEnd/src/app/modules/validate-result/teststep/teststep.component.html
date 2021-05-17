@@ -5,10 +5,19 @@
         <br />
       </div>
       <div class="file-input">
-        <p class="center">Mời bạn chọn file cần kiểm tra</p>
-        <i class="material-icons" width="100">folder</i>
-        <input type="file" (change)="handleChangeFileV1($event.target.files)" id="file" class="file" />
-        <label for="file">Select file</label>
+        <div *ngIf="isSpinning == true">
+          <nz-spin nzTip="Đang tải, vui lòng chờ"> </nz-spin>
+        </div>
+        <div *ngIf="isvalid != true">
+          <p class="center">Mời bạn chọn file cần kiểm tra</p>
+          <i nz-icon nzType="folder" style="font-size: 32px" nzTheme="outline"></i>
+        </div>
+        <div *ngIf="isvalid == true">
+          <i nz-icon nzType="folder" style="font-size: 32px" nzTheme="outline"></i>
+          <p>{{ FileToUpload.name }}</p>
+        </div>
+        <input type="file" (change)="handleChangeFile($event.target.files)" id="file" class="file" />
+        <label for="file">Chọn file</label>
       </div>
     </div>
 
@@ -52,8 +61,19 @@
   <ng-container *ngIf="step === 3">
     <div class="center-button">
       <div class="file-input">
-        <p class="center">Mời bạn chọn file muốn đối chiếu</p>
-        <i class="material-icons" width="100">folder</i>
+        <div *ngIf="isSpinning == true">
+          <nz-spin nzTip="Đang kiểm tra kết quả, vui lòng chờ"> </nz-spin>
+        </div>
+        <div *ngIf="isvalid != true">
+          <p class="center">Mời bạn chọn file muốn đối chiếu</p>
+          <i nz-icon nzType="folder" style="font-size: 32px" nzTheme="outline"></i>
+        </div>
+        <div *ngIf="isvalid == true">
+          <i nz-icon nzType="folder" style="font-size: 32px" nzTheme="outline"></i>
+          <li *ngFor="let item of ListFileToUpload">
+            {{ item.name }}
+          </li>
+        </div>
         <input type="file" (change)="handleChangeFileList($event.target.files)" id="file" multiple class="file" />
         <label for="file">Select file</label>
       </div>
