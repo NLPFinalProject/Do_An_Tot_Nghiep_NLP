@@ -3,7 +3,9 @@
     <nz-form-label [nzSm]="6" [nzXs]="10" nzRequired nzFor="email">E-mail</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
       <input disabled nz-input formControlName="email" id="email" />
-      <nz-form-explain *ngIf="validateForm.get('email').dirty && validateForm.get('email').errors"></nz-form-explain>
+      <nz-form-explain *ngIf="validateForm.get('email').dirty && validateForm.get('email').errors"
+        ></nz-form-explain
+      >
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
@@ -11,7 +13,7 @@
     <nz-form-control [nzSm]="14" [nzXs]="24" [nzValidateStatus]="validateForm.controls['phoneNumber']">
       <nz-input-group [nzAddOnBefore]="addOnBeforeTemplate">
         <ng-template #addOnBeforeTemplate>
-          <nz-select formControlName="phoneNumber" style="width: 70px">
+          <nz-select formControlName="phoneNumber" style="width: 70px;">
             <nz-option nzLabel="+84" nzValue="+84"></nz-option>
           </nz-select>
         </ng-template>
@@ -26,24 +28,27 @@
     <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="fullName">Tên đầy đủ</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
       <input nz-input formControlName="fullName" id="fullName" />
+      
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="emailOrganization">Email tổ chức</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
       <input nz-input formControlName="emailOrganization" id="emailOrganization" />
+      
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="ngaySinh">Ngày sinh</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
       <nz-date-picker formControlName="ngaySinh" [nzFormat]="dateFormat"></nz-date-picker>
+      
     </nz-form-control>
   </nz-form-item>
-
-  <nz-form-item nz-row style="margin-bottom: 8px">
+  
+  <nz-form-item nz-row style="margin-bottom:8px;">
     <nz-form-control [nzSpan]="14" [nzOffset]="6">
-      <button nz-button nzType="primary">Cập nhật</button> -
+      <button  nz-button nzType="primary">Cập nhật</button> -
       <button (click)="Clicked()" nz-button nzType="primary">Đổi mật khẩu</button>
     </nz-form-control>
   </nz-form-item>

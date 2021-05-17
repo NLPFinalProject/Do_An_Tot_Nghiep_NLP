@@ -24,7 +24,7 @@
             "polyfills": "src/polyfills.ts",
             "assets": [
               "src/favicon.ico",
-              "src/translations",
+	      "src/translations",
               "src/apple-touch-icon.png",
               "src/robots.txt",
               "src/manifest.json",

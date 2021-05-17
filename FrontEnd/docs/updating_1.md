@@ -1,25 +1,21 @@
 # Updating npm dependencies
 
 - Check outdated packages
-
 ```sh
 yarn outdated
 ```
 
 - Update local packages according to `package.json`
-
 ```sh
 yarn upgrade
 ```
 
 - Upgrade packages manually
-
 ```sh
 yarn upgrade <package_name>@latest
 ```
 
 To upgrade multiple package at once interactively, you can also use:
-
 ```sh
 yarn upgrade-interactive --latest
 ```

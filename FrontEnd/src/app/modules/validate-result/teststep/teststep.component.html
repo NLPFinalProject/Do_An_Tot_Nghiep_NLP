@@ -1,93 +1,110 @@
+
 <div class="container">
-  <ng-container *ngIf="step === 1">
-    <div class="center-button">
-      <div class="inside-item">
-        <br />
-      </div>
-      <div class="file-input">
-        <div *ngIf="isSpinning == true">
-          <nz-spin nzTip="Đang tải, vui lòng chờ"> </nz-spin>
-        </div>
-        <div *ngIf="isvalid != true">
-          <p class="center">Mời bạn chọn file cần kiểm tra</p>
-          <i nz-icon nzType="folder" style="font-size: 32px" nzTheme="outline"></i>
-        </div>
-        <div *ngIf="isvalid == true">
-          <i nz-icon nzType="folder" style="font-size: 32px" nzTheme="outline"></i>
-          <p>{{ FileToUpload.name }}</p>
-        </div>
-        <input type="file" (change)="handleChangeFile($event.target.files)" id="file" class="file" />
-        <label for="file">Chọn file</label>
-      </div>
-    </div>
+<ng-container *ngIf="step===1">
 
-    <button
-      [disabled]="isvalid !== true"
-      nz-button
-      class="w-25"
-      nzType="primary"
-      nzShape="omitted"
-      (click)="nextstep()"
-    >
-      <i theme="outline"></i> <span translate>Tiếp theo</span>
-    </button>
-
-    <div></div>
-  </ng-container>
-  <ng-container *ngIf="step === 2">
-    <div class="sth">
-      <p>
-        <button nz-button nzType="primary" class="w-50" (click)="checkChoice2($event.target.value)" value="1">
-          So sánh với file của bạn
-        </button>
-      </p>
-      <p>
-        <button nz-button nzType="primary" class="w-50" (click)="checkChoice2($event.target.value)" value="2">
-          So sánh với dữ liệu của hệ thống
-        </button>
-      </p>
-      <p>
-        <button nz-button nzType="primary" class="w-50" (click)="checkChoice2($event.target.value)" value="3">
-          So sánh với dữ liệu internet
-        </button>
-      </p>
-      <p>
-        <button nz-button nzType="primary" class="w-50" (click)="checkChoice2($event.target.value)" value="4">
-          So sánh với cả file internet và dữ liệu của hệ thống
-        </button>
-      </p>
+  <div class ="center-button">
+    <div class ="inside-item">
+    
+    <br>
+  </div>
+  <div class="file-input">
+    <div *ngIf= "isSpinning == true">
+      <nz-spin nzTip="Đang tải, vui lòng chờ">
+        
+      </nz-spin>
     </div>
-  </ng-container>
-  <ng-container *ngIf="step === 3">
-    <div class="center-button">
-      <div class="file-input">
-        <div *ngIf="isSpinning == true">
-          <nz-spin nzTip="Đang kiểm tra kết quả, vui lòng chờ"> </nz-spin>
-        </div>
-        <div *ngIf="isvalid != true">
-          <p class="center">Mời bạn chọn file muốn đối chiếu</p>
-          <i nz-icon nzType="folder" style="font-size: 32px" nzTheme="outline"></i>
-        </div>
-        <div *ngIf="isvalid == true">
-          <i nz-icon nzType="folder" style="font-size: 32px" nzTheme="outline"></i>
-          <li *ngFor="let item of ListFileToUpload">
-            {{ item.name }}
-          </li>
-        </div>
-        <input type="file" (change)="handleChangeFileList($event.target.files)" id="file" multiple class="file" />
-        <label for="file">Select file</label>
-      </div>
+    <div *ngIf= "isvalid !=true">
+      <p class="center">Mời bạn chọn file cần kiểm tra</p>
+      <i nz-icon nzType="folder" style="font-size: 32px;" nzTheme="outline"></i>
     </div>
-
-    <button
-      nz-button
-      class="w-25"
-      nzType="primary"
-      nzShape="omitted"
-      (click)="nextstep()"
-      [disabled]="isvalid !== true"
-    >
-      <i theme="outline"></i> <span translate>Kết quả</span>
-    </button>
-  </ng-container>
+    <div *ngIf= "isvalid ==true">
+      <i nz-icon nzType="folder" style="font-size: 32px;" nzTheme="outline"></i>
+      <p>{{FileToUpload.name}}</p>
+    </div>
+    <input type="file" (change)="handleChangeFile($event.target.files)" id="file" class="file" />
+    <label for="file">Chọn file</label>
+  </div>
+  
 </div>
+  
+
+  <button
+  [disabled]="isvalid!==true"
+  nz-button
+  class="w-25"
+  nzType="primary"
+  nzShape="omitted"
+  
+  (click)="nextstep()"
+  
+>
+  <i  theme="outline"></i> <span translate>Tiếp theo</span>
+</button>
+
+
+<div>
+ 
+ 
+</div>
+
+
+</ng-container>
+<ng-container *ngIf="step===2">
+  <div class="sth">
+    <p><button nz-button
+      nzType="primary" class ="w-50" (click)=checkChoice2($event.target.value) value ="1" >So sánh với file của bạn</button></p>
+    <p><button nz-button
+      nzType="primary" class ="w-50" (click)=checkChoice2($event.target.value) value ="2" >So sánh với dữ liệu của hệ thống</button></p>
+    <p><button nz-button
+      nzType="primary" class ="w-50" (click)=checkChoice2($event.target.value) value ="3" >So sánh với dữ liệu internet</button></p>
+    <p><button nz-button
+      nzType="primary" class ="w-50" (click)=checkChoice2($event.target.value) value ="4" >So sánh với cả file internet và dữ liệu của hệ thống</button></p>
+    </div>
+  
+</ng-container>
+<ng-container *ngIf="step===3">
+  
+ 
+  <div class ="center-button">
+    
+    
+    <div class="file-input">
+      <div *ngIf= "isSpinning == true">
+        <nz-spin nzTip="Đang kiểm tra kết quả, vui lòng chờ">
+         
+        </nz-spin>
+      </div>
+      <div *ngIf= "isvalid != true">
+        <p class= "center">Mời bạn chọn file muốn đối chiếu</p>
+        <i nz-icon nzType="folder" style="font-size: 32px;" nzTheme="outline"></i>
+        
+      </div>  
+      <div *ngIf= "isvalid == true">
+       
+        <i nz-icon nzType="folder" style="font-size: 32px;" nzTheme="outline"></i>
+        <li *ngFor="let item of ListFileToUpload; ">
+          {{item.name}}
+        </li>
+      </div>  
+      <input type="file" (change)="handleChangeFileList($event.target.files)"  id="file" multiple class="file">
+      <label for="file">Select file</label>
+    </div>
+  </div>
+         
+
+  
+  <button
+  nz-button
+  class="w-25"
+  nzType="primary"
+  nzShape="omitted"
+  
+  (click)="nextstep()"
+  [disabled]="isvalid!==true"
+>
+  <i  theme="outline"></i> <span translate>Kết quả</span>
+</button>
+</ng-container>
+
+
+

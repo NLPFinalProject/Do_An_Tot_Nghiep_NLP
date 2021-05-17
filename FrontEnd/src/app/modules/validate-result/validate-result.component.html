@@ -1,49 +1,64 @@
-<div class="container">
-  <h2 class="textcenter">Kiểm tra kết quả</h2>
-  <div class="autocenter">
-    <p class="inline">Mời bạn chọn văn bản muốn so sánh:</p>
-    <select id="pricingtemplates" (change)="confirmed($event.target.value)">
-      <option [value]="temp.id" *ngFor="let temp of characterList1">{{ temp.data }}</option>
-    </select>
-  </div>
 
-  <div id="scroller">
-    <table>
-      <tbody class="green">
+    
+<div class="container">
+
+  <h2 class ="textcenter">Kiểm tra kết quả</h2>
+  <div class="autocenter">
+    <p class = "inline">Mời bạn chọn văn bản muốn so sánh:</p>
+    <select id="pricingtemplates" (change)="confirmed($event.target.value)">
+      <option [value]="(temp.id)" *ngFor="let temp of characterList1 ">{{temp.data}}</option>
+    </select>
+   
+    
+    </div>
+   
+ <div  id = "scroller" >
+  
+  <table >
+   
+    <tbody class="green">
+      
         <tr>
-          <td>
-            <div contenteditable="true" id="ex1">
-              <div class="inlinetable" *ngFor="let temp of answer.ls1">
+          
+            <td><div  contenteditable="true" id="ex1">
+              
+              <div class = "inlinetable" *ngFor="let temp of answer.ls1">
+              
                 <div class="changeText" [ngClass]="[shouldHighlight(temp.id) ? 'highlight' : '']">
-                  <a (click)="triggerScrollTo(temp.id)">{{ temp.data }}.</a>
+                <a  (click)="triggerScrollTo(temp.id)">{{temp.data}}.</a>
                 </div>
-              </div>
+            </div>
+
             </div>
           </td>
-          <div style="width: 100px; text-align: center">Tỉ lệ {{ ratio }}%</div>
+          <div  style ="width:100px; text-align: center;">Tỉ lệ {{ratio}}%</div>
           <td>
             <div contenteditable="true" id="ex1">
-              <div class="inlinetable" *ngFor="let temp of answer.ls2">
-                <span
-                  class="changeText"
-                  [ngClass]="[shouldHighlight2(temp.id) ? 'highlight' : '']"
-                  id="{{ temp.id }}"
-                  #{{temp.id}}
-                  >{{ temp.data }}.</span
-                >
-              </div>
+              <div class = "inlinetable" *ngFor="let temp of answer.ls2">
+                <span class="changeText" [ngClass]="[shouldHighlight2(temp.id) ? 'highlight' : '']"  id ={{temp.id}} #{{temp.id}}>{{temp.data}}.</span>
+            </div>
+            
             </div>
           </td>
+           
         </tr>
-      </tbody>
+      
+      
+      
+    </tbody>
     </table>
     <div class="autocenter">
-      <a id="previous" (click)="scrollPrevious()">Trước</a>
+      <a id  ="previous" (click)="scrollPrevious()">Trước</a>
       &nbsp;&nbsp;
-      <a id="next" (click)="scrollNext()">Sau</a>
+      <a id = "next" (click) = "scrollNext()">Sau</a>
     </div>
-    <button nz-button nzType="primary" nzShape="omitted" class="autocenter" (click)="ExportEmail()">
-      Xuất kết quả ra email
-    </button>
+    <button nz-button
+  nzType="primary"
+  nzShape="omitted" class="autocenter" (click)="ExportEmail()">Xuất kết quả ra email</button>
+  
+  
   </div>
 </div>
+  
+
+  
