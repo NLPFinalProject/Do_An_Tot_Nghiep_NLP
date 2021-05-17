@@ -52,3 +52,8 @@ class DataDocumentContent(models.Model):
             models.Index(fields=['DataDocumentNo', 'DataDocumentSentence'], name='DataDocumentNo_idx'),
             models.Index(fields=['DataDocumentSentence'], name='DataDocumentSentence_idx'),
             ]
+
+class DataDocumentStatus(models.Model):
+    uploadTime = models.DateTimeField(auto_now_add=True)
+    status = models.BooleanField(default=True)
+    DataDocumentFrom = models.ForeignKey(DataDocumentT, on_delete=models.CASCADE)
