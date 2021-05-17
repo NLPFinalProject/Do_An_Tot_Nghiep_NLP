@@ -128,10 +128,10 @@ export class ValidateResultComponent implements OnInit {
   GetSelection(id: number) {
     this.SelectedOption = id;
   }
-  confirmed() {
+  confirmed(num: number) {
     console.log('this is');
-    console.log(this.SelectedOption);
-    this.ShowResult(this.SelectedOption);
+    console.log(num);
+    this.ShowResult(num);
   }
   getFirstSentences() {
     if (this.data != null) {

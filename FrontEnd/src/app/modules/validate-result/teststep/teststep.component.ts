@@ -4,6 +4,7 @@ import { FileService } from '@../../../src/app/shell/shell-routing-service';
 import { FormControl } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { UploadChangeParam } from 'ng-zorro-antd/upload';
+import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
 @Component({
   selector: 'app-teststep',
   templateUrl: './teststep.component.html',
@@ -35,36 +36,7 @@ export class TeststepComponent implements OnInit {
   HandleSelectionChange(id: string) {
     this.option = id;
   }
-  checkChoice() {
-    this.selectedOption = parseInt(this.option);
-    console.log(this.selectedOption);
-    //this.selectedOption=parseInt(this.selectedOption)
-    switch (this.selectedOption) {
-      case 1: {
-        localStorage.setItem('userchoice', this.selectedOption.toString());
-        //get next move
-        this.nextstep();
-        break;
-      }
-      case 2:
-      case 3:
-      case 4: {
-        let id = localStorage.getItem('id');
 
-        let data = {
-          id: id,
-          fileName1: localStorage.getItem('file'),
-          choice: this.selectedOption,
-        };
-        console.log('hi');
-
-        this.fileService.checkPlagiasmV2(data).subscribe((data: any) => {
-          this.router.navigate(['checkresult/result'], { replaceUrl: true, state: { data: data } });
-        });
-        break;
-      }
-    }
-  }
   checkChoice2(value: string) {
     console.log(value);
     this.selectedOption = parseInt(value);
@@ -91,7 +63,7 @@ export class TeststepComponent implements OnInit {
         });
         break;
       }
-      case 3:
+      case 3: {
         let id = localStorage.getItem('id');
 
         let data = {
@@ -105,6 +77,8 @@ export class TeststepComponent implements OnInit {
           this.router.navigate(['checkresult/result'], { replaceUrl: true, state: { data: data } });
         });
         break;
+      }
+
       case 4: {
         let id = localStorage.getItem('id');
 

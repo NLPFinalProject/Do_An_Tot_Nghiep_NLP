@@ -36,13 +36,7 @@
   box-sizing: border-box;
   overflow: auto;
 }
-#ex2 {
-  height: 400px;
-  width: 500px;
-  border: 1px solid blue;
-  box-sizing: border-box;
-  overflow: auto;
-}
+
 .on {
   overflow-anchor: auto;
   margin-left: auto;
@@ -93,4 +87,7 @@ div {
 }
 .inline {
   display: inline-block;
+}
+.changeText {
+  font-family: "roboto,noto,arial,sans-serif";
 }
