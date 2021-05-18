@@ -29,7 +29,6 @@ import time
 numPageSearch = 5
 resultRatio = 50
 maxFile = 1
-
 rat = 50
 
 
@@ -106,6 +105,149 @@ def makeDataStt(countReport,ReportFileName2Sentence,reportDataReadDoc):
 def documentimportDatabase(request):
     fileName1 = request.data["filename1"]
     userId = int(request.data["id"])
+    data1 = request.data
+    myDict=test1(data1)
+    return Response(myDict, status=status.HTTP_200_OK)
+    # fileName2Sentence = []
+    # cursor = connections['default'].cursor()
+    # # fileName1
+    # querys = DataDocument.objects.filter(
+    #     DataDocumentAuthor=str(userId)) \
+    #     .filter(DataDocumentName=fileName1.split(".")[0]) \
+    #     .filter(DataDocumentType=fileName1.split(".")[1])
+    # fetchQuery = querys[0].DataDocumentFile
+    # fName, lstSentence, lstLength = p.preprocess(
+    #     settings.MEDIA_ROOT + '/DocumentFile/' + os.path.basename(str(fetchQuery)))
+    # fileName1Sentence = lstSentence
+    #
+    # # database search
+    # documentName = databaseSearch(fileName1Sentence)
+    #
+    # # thong ke
+    # idStatistic = Counter(documentName)
+    # countReport = 0
+    # reportDataReadDoc = []
+    # ReportFileName2Sentence = []
+    # reportIdFile = []
+    # fileName2 = []
+    # for idFile in idStatistic.items():
+    #     if (countReport < maxFile):
+    #         querys = DataDocumentContent.objects.filter(
+    #             DataDocumentNo_id=int(idFile[0])).order_by('id')
+    #         fileName2Sentence = [
+    #             querys[i].DataDocumentSentence for i in range(len(querys))]
+    #         result = ExportOrder4(
+    #             fileName1Sentence, fileName2Sentence, resultRatio)
+    #         if (result[1] >= resultRatio and countReport < maxFile):
+    #             countReport += 1
+    #             reportIdFile.append(idFile[0])
+    #             reportDataReadDoc.append(result[0])
+    #             ReportFileName2Sentence.append(fileName2Sentence)
+    #             # querys = DataDocument.objects.filter(id=str(idFile[0]))
+    #             # fileName2Name = querys[0].DataDocumentName
+    #             fileName2Name = str(querys[0].DataDocumentNo)
+    #             fileName2.append(fileName2Name)
+    #
+    # myDict4 = []
+    # myDict = {}
+    # myDict["File1Name"] = fileName1
+    # myDict4 = makeDataStt(countReport, ReportFileName2Sentence, reportDataReadDoc)
+    # # for i in range(countReport):
+    # #     mydic3 = {}
+    # #     mydic3["data"] = ReportFileName2Sentence[i]
+    # #     mydic3["stt"] = reportDataReadDoc[i]
+    # #     myDict4.append(mydic3)
+    #
+    # # line length list
+    # myDict["ListFileName"] = fileName2
+    # myDict["ListFile"] = myDict4
+    # myDict["file1"] = fileName1Sentence
+    # return Response(myDict, status=status.HTTP_200_OK)
+
+
+@api_view(('POST',))
+def documentimportDatabaseInternet(request):
+    fileName1 = request.data["fileName1"]
+    userId = int(request.data["id"])
+    data1 = request.data
+    myDict1 = test1(data1)
+    myDict2 = test2(data1)
+    myDict=[]
+    myDict.append(myDict1)
+    myDict.append(myDict2)
+    return Response(myDict, status=status.HTTP_200_OK)
+    # print("filename1: ",fileName1, userId)
+    # fileName2Sentence = []
+    # # fileName1
+    # querys = DataDocument.objects.filter(
+    #     DataDocumentAuthor=str(userId)) \
+    #     .filter(DataDocumentName=fileName1.split(".")[0]) \
+    #     .filter(DataDocumentType=fileName1.split(".")[1])
+    # fetchQuery = querys[0].DataDocumentFile
+    # # return tag preprocess
+    # tagPage, fName, lstSentence, lstLength = p.preprocess_link(
+    #     settings.MEDIA_ROOT + '/DocumentFile/' + os.path.basename(str(fetchQuery)))
+    # # internet search
+    # internetPage = internetKeywordSearch.get_link(
+    #     tagPage, fName, lstSentence, lstLength)
+    # if (len(internetPage) > numPageSearch):
+    #     internetPage = internetPage[:numPageSearch]
+    # fileName1Sentence = lstSentence
+    # # database search
+    # documentName = []
+    # documentName = databaseSearch(fileName1Sentence)
+    #
+    # # thong ke
+    # idStatistic = Counter(documentName)
+    # countReport = 0
+    # reportDataReadDoc = []
+    # ReportFileName2Sentence = []
+    # reportIdFile = []
+    # fileName2 = []
+    # for idFile in idStatistic.items():
+    #     if (countReport < maxFile):
+    #         querys = DataDocumentContent.objects.filter(
+    #             DataDocumentNo_id=int(idFile[0])).order_by('id')
+    #         fileName2Sentence = [
+    #             querys[i].DataDocumentSentence for i in range(len(querys))]
+    #         result = ExportOrder4(
+    #             fileName1Sentence, fileName2Sentence, resultRatio)
+    #         if (result[1] >= resultRatio and countReport < maxFile):
+    #             countReport += 1
+    #             reportIdFile.append(idFile[0])
+    #             reportDataReadDoc.append(result[0])
+    #             ReportFileName2Sentence.append(fileName2Sentence)
+    #             fileName2Name = str(querys[0].DataDocumentNo)
+    #             fileName2.append(fileName2Name)
+    #
+    # myDict4 = []
+    # myDict = {}
+    # myDict["File1Name"] = fileName1
+    # myDict4 = makeDataStt(countReport,ReportFileName2Sentence,reportDataReadDoc)
+    #
+    # # report cac cau html
+    # dataReadDoc = []
+    # dataReadDoc = makeDataReadDoc(internetPage,userId)
+    # # B2 trả json
+    # reportDataReadDoc = []
+    # for i in range(len(dataReadDoc)):
+    #     result = ExportOrder(fileName1Sentence, dataReadDoc[i], rat)
+    #     reportDataReadDoc.append(result)
+    # myDictHtml2 = []
+    # myDictHtml2 = makeDataStt(len(internetPage),dataReadDoc,reportDataReadDoc)
+    # fileName2.extend(internetPage)
+    #
+    # # line length list
+    # myDict["ListFileName"] = fileName2
+    # myDict["ListFile"] = myDict4
+    # myDict["file1"] = fileName1Sentence
+    # myDict["ListFile"].extend(myDictHtml2)
+    # myDict["internet"] = myDictHtml2
+    # return Response(myDict, status=status.HTTP_200_OK)
+
+def test1(data):
+    fileName1 = data["filename1"]
+    userId = int(data["id"])
     fileName2Sentence = []
     cursor = connections['default'].cursor()
     # fileName1
@@ -119,7 +261,6 @@ def documentimportDatabase(request):
     fileName1Sentence = lstSentence
 
     # database search
-    documentName = []
     documentName = databaseSearch(fileName1Sentence)
 
     # thong ke
@@ -162,84 +303,10 @@ def documentimportDatabase(request):
     myDict["ListFile"] = myDict4
     myDict["file1"] = fileName1Sentence
 
-    return Response(myDict, status=status.HTTP_200_OK)
+    return myDict
 
 
-@api_view(('POST',))
-def documentimportDatabaseInternet(request):
-    fileName1 = request.data["filename1"]
-    userId = int(request.data["id"])
-    fileName2Sentence = []
-    # fileName1
-    querys = DataDocument.objects.filter(
-        DataDocumentAuthor=str(userId)) \
-        .filter(DataDocumentName=fileName1.split(".")[0]) \
-        .filter(DataDocumentType=fileName1.split(".")[1])
-    fetchQuery = querys[0].DataDocumentFile
-    # return tag preprocess
-    tagPage, fName, lstSentence, lstLength = p.preprocess_link(
-        settings.MEDIA_ROOT + '/DocumentFile/' + os.path.basename(str(fetchQuery)))
-    # internet search
-    internetPage = internetKeywordSearch.get_link(
-        tagPage, fName, lstSentence, lstLength)
-    if (len(internetPage) > numPageSearch):
-        internetPage = internetPage[:numPageSearch]
-    fileName1Sentence = lstSentence
-    # database search
-    documentName = []
-    documentName = databaseSearch(fileName1Sentence)
-
-    # thong ke
-    idStatistic = Counter(documentName)
-    countReport = 0
-    reportDataReadDoc = []
-    ReportFileName2Sentence = []
-    reportIdFile = []
-    fileName2 = []
-    for idFile in idStatistic.items():
-        if (countReport < maxFile):
-            querys = DataDocumentContent.objects.filter(
-                DataDocumentNo_id=int(idFile[0])).order_by('id')
-            fileName2Sentence = [
-                querys[i].DataDocumentSentence for i in range(len(querys))]
-            result = ExportOrder4(
-                fileName1Sentence, fileName2Sentence, resultRatio)
-            if (result[1] >= resultRatio and countReport < maxFile):
-                countReport += 1
-                reportIdFile.append(idFile[0])
-                reportDataReadDoc.append(result[0])
-                ReportFileName2Sentence.append(fileName2Sentence)
-                fileName2Name = str(querys[0].DataDocumentNo)
-                fileName2.append(fileName2Name)
-
-    myDict4 = []
-    myDict = {}
-    myDict["File1Name"] = fileName1
-    myDict4 = makeDataStt(countReport,ReportFileName2Sentence,reportDataReadDoc)
-
-    # report cac cau html
-    dataReadDoc = []
-    dataReadDoc = makeDataReadDoc(internetPage,userId)
-    # B2 trả json
-    reportDataReadDoc = []
-    for i in range(len(dataReadDoc)):
-        result = ExportOrder(fileName1Sentence, dataReadDoc[i], rat)
-        reportDataReadDoc.append(result)
-    myDictHtml2 = []
-    myDictHtml2 = makeDataStt(len(internetPage),dataReadDoc,reportDataReadDoc)
-    fileName2.extend(internetPage)
-
-    # line length list
-    myDict["ListFileName"] = fileName2
-    myDict["ListFile"] = myDict4
-    myDict["file1"] = fileName1Sentence
-    myDict["ListFile"].extend(myDictHtml2)
-    myDict["internet"] = myDictHtml2
-    return Response(myDict, status=status.HTTP_200_OK)
-
-
-# kiểm vs internet
-def documentimportInternet(data):
+def test2(data):
     fileName1 = data['fileName1']
     userId = data['id']
     cursor = connections['default'].cursor()
@@ -286,7 +353,65 @@ def documentimportInternet(data):
     # FileDatabase=DataDocument.objects.filter(DataDocumentName=fileName1.split(".")[0],DataDocumentType=fileName1.split(".")[1],DataDocumentAuthor_id=str(userId))
     # jsonResult=ReportDocument(DataDocumentName=FileDatabase.,DataDocumentReport=RjsonFile(myDict,fileName1.split(".")[0],userId))
     #jsonResult = jsonFile(myDict, fileName1.split(".")[0], userId)
+
     return myDict
+
+
+
+# kiểm vs internet
+@api_view(('POST',))
+def documentimportInternet(request):
+    fileName1 = request.data['fileName1']
+    userId = request.data['id']
+    data1 = request.data
+    myDict = test2(data1)
+    return Response(myDict, status=status.HTTP_200_OK)
+
+    # cursor = connections['default'].cursor()
+    # # fileName1
+    # querys = DataDocument.objects.filter(
+    #     DataDocumentAuthor=str(userId)) \
+    #     .filter(DataDocumentName=fileName1.split(".")[0]) \
+    #     .filter(DataDocumentType=fileName1.split(".")[1])
+    # fetchQuery = querys[0].DataDocumentFile
+    # # return tag preprocess
+    # tagPage, fName, lstSentence, lstLength = p.preprocess_link(
+    #     settings.MEDIA_ROOT + '/DocumentFile/' + os.path.basename(str(fetchQuery)))
+    # fileName1Sentence = lstSentence
+    #
+    # # internet search
+    # internetPage = internetKeywordSearch.get_link(
+    #     tagPage, fName, lstSentence, lstLength)
+    # if (len(internetPage) > numPageSearch):
+    #     internetPage = internetPage[:numPageSearch]
+    # print("Link: ", internetPage)
+    # dataReadDoc = makeDataReadDoc(internetPage,userId)
+    #
+    # # B2 trả json
+    # reportDataReadDoc = []
+    # for i in range(len(dataReadDoc)):
+    #     # print("tao report ", i)
+    #     # start_time = time.time()
+    #     result = ExportOrder(fileName1Sentence, dataReadDoc[i], rat)
+    #     reportDataReadDoc.append(result)
+    #     # print("---tao report ", i, " nay mất %s seconds ---" %
+    #     #       (time.time() - start_time))
+    #
+    # myDict = {}
+    # myDict["file1"] = fileName1Sentence
+    # myDict4 = []
+    # listFileName = {}
+    # myDict4 = makeDataStt(len(internetPage),dataReadDoc,reportDataReadDoc)
+    #
+    # listFileName = internetPage
+    # myDict["ListFileName"] = listFileName
+    # myDict["File1Name"] = fileName1
+    # myDict["ListFile"] = myDict4
+    #
+    # # FileDatabase=DataDocument.objects.filter(DataDocumentName=fileName1.split(".")[0],DataDocumentType=fileName1.split(".")[1],DataDocumentAuthor_id=str(userId))
+    # # jsonResult=ReportDocument(DataDocumentName=FileDatabase.,DataDocumentReport=RjsonFile(myDict,fileName1.split(".")[0],userId))
+    # #jsonResult = jsonFile(myDict, fileName1.split(".")[0], userId)
+    # return Response(myDict, status=status.HTTP_200_OK)
 
 
 # import mới

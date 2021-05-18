@@ -7,9 +7,11 @@ from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
     # url(r'^test2', views.documentimportTesting),
+    url(r'^checkdatabaseinternet', csrf_exempt(views.documentimportDatabaseInternet)),
     url(r'^checkdatabase', csrf_exempt(views.documentimportDatabase)),
     url(r'^final-check', csrf_exempt(views.FinalCheck)),
     url(r'^checkinternet', csrf_exempt(views.documentimportInternet)),
+    #url(r'^checkdatabaseinternet', csrf_exempt(views.documentimportDatabaseInternet)),
     url(r'^test3', csrf_exempt(views.documentimport)),
     url(r'^test2', csrf_exempt(views.ff)),
     url(r'^test', views.test),
