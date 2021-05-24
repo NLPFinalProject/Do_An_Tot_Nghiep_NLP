@@ -1,7 +1,6 @@
 import os, sys
 from pptx import Presentation
 import pandas as pd
-from vncorenlp import VnCoreNLP
 from pyvi import ViTokenizer, ViPosTagger, ViUtils
 from docx_utils.flatten import opc_to_flat_opc
 from xml.dom import minidom
@@ -277,6 +276,7 @@ def preprocess(filename):
     # print("Thời gian bắt đầu xử lý file ",filename," la: ", start_time)'
     list_sentenc = ""
     name, file_extension = os.path.splitext(filename)
+    print("filename là: ",filename, file_extension)
     if (file_extension.lower() not in [".doc", ".docx", ".pdf", ".xlsx", ".csv", ".pptx", ".txt"]):
         raise TypeError("Wrong type document file")
     if (file_extension.lower() == ".doc"):

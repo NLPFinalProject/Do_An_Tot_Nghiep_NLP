@@ -455,14 +455,8 @@ def ExportOrder4(lst_1, lst_2, ratio):
                 count += 1
                 similar_sent.append(j + 1)
                 similar_ratio.append(CurrentRatio)
-        #print("Count: ",count)
         if count != 0:
             length += 1
-        #     export['line'] = i + 1
-        #     export['count'] = count
-        #     export['lst'] =similar_sent
-        #     export['ratio']=similar_ratio
-        #     result.append(export)
         export.append(i + 1)
         export.append(count)
         export.append(similar_sent)
