@@ -113,16 +113,6 @@ def APIUser(request):
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
         
 
-@api_view([ 'GET','POST'])
-def isAdmin(request):
-    #if(request.data not None)
-    print(request.GET)
-    try: 
-        user = User.objects.get(username = request.GET['username'])
-        response = {'isAdmin' : user.is_admin}
-        return JsonResponse(response,status=status.HTTP_200_OK)
-    except ObjectDoesNotExist:
-         return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view([ 'POST'])
 def ActivateUser(request):

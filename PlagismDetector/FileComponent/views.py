@@ -758,7 +758,6 @@
 # #     myDict={}
 
 
-import re
 from rest_framework.decorators import api_view
 from django.shortcuts import render, redirect
 from django.http import Http404
@@ -905,7 +904,7 @@ def makeDataReadDoc(internetPage, userId):
             dataReadDoc.append(lstSentence)
             length = len(lstSentence)
             for i in range(length):
-                print("đs độ dài các câu là: ", len(lstSentence[i]))
+                print("đs độ dài các caua là: ", len(lstSentence[i]))
                 data.datadocumentcontent_set.create(
                     DataDocumentSentence=lstSentence[i],
                     DataDocumentSentenceLength=len(lstSentence[i]))
@@ -929,8 +928,7 @@ def documentimportDatabase(request):
     # fileName1 = request.data["filename1"]
     # userId = int(request.data["id"])
     data1 = request.data
-    #data1["filenameA"], session = uploadDoc(request)
-    data1["filenameA"], session = uploadDoc2(request.POST,request.FILES,request.data['id'])
+    data1["filenameA"], session = uploadDoc(request)
     myDict, fileName1, userId = test1(data1, session)
     jsonFile(myDict, fileName1, userId, session)
     session1 = DocumentSession.objects.get(pk=session)
@@ -945,15 +943,13 @@ def documentimportInternet(request):
     # fileName1 = request.data['fileName1']
     # userId = request.data['id']
     data1 = request.data
-    print(request.data)
-    data1["filenameA"], session = uploadDoc2(request.POST,request.FILES,request.data['id'])
+    data1["filenameA"], session = uploadDoc(request)
     myDict, fileName1, userId = test2(data1, session)
     jsonFile(myDict, fileName1, userId, session)
     session1 = DocumentSession.objects.get(pk=session)
     session1.Status = True
     session1.save()
-    #return Response(myDict, status=status.HTTP_200_OK)
-    return Response( status=status.HTTP_200_OK)
+    # return Response(myDict, status=status.HTTP_200_OK)
 
 
 @api_view(('POST',))
@@ -962,7 +958,7 @@ def documentimportDatabaseInternet(request):
     # userId = int(request.data["id"])
 
     data1 = request.data
-    data1["filenameA"], session = uploadDoc2(request.POST,request.FILES,request.data['id'])
+    data1["filenameA"], session = uploadDoc(request)
     myDict1, fileName1, userId = test1(data1, session)
     myDict2, fileName1, userId = test2(data1, session)
     # myDict1 = test1(data1)
@@ -982,16 +978,14 @@ def documentimportDatabaseInternet(request):
 @api_view(('POST', 'GET'))
 def documentimport(request):
     data1 = request.data
-    #data1["filenameA"], session = uploadDoc(request)
-    #data1["filenameB"] = uploadDocList(request, session)
-    data1["filenameA"], session = uploadDoc2(request.POST,request.FILES,request.data['id'])
-    data1["filenameB"] = uploadDocList2(request.POST,request.FILES,request.data['id'], session)
+    data1["filenameA"], session = uploadDoc(request)
+    data1["filenameB"] = uploadDocList(request, session)
     myDict, fileName1, userId = test3(data1, session)
     jsonFile(myDict, fileName1, userId, session)
     session1 = DocumentSession.objects.get(pk=session)
     session1.Status = True
     session1.save()
-    # return Response(myDict, status=status.HTTP_200_OK)
+
 
 
 # hệ thống
@@ -1265,35 +1259,7 @@ def uploadDoc(request):
     #     # form = UploadOneFileForm()
     #     content = {'please move along': 'have the same username'}
     #     return Response(content, status=status.HTTP_204_NO_CONTENT)
-def uploadDoc2(PostData,FileData,ID):
-    content = None
-   
-    id = ID
-    form1 = UploadOneFileForm(PostData, FileData)
 
-    if form1.is_valid():
-        # save form người dùng gửi
-        data = form1.cleaned_data
-        file1 = data['DataDocumentFile']  # abc.doc
-        file_name = file1.name.split(".")[0]  # doc
-        extension = file1.name.split(".")[-1]  # abc
-        content = file_name
-        session = DocumentSession(NumOfFile=1)
-        session.save()
-        data = DataDocument(
-            DataDocumentName=file_name,
-            DataDocumentAuthor_id=id,
-            DataDocumentType=extension,
-            DataDocumentFile=file1,
-            SesssionId=session.id)
-
-        data.save()
-        # data= form1.save(commit = False)
-        # agreeStatus = FileName if true, =0 if false
-        agreeStatus = checkAgree(False, data=data)
-        result = file_name + '.' + extension
-        content = {'filename': file1}
-        return result, session.id
 
 # upload multiple file
 @api_view(('POST', 'GET'))
@@ -1332,41 +1298,7 @@ def uploadDocList(request, session):
     #     # form = UploadManyFileForm()
     #     content = {'please move along': 'have the same username'}
     #     return Response(content, status=status.HTTP_204_NO_CONTENT)
-def uploadDocList2(PostData,FileData,ID, session):
-    # chuong trinh test
-    content = None
-    
-    id = ID
-    listfile = FileData.getlist('DataDocumentFile')
-    filenameList = []
-    count = 0
-    session = DocumentSession.objects.get(pk=session.id)
-    session.NumOfFile = 1 + len(listfile)
-    session.save()
-    for f in listfile:
-        # name = listname[count]
-        count = count + 1
-        file1: file
-        file1 = f  # abc.doc
-        file_name = file1.name.split(".")[0]  # doc
-        extension = file1.name.split(".")[-1]  # abc
-        filenameList.append(file1.name)
-        data = DataDocument(
-            DataDocumentName=file_name,
-            DataDocumentAuthor_id=id,
-            DataDocumentType=extension,
-            DataDocumentFile=file1,
-            SesssionId=session.id
-        )
-        data.save()
-        agreeStatus = checkAgree(False, data=data)
-    response = {'data': filenameList}
-    return filenameList
-#     return JsonResponse(response, status=status.HTTP_200_OK)
-# else:
-#     # form = UploadManyFileForm()
-#     content = {'please move along': 'have the same username'}
-#     return Response(content, status=status.HTTP_204_NO_CONTENT)
+
 
 @api_view(['GET'])
 def test(self):
