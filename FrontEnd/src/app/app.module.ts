@@ -18,7 +18,7 @@ import { ShellModule } from './shell/shell.module';
 import { VaildateResultModule } from './modules/validate-result/validate-result.module';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
-
+import { MatDialogModule } from '@angular/material/dialog';
 export function httpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(httpClient, 'http://localhost:4200/assets/translations/', '.json');
 }
@@ -44,7 +44,8 @@ export function httpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
     LoginModule,
     AppRoutingModule,
     VaildateResultModule,
-    //MatDialogModule,
+
+    MatDialogModule,
     // must be imported as the last module as it contains the fallback route
   ],
   declarations: [AppComponent],

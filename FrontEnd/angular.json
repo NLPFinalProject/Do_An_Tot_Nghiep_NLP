@@ -24,7 +24,7 @@
             "polyfills": "src/polyfills.ts",
             "assets": [
               "src/favicon.ico",
-	      "src/translations",
+              "src/translations",
               "src/apple-touch-icon.png",
               "src/robots.txt",
               "src/manifest.json",
@@ -35,7 +35,12 @@
                 "output": "/assets/"
               }
             ],
-            "styles": ["src/main.scss", "node_modules/ng-zorro-antd/ng-zorro-antd.min.css"],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "src/main.scss",
+              "node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
+              "src/styles.css"
+            ],
             "scripts": [],
             "aot": true
           },
@@ -89,7 +94,10 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.spec.json",
             "scripts": [],
-            "styles": ["src/main.scss"],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "src/main.scss"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/apple-touch-icon.png",
@@ -102,8 +110,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": [
+              "src/tsconfig.app.json",
+              "src/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -122,8 +135,12 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": [
+              "e2e/tsconfig.e2e.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }

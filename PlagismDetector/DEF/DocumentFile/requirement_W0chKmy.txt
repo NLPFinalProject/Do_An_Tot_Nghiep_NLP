@@ -1,0 +1,13 @@
+djangorestframework-simplejwt
+mysqlclient
+django-cors-headers
+djangorestframework-jwt
+python-pptx
+vncorenlp
+docx_utils
+uuid
+itertools
+pythoncom
+sortedcontainers
+auto-py-to-exe
+PyJWT==1.7.0

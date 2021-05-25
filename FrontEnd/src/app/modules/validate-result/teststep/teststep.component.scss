@@ -1,13 +1,22 @@
 div.container {
   min-height: 10em;
-
+  background: white;
   align-items: center;
 }
 .center {
   align-items: center;
   font-family: "Times New Roman", Times, serif;
-
+  text-align: center;
   font-size: 16px;
+}
+.example-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+}
+
+.example-radio-button {
+  margin: 5px;
 }
 .file {
   opacity: 0;
@@ -20,6 +29,7 @@ div.container {
 }
 .file-input {
   text-align: center;
+  justify-content: center;
 }
 .material-icons {
   font-size: 30px;
@@ -42,10 +52,10 @@ div.container {
   font-family: "Times New Roman", Times, serif;
 }
 .center-button {
-  display: flex;
   justify-content: center;
   align-items: center;
   height: 500px;
+  text-align: center;
 
   background-color: #fff;
 }
@@ -66,4 +76,44 @@ button {
 p {
   font-family: "Times New Roman", Times, serif;
   size: 15px;
+}
+.ngx-file-drop__drop-zone {
+  height: 500px;
+  color: red;
+}
+.ngx-file-drop__content {
+  height: 500px;
+  color: red;
+}
+.example-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+}
+
+.example-radio-button {
+  margin: 5px;
+}
+.ff {
+  width: 720px;
+  height: 500px;
+}
+div.ngx-file-drop__drop-zone {
+  height: 500px;
+}
+.ngx-file-drop__drop-zone {
+  height: 500px;
+  border: 2px dotted #0782d0;
+  margin: auto;
+}
+
+// }
+// ngx-file-drop{
+//   height: 500px;
+//   border: 2px dotted #0782d0;
+//   margin:auto;
+// }
+
+.mycolor {
+  color: red;
 }

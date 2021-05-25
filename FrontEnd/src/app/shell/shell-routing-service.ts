@@ -39,20 +39,83 @@ export class FileService {
     return this.http.get(`${this.baseUrl}/api/file/test`);*/
     return this.http.post(`${this.baseUrl}/api/file/test3`, data);
   }
-  checkPlagiasmUsingDatabase(data: Object): Observable<Object> {
+  checkPlagiasmNormal(data: any): Observable<Object> {
     /*console.log('there');
     return this.http.get(`${this.baseUrl}/api/file/test`);*/
+    const formData: FormData = new FormData();
+    
+     formData.append('id', data.id);
+     formData.append('DataDocumentFile', data.filename1);
+     let file = data.listfile;
+    for (var i = 0; i < file.length; i++) {
+      let temp = file[i];
+
+      formData.append('DataDocumentFile', temp);
+      //formData.append('title', temp.name);
+
+      console.log(temp.name);
+    }
+    //if(localStorage.getItem('id')!=undefined)
+    // formData.append('id', localStorage.getItem('id'));
+    return this.http.post(`${this.baseUrl}/api/file/uploadfilelist`, formData);
+     this.http.post(`${this.baseUrl}/api/file/test3`, data);
+  }
+  checkPlagiasmUsingDatabase(data: any): Observable<Object> {
+    /*console.log('there');
+    return this.http.get(`${this.baseUrl}/api/file/test`);*/
+    const formData: FormData = new FormData();
+    
+    formData.append('id', data.id);
+     
+     formData.append('agreeStatus',data.agreeStatus);
+   
+     formData.append('DataDocumentFile', data.filename1);
+   
     return this.http.post(`${this.baseUrl}/api/file/checkdatabase`, data);
   }
-  checkPlagiasmUsingAll(data: Object): Observable<Object> {
+  checkPlagiasmUsingAll(data: any): Observable<Object> {
     /*console.log('there');
     return this.http.get(`${this.baseUrl}/api/file/test`);*/
+    const formData: FormData = new FormData();
+    
+    formData.append('id', data.id);
+     
+     formData.append('agreeStatus',data.agreeStatus);
+   
+     formData.append('DataDocumentFile', data.filename1);
+   
     return this.http.post(`${this.baseUrl}/api/file/checkdatabaseinternet`, data);
   }
-  checkPlagiasmUsingInternet(data: Object): Observable<Object> {
+  checkPlagiasmUsingInternet(data: any): Observable<Object> {
     /*console.log('there');
     return this.http.get(`${this.baseUrl}/api/file/test`);*/
-    return this.http.post(`${this.baseUrl}/api/file/checkinternet`, data);
+    const formData: FormData = new FormData();
+    
+     formData.append('id', data.id);
+      
+      formData.append('agreeStatus',data.agreeStatus);
+    
+      formData.append('DataDocumentFile', data.filename1);
+    
+    
+    return this.http.post(`${this.baseUrl}/api/file/checkinternet`, formData);
+  }
+  checkPlagiasmUsingDatabase2(data: Object): void {
+    /*console.log('there');
+    return this.http.get(`${this.baseUrl}/api/file/test`);*/
+     this.http.post(`${this.baseUrl}/api/file/checkdatabase`, data);
+  }
+  checkPlagiasmUsingAll2(data: Object): void {
+    /*console.log('there');
+    return this.http.get(`${this.baseUrl}/api/file/test`);*/
+     this.http.post(`${this.baseUrl}/api/file/checkdatabaseinternet`, data);
+  }
+
+  checkPlagiasmUsingInternet2(data: Object): void {
+    /*console.log('there');
+    return this.http.get(`${this.baseUrl}/api/file/test`);*/
+    console.log('is it working');
+     this.http.post(`${this.baseUrl}/api/file/checkinternet`, data);
   }
   checkPlagiasmV2(data: Object): Observable<Object> {
     console.log('there');
@@ -70,6 +133,22 @@ export class FileService {
     if (id != undefined) formData.append('id', id);
     for (var i = 0; i < file.length; i++) {
       let temp = file.item(i);
+
+      formData.append('DataDocumentFile', temp);
+      //formData.append('title', temp.name);
+
+      console.log(temp.name);
+    }
+    //if(localStorage.getItem('id')!=undefined)
+    // formData.append('id', localStorage.getItem('id'));
+    return this.http.post(`${this.baseUrl}/api/file/uploadfilelist`, formData);
+  }
+  UploadFileList2(file: File[]): Observable<Object> {
+    const formData: FormData = new FormData();
+    var id = localStorage.getItem('id');
+    if (id != undefined) formData.append('id', id);
+    for (var i = 0; i < file.length; i++) {
+      let temp = file[i];
 
       formData.append('DataDocumentFile', temp);
       //formData.append('title', temp.name);

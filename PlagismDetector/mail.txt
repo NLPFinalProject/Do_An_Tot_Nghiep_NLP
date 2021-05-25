@@ -1,0 +1,6 @@
+{% for file in ListFile %}
+Với văn bản {{file.name}}
+    <p>Số cặp câu trùng trong văn bản {{file.count}}</p>
+	<p> Tỉ lệ câu trùng trên toàn văn bản: {{file.HitRate}}</p>
+	<a href="localhost://5000/getinfo/{{file.id}}"></a>
+{% endfor %}

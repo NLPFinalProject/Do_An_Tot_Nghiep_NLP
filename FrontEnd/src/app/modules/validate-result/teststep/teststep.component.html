@@ -1,98 +1,119 @@
 
+
 <div class="container">
-<ng-container *ngIf="step===1">
-
+  <div>Bạn có muốn lưu file vào cơ sở dữ liệu của chúng tôi không?</div>
+  <mat-radio-group
+  aria-labelledby="example-radio-group-label"
+  class="example-radio-group"
+ >
+  <mat-radio-button class="example-radio-button" value="yes" (change)="HandleSelectionSaveFileChange($event.value)">
+    Có
+  </mat-radio-button>
+  <mat-radio-button class="example-radio-button" value="no" (change)="HandleSelectionSaveFileChange($event.value)">
+    Không
+  </mat-radio-button>
+  
+  
+</mat-radio-group>
   <div class ="center-button">
-    <div class ="inside-item">
-    
-    <br>
-  </div>
-  <div class="file-input">
-    <div *ngIf= "isSpinning == true">
-      <nz-spin nzTip="Đang tải, vui lòng chờ">
-        
-      </nz-spin>
-    </div>
-    <div *ngIf= "isvalid !=true">
-      <p class="center">Mời bạn chọn file cần kiểm tra</p>
-      <i nz-icon nzType="folder" style="font-size: 32px;" nzTheme="outline"></i>
-    </div>
-    <div *ngIf= "isvalid ==true">
-      <i nz-icon nzType="folder" style="font-size: 32px;" nzTheme="outline"></i>
-      <p>{{FileToUpload.name}}</p>
-    </div>
-    <input type="file" (change)="handleChangeFile($event.target.files)" id="file" class="file" />
-    <label for="file">Chọn file</label>
-  </div>
-  
-</div>
-  
-
-  <button
-  [disabled]="isvalid!==true"
-  nz-button
-  class="w-25"
-  nzType="primary"
-  nzShape="omitted"
-  
-  (click)="nextstep()"
-  
->
-  <i  theme="outline"></i> <span translate>Tiếp theo</span>
-</button>
-
-
-<div>
- 
- 
-</div>
-
-
-</ng-container>
-<ng-container *ngIf="step===2">
-  <div class="sth">
-    <p><button nz-button
-      nzType="primary" class ="w-50" (click)=checkChoice2($event.target.value) value ="1" >So sánh với file của bạn</button></p>
-    <p><button nz-button
-      nzType="primary" class ="w-50" (click)=checkChoice2($event.target.value) value ="2" >So sánh với dữ liệu của hệ thống</button></p>
-    <p><button nz-button
-      nzType="primary" class ="w-50" (click)=checkChoice2($event.target.value) value ="3" >So sánh với dữ liệu internet</button></p>
-    <p><button nz-button
-      nzType="primary" class ="w-50" (click)=checkChoice2($event.target.value) value ="4" >So sánh với cả file internet và dữ liệu của hệ thống</button></p>
-    </div>
-  
-</ng-container>
-<ng-container *ngIf="step===3">
-  
- 
-  <div class ="center-button">
-    
-    
-    <div class="file-input">
-      <div *ngIf= "isSpinning == true">
-        <nz-spin nzTip="Đang kiểm tra kết quả, vui lòng chờ">
-         
-        </nz-spin>
+    <div class="center">
+      <ngx-file-drop dropZoneLabel="Drop files here" id="1" (onFileDrop)="droppedFile($event)" 
+      dropZoneClassName="my-zone-style"
+      contentClassName="my-content-style"
+      accept=".doc,.docx,.pptx,.txt" 
+      (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)">
+          <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+            
+            <button type="button" (click)="openFileSelector()">Browse Files</button>
+          </ng-template>
+      </ngx-file-drop>
+      <div class="upload-table">
+          <table class="table">
+              <thead>
+                  <tr>
+                      <th>Name</th>
+                  </tr>
+              </thead>
+              <tbody class="upload-name-style">
+                  <tr >
+                      <td *ngIf ="FileToUpload"><strong>{{FileToUpload.name}}</strong></td>
+                  </tr>
+              </tbody>
+          </table>
       </div>
-      <div *ngIf= "isvalid != true">
-        <p class= "center">Mời bạn chọn file muốn đối chiếu</p>
-        <i nz-icon nzType="folder" style="font-size: 32px;" nzTheme="outline"></i>
-        
-      </div>  
-      <div *ngIf= "isvalid == true">
-       
-        <i nz-icon nzType="folder" style="font-size: 32px;" nzTheme="outline"></i>
-        <li *ngFor="let item of ListFileToUpload; ">
-          {{item.name}}
-        </li>
-      </div>  
-      <input type="file" (change)="handleChangeFileList($event.target.files)"  id="file" multiple class="file">
-      <label for="file">Select file</label>
+  </div>
+    
+    
+  
+  
+</div>
+  
+
+
+
+
+
+
+
+
+    
+<mat-radio-group
+  aria-labelledby="example-radio-group-label"
+  class="example-radio-group"
+ >
+  <mat-radio-button class="example-radio-button" value="1" (change)="HandleSelectionChange($event.value)">
+    So sánh  với file của bạn
+  </mat-radio-button>
+  <mat-radio-button class="example-radio-button" value="2" (change)="HandleSelectionChange($event.value)">
+    So sánh  với dữ liệu của hệ thống
+  </mat-radio-button>
+  <mat-radio-button class="example-radio-button" value="3" (change)="HandleSelectionChange($event.value)">
+    So sánh vói dữ liệu trên internet
+  </mat-radio-button>
+  <mat-radio-button class="example-radio-button" value="4" (change)="HandleSelectionChange($event.value)">
+    So sánh cả với dữ liệu hệ thống và trên internet
+  </mat-radio-button>
+  
+</mat-radio-group>
+
+  <div *ngIf = "step1Unlock==true">
+    <div class ="center-button">
+      <div class="center">
+        <ngx-file-drop dropZoneLabel="Drop files here" id="2" (onFileDrop)="dropped($event)" 
+        accept=".doc,.docx,.pptx,.txt" 
+        dropZoneClassName="my-zone-style"
+        contentClassName="my-content-style"
+        (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)">
+            <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+              
+              <button type="button" (click)="openFileSelector()">Browse Files</button>
+            </ng-template>
+        </ngx-file-drop>
+        <div class="upload-table">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody class="upload-name-style">
+                    <tr *ngFor="let item of files; let i=index">
+                        <td><strong>{{ item.relativePath }}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+      
+      
+    
+    
   </div>
          
 
+
   
+  </div>
   <button
   nz-button
   class="w-25"
@@ -102,9 +123,13 @@
   (click)="nextstep()"
   [disabled]="isvalid!==true"
 >
-  <i  theme="outline"></i> <span translate>Kết quả</span>
+  <i  theme="outline"></i> <span translate>Kiểm tra</span>
 </button>
-</ng-container>
+
+
+ 
+    
+</div>
 
 
 

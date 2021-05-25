@@ -101,8 +101,9 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
       .login(data)
 
       .subscribe(
-        (value: Data) => {
+        (value: any) => {
           console.log('sucess ');
+          console.log(value);
           this.isLoading = false;
           this.loading = false;
           this.authenticationService.setSession(value);
@@ -112,11 +113,33 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
           console.log(value);
 
           if (value.token != null) {
-            setTimeout(() => {
-              this.router.navigate(['daovan'], { replaceUrl: true, state: { user: value } });
-            }, 1000);
+            console.log(this.loginForm.controls.username.value);
+            this.UserService.isAdmin(this.loginForm.controls.username.value).subscribe(
+              (data: any) => {
+                this.isLoading = false;
+                console.log('where is my data');
+                console.log(data);
+                if (data.isAdmin == false) {
+                  setTimeout(() => {
+                    this.router.navigate(['daovan'], { replaceUrl: true, state: { user: value } });
+                  }, 1000);
+                } else {
+                  setTimeout(() => {
+                    this.router.navigate(['admin'], { replaceUrl: true, state: { user: value } });
+                  }, 1000);
+                }
+              },
+              (error) => {
+                this.isLoading = false;
+
+                this.loading = false;
+                log.debug(`Login error: ${error}`);
+                this.error = error;
+                //this.notificationService.error("Tài khoản hoặc mật khẩu không chính xác");
+                this.showErrorNotification(`${MessageConstant.LoginFailed}`);
+              }
+            );
           } else {
-            this.isLoading = false;
             this.notificationService.error(value.toString() + '1');
             this.loading = false;
           }
