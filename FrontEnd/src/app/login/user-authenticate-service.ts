@@ -18,7 +18,12 @@ export class UserService {
   register(user: Object): Observable<Object> {
     return this.http.post(`${this.baseUrl}/register`, user);
   }
+  isAdmin(username: string): Observable<Object> {
+    let params = new HttpParams().set('username', username);
 
+    console.log(username);
+    return this.http.get(`${this.baseUrl}/is-admin-user/`, { params: params });
+  }
   ActivateUser(user: Object): Observable<Object> {
     return this.http.post(`${this.baseUrl}/activate`, user);
   }

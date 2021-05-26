@@ -1,0 +1,24 @@
+<br />
+<div nz-row nzType="flex" nzJustify="center" nzAlign="top">
+  <button [routerLink]="['/daovan']" routerLinkActive="router-link-active" nz-button nzType="default" translate>
+    Quay lại
+  </button>
+</div>
+<br />
+<nz-alert nzType="warning" nzMessage="Danh sách file trong phiên"></nz-alert>
+<nz-table #filterTable [nzData]="displayData" [nzLoading]="loading" nzSize="small">
+  <!-- <thead (nzSortChange)="sort($event)" nzSingleSort>
+    <tr>
+      <th nzShowSort nzSortKey="name">Danh sách file trong phiên</th>
+    </tr>
+  </thead> -->
+  <tbody>
+    <tr *ngFor="let data of filterTable.data">
+      <td>
+        <span class="d-inline-block text-truncate" style="max-width: 320px" nz-tooltip nzTitle="{{ data.name }}">
+          {{ data.name }}
+        </span>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>

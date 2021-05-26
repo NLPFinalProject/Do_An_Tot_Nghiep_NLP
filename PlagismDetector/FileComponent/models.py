@@ -13,7 +13,7 @@ class DataDocument(models.Model):
     DataDocumentType = models.CharField(max_length=20)
     DataDocumentAuthor = models.ForeignKey(User, on_delete=models.CASCADE)
     DataDocumentFile = models.FileField(upload_to='DocumentFile/',max_length=1000)
-    SesssionId = models.IntegerField(default=0)
+    SessionId = models.IntegerField(default=0)
     DocumentStatus = models.BooleanField(default=False)  # luu cau vao database
 
     def __str__(self):
@@ -60,8 +60,9 @@ class DocumentSession(models.Model):
     NumOfFile = models.IntegerField(default=0)
     Date = models.DateTimeField(auto_now_add=True)
     Status = models.BooleanField(default=False) # bua sau thanh string
-    SessionUser = models.ForeignKey(User, on_delete=models.CASCADE)
+    SessionUser = models.IntegerField(default=0)
+
 
 class ReportDocument(models.Model):
-    DataDocumentJson = models.ForeignKey(DataDocument, on_delete=models.CASCADE)
-    DataDocumentReport = models.TextField(max_length=700)
+    DocumentJson = models.ForeignKey(DataDocument, on_delete=models.CASCADE)
+    JsonFile = models.TextField(max_length=700)

@@ -15,7 +15,9 @@
             <div contenteditable="true" id="ex1">
               <div class="inlinetable" *ngFor="let temp of answer.ls1">
                 <div class="changeText" [ngClass]="[shouldHighlight(temp.id) ? 'highlight' : '']">
-                  <a (click)="triggerScrollTo(temp.id)">{{ temp.data }}.</a>
+                  <a (click)="triggerScrollTo(temp.id)"
+                    ><span>{{ temp.data }}.</span></a
+                  >
                 </div>
               </div>
             </div>

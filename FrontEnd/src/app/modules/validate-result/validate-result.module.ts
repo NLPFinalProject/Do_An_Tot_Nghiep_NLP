@@ -9,6 +9,13 @@ import { TeststepComponent } from './teststep/teststep.component';
 import { ValidateResultRoutingModule } from './validate-result.routing.module';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 //import { NgHighlightModule } from 'ngx-text-highlight';
+import { NgxFileDropModule } from 'ngx-file-drop';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatDialogModule } from '@angular/material/dialog';
+
+//import { MaterialModule } from './material.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+//import { BrowserAnimationsModule } from '@angular/platform-browser/animation;
 
 const COMPONENT = [ValidateResultComponent, TeststepComponent];
 const MODULE = [
@@ -19,6 +26,11 @@ const MODULE = [
   SharedModule,
   ScrollToModule,
   NzUploadModule,
+  NgxFileDropModule,
+  MatRadioModule,
+  MatDialogModule,
+  FormsModule,
+  ReactiveFormsModule,
   //NgHighlightModule,
 ];
 @NgModule({
