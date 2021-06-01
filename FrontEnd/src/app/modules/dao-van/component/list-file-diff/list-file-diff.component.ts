@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,Input } from '@angular/core';
 import { MessageService } from '@app/core/services/Utils/message.service';
 
 @Component({
@@ -7,6 +7,7 @@ import { MessageService } from '@app/core/services/Utils/message.service';
   styleUrls: ['./list-file-diff.component.scss'],
 })
 export class ListFileDiffComponent implements OnInit {
+  @Input ()FileList2:Array<any>;
   sortValue: any = null;
   sortName: any = null;
   listOfSearchName: any = [];
@@ -40,7 +41,7 @@ export class ListFileDiffComponent implements OnInit {
   getData(): void {
     const number = Math.floor(Math.random() * 100);
     setTimeout(() => {
-      this.displayData = [...this.data];
+      this.displayData = [...this.FileList2];
       this.loading = false;
     }, number);
   }

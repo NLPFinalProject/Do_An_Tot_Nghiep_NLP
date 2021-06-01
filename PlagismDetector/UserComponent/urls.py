@@ -17,10 +17,11 @@ urlpatterns = [
      url(r'register',csrf_exempt(views.register)),
      url(r'update-user',csrf_exempt(views.UpdateUser)),
      url(r'SendMail',csrf_exempt(views.register)),
-     
+     url(r'session',csrf_exempt(views.Session)),
      url(r'^profile',views.GetProfile),
      #url(r'^login',views.login),
      url(r'^login', obtain_jwt_token),
+     url(r'^is-admin-user', csrf_exempt(views.isAdmin)),
      url(r'^refresh-token/', refresh_jwt_token),
      #url(r'^api/login',obtain_jwt_token),
      #path('api/login/', obtain_jwt_token),

@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,Input } from '@angular/core';
 import { MessageService } from '@app/core/services/Utils/message.service';
-
+import {DaovanServiceService} from '../../daovan-service.service'
 @Component({
   selector: 'app-section-diff',
   templateUrl: './section-diff.component.html',
   styleUrls: ['./section-diff.component.scss'],
 })
 export class SectionDiffComponent implements OnInit {
+  @Input() sessionData :any[];
   sortValue: any = null;
   sortName: any = null;
   listOfSearchName: any = [];
@@ -28,7 +29,9 @@ export class SectionDiffComponent implements OnInit {
     },
   ];
   fileList: Array<object> = [];
-  constructor(private messageService: MessageService) {}
+  constructor(private messageService: MessageService, private DaoVanService:DaovanServiceService) {
+
+  }
   ngOnInit(): void {
     this.getData();
   }
@@ -36,7 +39,7 @@ export class SectionDiffComponent implements OnInit {
   getData(): void {
     const number = Math.floor(Math.random() * 100);
     setTimeout(() => {
-      this.displayData = [...this.data];
+      this.displayData = [...this.sessionData];
       this.loading = false;
     }, number);
   }

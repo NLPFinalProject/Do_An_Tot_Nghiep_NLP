@@ -1,27 +1,28 @@
-
-  .my-zone-style {
-    height: 200px;
-    border: 2px dotted #0782d0;
-    margin: auto;
-    justify-content: center;
-    text-align: center;
-    
-  }
-  .my-content-style {
-    
-    margin: auto;
-    display: flex;
-    height: 100px;
-    justify-content: center;
-    text-align: center
-    ;
-    
-  }
-  #mystyle {
-    height: 500px;
-    border: 2px dotted #0782d0;
-    margin: auto;
-    color: red;
-  }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.my-zone-style {
+  height: 200px;
+  border: 2px dotted #0782d0;
+  margin: auto;
+  justify-content: center;
+  text-align: center;
+}
+.my-content-style {
+  margin: auto;
+  display: flex;
+  height: 100px;
+  justify-content: center;
+  text-align: center;
+}
+#mystyle {
+  height: 500px;
+  border: 2px dotted #0782d0;
+  margin: auto;
+  color: red;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}

@@ -18,6 +18,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import authentication_classes,permission_classes
 from rest_framework.authentication import TokenAuthentication
 from MailComponent import views as mail
+from FileComponent.models import DocumentSession
 import random as rand
 
 @api_view([ 'POST'])
@@ -113,6 +114,16 @@ def APIUser(request):
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
         
 
+@api_view([ 'GET','POST'])
+def isAdmin(request):
+    #if(request.data not None)
+    print(request.GET)
+    try: 
+        user = User.objects.get(username = request.GET['username'])
+        response = {'isAdmin' : user.is_admin}
+        return JsonResponse(response,status=status.HTTP_200_OK)
+    except ObjectDoesNotExist:
+         return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view([ 'POST'])
 def ActivateUser(request):
@@ -191,13 +202,41 @@ def login(request):
         return Response(content, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
     # In order to serialize objects, we must set 'safe=False'
 
-   
+@api_view(('GET',))
+def Session(request):
+    print(request.GET)
+    content =None
+    userId = request.GET['id']
+    try:
+        # session=DocumentSession.objects.filter(SessionUser=str(userId))
+        # content = session
+    
+        # print("session là: ",content)
+        content = readSession(userId)
+        print(content[0].Status)
+        return Response(content)  
+    except ObjectDoesNotExist:
+        return Response(None, status=status.HTTP_200_OK)
+    
 @api_view(['POST'])
 def fakelogin(request):
     content = None
     print('fake login is here')
     return Response(content, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+def readSession(userId):
+    sessionList = DocumentSession.objects.filter(SessionUser=str(userId))
+    ResponseContent = []
+    for i in range(len(sessionList)):
+        temp = {}
+        temp["Status"] = sessionList[i].Status
+        temp["id"]=sessionList[i].id
+        temp["NumOfFile"]= sessionList[i].NumOfFile
+        temp["Date"] = sessionList[i].Date
+        temp["SessionUser"] = sessionList[i].SessionUser
+        ResponseContent.append(temp) 
 
+
+    return sessionList
 @api_view(['GET'])
 def GetProfile(request):
     try:

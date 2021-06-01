@@ -6,7 +6,6 @@
     <hr />
     <form nz-form [formGroup]="loginForm" (ngSubmit)="login()">
       <nz-spin [nzSpinning]="isLoading">
-       
         <nz-form-item>
           <nz-form-control>
             <nz-input-group [nzPrefix]="prefixUser">
@@ -75,7 +74,7 @@
     <ng-template #prefixUser><i nz-icon [nzType]="'user'"></i></ng-template>
     <ng-template #prefixLock><i nz-icon [nzType]="'lock'"></i></ng-template>
     <nz-form-item class="centerclick">
-      <span  nz-row nzType="'flex'" nzJustify="center" >
+      <span nz-row nzType="'flex'" nzJustify="center">
         <a [routerLink]="['/register']" routerLinkActive="router-link-active">{{ 'CreateAccount' | translate }}</a>
         <nz-divider nzType="vertical"></nz-divider>
         <a [routerLink]="['/forgot-password']" routerLinkActive="router-link-active" class="forgot forget-password"

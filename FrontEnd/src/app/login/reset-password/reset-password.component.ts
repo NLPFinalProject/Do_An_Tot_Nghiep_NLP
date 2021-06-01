@@ -29,13 +29,14 @@ export class ResetPasswordComponent extends AppComponentBase implements OnInit {
   //#region Confirm
   updateConfirmValidator(): void {
     /** wait for refresh value */
+  
     Promise.resolve().then(() => this.resetPasswordForm.controls.checkPassword.updateValueAndValidity());
   }
 
   confirmationValidator = (control: FormControl): { [s: string]: boolean } => {
     if (!control.value) {
       return { required: true };
-    } else if (control.value !== this.resetPasswordForm.controls.password.value) {
+    } else if (control.value !== this.resetPasswordForm.controls.checkPassword.value) {
       return { confirm: true, error: true };
     }
     return {};
@@ -78,8 +79,8 @@ export class ResetPasswordComponent extends AppComponentBase implements OnInit {
     this.resetPasswordForm = this.formBuilder.group({
       //userId: [null, [Validators.required]],
       password: [null, [Validators.required]],
-      checkPassword: [null, [Validators.required, this.confirmationValidator]],
-      recheckPassword: [null, [Validators.required]],
+      checkPassword: [null, [Validators.required, ]],
+      recheckPassword: [null, [Validators.required,this.confirmationValidator]],
     });
   }
 }

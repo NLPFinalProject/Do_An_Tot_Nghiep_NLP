@@ -16,7 +16,7 @@ export class ReportInputFileService {
 
   public getJSON(): Observable<any> {
     return this.http.get(this.mookData).pipe(
-      map((body: any)=>body ),
+      map((body: any) => body),
       catchError(() => of('Error, could not load file json :-('))
     );
   }

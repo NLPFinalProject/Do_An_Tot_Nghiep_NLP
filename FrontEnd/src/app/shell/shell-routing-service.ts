@@ -43,79 +43,78 @@ export class FileService {
     /*console.log('there');
     return this.http.get(`${this.baseUrl}/api/file/test`);*/
     const formData: FormData = new FormData();
-    
-     formData.append('id', data.id);
-     formData.append('DataDocumentFile', data.filename1);
-     let file = data.listfile;
+    formData.append('agreeStatus', data.agreeStatus);
+    formData.append('id', data.id);
+    formData.append('DataDocumentFile', data.filename1);
+    let file = data.listfile;
     for (var i = 0; i < file.length; i++) {
       let temp = file[i];
 
-      formData.append('DataDocumentFile', temp);
+      formData.append('DataDocumentFileList', temp);
       //formData.append('title', temp.name);
 
       console.log(temp.name);
     }
     //if(localStorage.getItem('id')!=undefined)
     // formData.append('id', localStorage.getItem('id'));
-    return this.http.post(`${this.baseUrl}/api/file/uploadfilelist`, formData);
-     this.http.post(`${this.baseUrl}/api/file/test3`, data);
+    //return this.http.post(`${this.baseUrl}/api/file/uploadfilelist`, formData);
+    return this.http.post(`${this.baseUrl}/api/file/test3`, formData);
   }
   checkPlagiasmUsingDatabase(data: any): Observable<Object> {
     /*console.log('there');
     return this.http.get(`${this.baseUrl}/api/file/test`);*/
     const formData: FormData = new FormData();
-    
+
     formData.append('id', data.id);
-     
-     formData.append('agreeStatus',data.agreeStatus);
-   
-     formData.append('DataDocumentFile', data.filename1);
-   
-    return this.http.post(`${this.baseUrl}/api/file/checkdatabase`, data);
+
+    formData.append('agreeStatus', data.agreeStatus);
+
+    formData.append('DataDocumentFile', data.filename1);
+
+    return this.http.post(`${this.baseUrl}/api/file/checkdatabase`, formData);
   }
   checkPlagiasmUsingAll(data: any): Observable<Object> {
     /*console.log('there');
     return this.http.get(`${this.baseUrl}/api/file/test`);*/
     const formData: FormData = new FormData();
-    
+
     formData.append('id', data.id);
-     
-     formData.append('agreeStatus',data.agreeStatus);
-   
-     formData.append('DataDocumentFile', data.filename1);
-   
-    return this.http.post(`${this.baseUrl}/api/file/checkdatabaseinternet`, data);
+
+    formData.append('agreeStatus', data.agreeStatus);
+
+    formData.append('DataDocumentFile', data.filename1);
+
+    return this.http.post(`${this.baseUrl}/api/file/checkdatabaseinternet`, formData);
   }
   checkPlagiasmUsingInternet(data: any): Observable<Object> {
     /*console.log('there');
     return this.http.get(`${this.baseUrl}/api/file/test`);*/
     const formData: FormData = new FormData();
-    
-     formData.append('id', data.id);
-      
-      formData.append('agreeStatus',data.agreeStatus);
-    
-      formData.append('DataDocumentFile', data.filename1);
-    
-    
+
+    formData.append('id', data.id);
+
+    formData.append('agreeStatus', data.agreeStatus);
+
+    formData.append('DataDocumentFile', data.filename1);
+
     return this.http.post(`${this.baseUrl}/api/file/checkinternet`, formData);
   }
   checkPlagiasmUsingDatabase2(data: Object): void {
     /*console.log('there');
     return this.http.get(`${this.baseUrl}/api/file/test`);*/
-     this.http.post(`${this.baseUrl}/api/file/checkdatabase`, data);
+    this.http.post(`${this.baseUrl}/api/file/checkdatabase`, data);
   }
   checkPlagiasmUsingAll2(data: Object): void {
     /*console.log('there');
     return this.http.get(`${this.baseUrl}/api/file/test`);*/
-     this.http.post(`${this.baseUrl}/api/file/checkdatabaseinternet`, data);
+    this.http.post(`${this.baseUrl}/api/file/checkdatabaseinternet`, data);
   }
 
   checkPlagiasmUsingInternet2(data: Object): void {
     /*console.log('there');
     return this.http.get(`${this.baseUrl}/api/file/test`);*/
     console.log('is it working');
-     this.http.post(`${this.baseUrl}/api/file/checkinternet`, data);
+    this.http.post(`${this.baseUrl}/api/file/checkinternet`, data);
   }
   checkPlagiasmV2(data: Object): Observable<Object> {
     console.log('there');
@@ -134,7 +133,7 @@ export class FileService {
     for (var i = 0; i < file.length; i++) {
       let temp = file.item(i);
 
-      formData.append('DataDocumentFile', temp);
+      formData.append('DataDocumentFileList', temp);
       //formData.append('title', temp.name);
 
       console.log(temp.name);

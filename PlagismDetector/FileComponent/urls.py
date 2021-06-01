@@ -15,8 +15,8 @@ urlpatterns = [
     url(r'^test3', csrf_exempt(views.documentimport)),
     url(r'^test2', csrf_exempt(views.ff)),
     url(r'^test', views.test),
-    url(r'^uploadfilelist', csrf_exempt(views.uploadDocList)),
-    url(r'^uploadfile', csrf_exempt(views.uploadDoc)),
+    #url(r'^uploadfilelist', csrf_exempt(views.uploadDocList2)),
+    #url(r'^uploadfile', csrf_exempt(views.uploadDoc2)),
 
     # url(r'^', include('UserComponent.urls')),
     # url(r'^$', views.home, name='home'),

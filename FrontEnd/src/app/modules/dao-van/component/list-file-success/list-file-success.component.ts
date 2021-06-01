@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,Input } from '@angular/core';
 import { MessageService } from '@app/core/services/Utils/message.service';
+import {DaovanServiceService} from '../../daovan-service.service'
 
 @Component({
   selector: 'app-list-file-success',
@@ -7,6 +8,7 @@ import { MessageService } from '@app/core/services/Utils/message.service';
   styleUrls: ['./list-file-success.component.scss'],
 })
 export class ListFileSuccessComponent implements OnInit {
+  @Input() File1Name:any;
   sortValue: any = null;
   sortName: any = null;
   listOfSearchName: any = [];
@@ -28,7 +30,7 @@ export class ListFileSuccessComponent implements OnInit {
     },
   ];
   fileList: Array<object> = [];
-  constructor(private messageService: MessageService) {}
+  constructor(private messageService: MessageService,private DaovanService:DaovanServiceService) {}
   ngOnInit(): void {
     this.getData();
   }
@@ -36,7 +38,7 @@ export class ListFileSuccessComponent implements OnInit {
   getData(): void {
     const number = Math.floor(Math.random() * 100);
     setTimeout(() => {
-      this.displayData = [...this.data];
+      this.displayData = [...this.File1Name];
       this.loading = false;
     }, number);
   }

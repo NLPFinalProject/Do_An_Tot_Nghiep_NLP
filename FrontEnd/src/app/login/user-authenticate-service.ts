@@ -14,7 +14,12 @@ export class UserService {
   constructor(private http: HttpClient) {
     this.params = new HttpParams();
   }
+  getSession(id: string): Observable<Object> {
+    let params = new HttpParams().set('id', id);
 
+    console.log(params.toString());
+    return this.http.get(`${this.baseUrl}/session`, { params: params });
+  }
   register(user: Object): Observable<Object> {
     return this.http.post(`${this.baseUrl}/register`, user);
   }

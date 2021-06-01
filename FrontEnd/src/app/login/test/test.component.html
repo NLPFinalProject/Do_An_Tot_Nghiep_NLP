@@ -1,31 +1,22 @@
-
- <div class="on" id = "scroller" >
+<div class="on" id="scroller">
   <table>
-
     <tbody class="green">
-        <tr>
-            <td><div contenteditable="true" id="ex1">
-    
-              <div *ngFor="let temp of tdata">
-                <a [ngxScrollTo]="(temp.id)">{{temp.name}}</a>
+      <tr>
+        <td>
+          <div contenteditable="true" id="ex1">
+            <div *ngFor="let temp of tdata">
+              <a [ngxScrollTo]="temp.id">{{ temp.name }}</a>
             </div>
-
+          </div>
+        </td>
+        <td>
+          <div contenteditable="true" id="ex2">
+            <div *ngFor="let temp of HEROES">
+              <div id="{{ temp.id }}" #{{temp.id}}>{{ temp.name }}</div>
             </div>
-          </td>
-          <td>
-            <div contenteditable="true" id="ex2">
-              <div *ngFor="let temp of HEROES">
-                <div  id ={{temp.id}} #{{temp.id}}>{{temp.name}}</div>
-            </div>
-            
-            </div>
-          </td>
-           
-        </tr>
+          </div>
+        </td>
+      </tr>
     </tbody>
-    </table>
-  </div>
-  
-
-  
-  
+  </table>
+</div>

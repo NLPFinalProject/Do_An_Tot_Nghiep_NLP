@@ -50,7 +50,7 @@ export class TeststepComponent implements OnInit {
     this.selectedOption = 1;
     this.option = '1';
   }
-  ngOnDestroy(){
+  ngOnDestroy() {
     console.log('now you die');
   }
   HandleSelectionChange(id: any) {
@@ -116,12 +116,13 @@ export class TeststepComponent implements OnInit {
               agreeStatus: this.agreeStatus,
             };
             console.log(tempdata);
-            this.fileService.checkPlagiasmNormal(tempdata);
+            this.fileService.checkPlagiasmNormal(tempdata).subscribe((data: any) => {
+              console.log(data);
+            });
           } else {
             //add warning here
           }
 
-           
           //   console.log(data);
           //   this.router.navigate(['checkresult/result'], { replaceUrl: true, state: { data: data } });
           // })
@@ -135,10 +136,10 @@ export class TeststepComponent implements OnInit {
 
             agreeStatus: this.agreeStatus,
           };
-          this.fileService.checkPlagiasmUsingDatabase(tempdata).subscribe((data:any)=>{
+          this.fileService.checkPlagiasmUsingDatabase(tempdata).subscribe((data: any) => {
             console.log(data);
-          this.openDialog();
-          })
+            this.openDialog();
+          });
           console.log(tempdata);
           //this.openDialog();
           break;
@@ -151,12 +152,12 @@ export class TeststepComponent implements OnInit {
 
             agreeStatus: this.agreeStatus,
           };
-          this.fileService.checkPlagiasmUsingInternet(tempdata).subscribe((data:any)=>{
+          this.fileService.checkPlagiasmUsingInternet(tempdata).subscribe((data: any) => {
             console.log(data);
             console.log('done my job');
-          })
+          });
           this.openDialog();
-         
+
           break;
         }
         case 4: {
@@ -200,8 +201,6 @@ export class TeststepComponent implements OnInit {
     console.log('welcome');
 
     this.fileService.UploadFile(this.FileToUpload).subscribe((data: any) => {
-      
-
       this.fileList = data.data;
     });
     console.log('fail');
@@ -217,8 +216,7 @@ export class TeststepComponent implements OnInit {
     this.FileToUpload = item;
     this.uploadFile();
   };
-  WarningSize()
-  {
+  WarningSize() {
     const dialogRef = this.dialog.open(WarningFileSizeDialog, {
       width: '250px',
       //data: {name: this.name, animal: this.animal}
@@ -237,15 +235,13 @@ export class TeststepComponent implements OnInit {
     if (files[0].fileEntry.isFile) {
       const fileEntry = files[0].fileEntry as FileSystemFileEntry;
       fileEntry.file((file: File) => {
-        if(file.size>10*1024*1024)
-        {
-            this.WarningSize();
+        if (file.size > 10 * 1024 * 1024) {
+          this.WarningSize();
         }
         // Here you can access the real file
-        else{
+        else {
           this.FileToUpload = file;
         }
-        
 
         //this.ListOfFile.push(file);
       });
@@ -263,16 +259,13 @@ export class TeststepComponent implements OnInit {
         fileEntry.file((file: File) => {
           console.log(1);
           // Here you can access the real file
-          if(file.size <= 10*1024*1024)
-          {
+          if (file.size <= 10 * 1024 * 1024) {
             console.log(file);
-          this.ListOfFile.push(file);
-          }
-          else{
+            this.ListOfFile.push(file);
+          } else {
             this.ListOfFile = null;
             this.WarningSize();
           }
-          
 
           //this.handleChangeFile1(file);
           //this.FileToUpload=null;
@@ -348,7 +341,7 @@ export class SuccessUploadDialog {
 export class WarningFileSizeDialog {
   constructor(
     public dialogRef: MatDialogRef<WarningFileSizeDialog>,
-    
+
     @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) {}
 

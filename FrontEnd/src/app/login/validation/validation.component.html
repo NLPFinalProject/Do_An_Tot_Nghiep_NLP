@@ -25,7 +25,7 @@
             <div ngxErrors="username">
               <div *ngFor="let error of errors" [ngxError]="error.name" [when]="error.rules">
                 <nz-form-explain translate class="errors">
-                  {{ 'Username is required' | translate }}
+                  {{ 'validation is required' | translate }}
                 </nz-form-explain>
               </div>
             </div>
@@ -45,16 +45,16 @@
             type="submit"
             
           >
-            <i nz-icon type="login" theme="outline"></i> <span translate>Validate</span>
+            <i nz-icon [nzType] ="'login'" theme="outline"></i> <span translate>Validate</span>
           </button>
           <nz-form-explain *ngIf="isError" class="errors">
-            {{ 'Username or password incorrect.' | translate }}
+            {{ 'validation code incorrect.' | translate }}
           </nz-form-explain>
         </nz-form-control>
       </nz-form-item>
     </form>
-    <ng-template #prefixUser><i nz-icon type="user"></i></ng-template>
-    <ng-template #prefixLock><i nz-icon type="lock"></i></ng-template>
+    <ng-template #prefixUser><i nz-icon [nzType]="'user'"></i></ng-template>
+    <ng-template #prefixLock><i nz-icon [nzType]="'lock'"></i></ng-template>
     
     <div nz-row nzType="flex" nzJustify="center">
       <ng-template ngFor let-lang [ngForOf]="languages" let-i="index">
