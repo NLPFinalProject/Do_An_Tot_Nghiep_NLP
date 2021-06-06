@@ -147,16 +147,23 @@ def ActivateUser(request):
 @api_view([ 'POST'])
 def ResetPassword(request):
     #if(request.data not None)
-    
-    print(request.data)
-    user = User.objects.get(username = request.data["username"])
-    print(user.username)
-    print(user.password)
-
-    user.set_password(user.request.data['password'])
-    #user.password = request.data['password']
-    user.save()
-    return HttpResponse(status=status.HTTP_200_OK)
+    try:
+        print(request.data)
+        user = User.objects.get(username = request.data["username"])
+        print(user.username)
+        print(user.password)
+        flag = user.check_password(request.data['password'])
+        if flag==False:
+            
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+        
+        user.set_password(request.data['reset'])
+        #user.password = request.data['password']
+        user.save()
+        return HttpResponse(status=status.HTTP_200_OK)
+    except ObjectDoesNotExist:
+        content = "username or password is wrong, please try again"
+        return Response(content,status=status.HTTP_400_BAD_REQUEST)
 @api_view([ 'POST'])
 def ForgetPassword(request):
     #if(request.data not None)

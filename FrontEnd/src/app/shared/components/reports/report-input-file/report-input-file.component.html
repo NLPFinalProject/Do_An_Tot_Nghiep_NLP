@@ -3,7 +3,7 @@
 <br />
 
 <div class="gutter-box">
-  <nz-table  [nzData]="displayData" [nzPageSize]="10">
+  <nz-table [nzData]="displayData" [nzLoading]="loading" [nzPageSize]="10">
     <thead (nzSortChange)="sort($event)" nzSingleSort>
       <tr>
         <th nzShowExpand></th>
@@ -15,9 +15,9 @@
     <tbody>
       <ng-template ngFor let-data [ngForOf]="displayData">
         <tr (click)="Warning(data.id)">
-          <td ></td>
+          <td></td>
           <td>
-            <b>{{data.Date | date:'medium'}}</b>
+            <b>{{ data.Date | date: 'medium' }}</b>
           </td>
           <td>
             <nz-badge
@@ -27,11 +27,10 @@
             ></nz-badge>
           </td>
           <td>
-             <div *ngIf = "data.Status==true">Tải lên thành công</div>
-             <div *ngIf = "data.Status==false">Đang tải</div>
+            <div *ngIf="data.Status == true">Tải lên thành công</div>
+            <div *ngIf="data.Status == false">Đang tải</div>
           </td>
         </tr>
-        
       </ng-template>
     </tbody>
   </nz-table>

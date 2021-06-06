@@ -1,14 +1,13 @@
-;import { Component, OnInit,Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 import { ReportInputFileDto } from './utils/models/report-InputFile.dto';
 import { ReportInputFileService } from './utils/services/report-input-file.service';
 import { RoutingService } from '@app/core/services/Routing/routing.services';
-import {UserService} from '../../../../login/user-authenticate-service'
-import {FileService} from '../../../../shell/shell-routing-service'
-import {SessionToHistoryService} from '../../session-to-history.service'
-import {Router} from '@angular/router'
+import { UserService } from '../../../../login/user-authenticate-service';
+import { FileService } from '../../../../shell/shell-routing-service';
+import { SessionToHistoryService } from '../../session-to-history.service';
+import { Router } from '@angular/router';
 import { fromPairs } from 'lodash';
-
 
 @Component({
   selector: 'app-report-input-file',
@@ -16,7 +15,7 @@ import { fromPairs } from 'lodash';
   styleUrls: ['./report-input-file.component.scss'],
 })
 export class ReportInputFileComponent implements OnInit {
-  @Input()SessionList:any;
+  @Input() SessionList: any;
   loading = true;
   reportInputFile: ReportInputFileDto[] = [];
   sortValue: any = null;
@@ -24,38 +23,40 @@ export class ReportInputFileComponent implements OnInit {
   listOfSearchName: any = [];
   searchAddress: string;
   displayData: Array<object> = [];
-  ListOfTemp :any[];
-  constructor(private reportInputFileService: ReportInputFileService,
-     private routingService: RoutingService,
-     private userService:UserService,
-     private fileService:FileService,
-     private router:Router,
-     private sessionToHistoryService:SessionToHistoryService) {}
-
+  ListOfTemp: any[];
+  constructor(
+    private reportInputFileService: ReportInputFileService,
+    private routingService: RoutingService,
+    private userService: UserService,
+    private fileService: FileService,
+    private router: Router,
+    private sessionToHistoryService: SessionToHistoryService
+  ) {}
+  ngOnChanges() {
+    this.loading = false;
+  }
   ngOnInit(): void {
-    this.userService.getSession(localStorage.getItem('id')).subscribe((data:any)=>
-    {console.log(data);
+    this.userService.getSession(localStorage.getItem('id')).subscribe((data: any) => {
+      console.log(data);
+      //this.loading = false;
       setTimeout(() => {
-        this.displayData=data.session;
+        this.displayData = data.session;
         this.ListOfTemp = data.session;
-        console.log("this is");
+        console.log('this is');
         this.Warning(0);
       }, 3000);
-     
-      
-     
-    })
-    
+    });
+
     //this.getReportInputFile();
   }
-  Warning(id:number)
-  {
-    let data={
+  Warning(id: number) {
+    this.loading = false;
+    let data = {
       //'id':localStorage.getItem('id'),
-      'sessionId':id,
-      filename:this.ListOfTemp[id].filename
-    }
-    localStorage.setItem('sesstionId',id.toString());
+      sessionId: id,
+      filename: this.ListOfTemp[id].filename,
+    };
+    localStorage.setItem('sesstionId', id.toString());
     this.sessionToHistoryService.sendFileList(data);
     // this.fileService.getResult(data).subscribe((data:any)=>{
     //   //this.router.navigate('daovan',{})

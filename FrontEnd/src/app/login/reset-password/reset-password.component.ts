@@ -4,7 +4,7 @@ import { MessageError } from '@app/core/common/errorMessage';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MessageConstant, RoutingConstant } from '@app/shared';
 import { Router, ActivatedRoute } from '@angular/router';
-import {UserService} from '../user-authenticate-service'
+import { UserService } from '../user-authenticate-service';
 
 @Component({
   selector: 'app-reset-password',
@@ -31,7 +31,7 @@ export class ResetPasswordComponent extends AppComponentBase implements OnInit {
   //#region Confirm
   updateConfirmValidator(): void {
     /** wait for refresh value */
-  
+
     Promise.resolve().then(() => this.resetPasswordForm.controls.checkPassword.updateValueAndValidity());
   }
 
@@ -66,27 +66,29 @@ export class ResetPasswordComponent extends AppComponentBase implements OnInit {
     var data = {
       username: localStorage.getItem('username'),
       password: this.resetPasswordForm.value.password,
-      reset: '123',
+      reset: this.resetPasswordForm.value.checkPassword,
     };
-    this.userService.ResetPassword(data).subscribe((data:any)=>{
-      this.notificationService.success(`${MessageConstant.RegisterSucssec} ${MessageConstant.GoToPage} 5 giây`);
-      setTimeout(() => {
-        this.route.queryParams.subscribe((params) =>
-          this.router.navigate([params.redirect || RoutingConstant.Base], { replaceUrl: true })
-        );
-      }, 5000);
-    })
-    
-
-   
+    this.userService.ResetPassword(data).subscribe(
+      (data: any) => {
+        this.notificationService.success(`${MessageConstant.RegisterSucssec} ${MessageConstant.GoToPage} 5 giây`);
+        setTimeout(() => {
+          this.route.queryParams.subscribe((params) =>
+            this.router.navigate([params.redirect || RoutingConstant.Base], { replaceUrl: true })
+          );
+        }, 5000);
+      },
+      (error) => {
+        this.notificationService.error('Mật khẩu không đúng, vui lòng thử lại');
+      }
+    );
   }
 
   createdFrom(): void {
     this.resetPasswordForm = this.formBuilder.group({
       //userId: [null, [Validators.required]],
       password: [null, [Validators.required]],
-      checkPassword: [null, [Validators.required, ]],
-      recheckPassword: [null, [Validators.required,this.confirmationValidator]],
+      checkPassword: [null, [Validators.required]],
+      recheckPassword: [null, [Validators.required, this.confirmationValidator]],
     });
   }
 }

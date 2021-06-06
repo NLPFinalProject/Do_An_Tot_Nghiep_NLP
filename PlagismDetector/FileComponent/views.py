@@ -780,6 +780,7 @@ from django.conf import settings
 from PreprocessingComponent import views as p
 from PreprocessingComponent import TFIDF as internetKeywordSearch
 from UserComponent.models import User
+import MailComponent.views as mail
 # import cho tách câu
 import os
 from collections import Counter
@@ -936,6 +937,9 @@ def documentimportDatabase(request):
     session1 = DocumentSession.objects.get(pk=session)
     session1.Status = True
     session1.save()
+    #mail.sendExportMailV2(request.data)
+    sessionId = session1.id
+    mail.sendExportMailV2(request.data,sessionId)
     return Response(status=status.HTTP_200_OK)
 
 
@@ -953,6 +957,8 @@ def documentimportInternet(request):
     session1 = DocumentSession.objects.get(pk=session)
     session1.Status = True
     session1.save()
+    sessionId = session1.id
+    mail.sendExportMailV2(request.data,sessionId)
     #return Response(myDict, status=status.HTTP_200_OK)
     return Response(status=status.HTTP_200_OK)
 
@@ -977,6 +983,8 @@ def documentimportDatabaseInternet(request):
     session1 = DocumentSession.objects.get(pk=session)
     session1.Status = True
     session1.save()
+    sessionId = session1.id
+    mail.sendExportMailV2(request.data,sessionId)
     return Response(status=status.HTTP_200_OK)
 
 
@@ -998,6 +1006,8 @@ def documentimport(request):
     session1 = DocumentSession.objects.get(pk=session)
     session1.Status = True
     session1.save()
+    sessionId = session1.id
+    mail.sendExportMailV2(request.data,sessionId)
     return Response(status=status.HTTP_200_OK)
 
 

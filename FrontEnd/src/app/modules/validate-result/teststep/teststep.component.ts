@@ -118,6 +118,7 @@ export class TeststepComponent implements OnInit {
             console.log(tempdata);
             this.fileService.checkPlagiasmNormal(tempdata).subscribe((data: any) => {
               console.log(data);
+              this.openDialog();
             });
           } else {
             //add warning here
