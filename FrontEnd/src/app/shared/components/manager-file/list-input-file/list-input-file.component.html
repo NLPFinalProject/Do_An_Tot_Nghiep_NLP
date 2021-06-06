@@ -29,4 +29,7 @@
       <td>{{ data.status }}</td>
     </tr>
   </tbody>
+  <div *ngIf="flag">
+    <button (click)="gotoDetail()">Xem chi tiết</button>
+  </div>
 </nz-table>

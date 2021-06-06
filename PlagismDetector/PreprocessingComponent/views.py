@@ -10,7 +10,8 @@ import time
 import pythoncom
 import csv
 sys.path.insert(1, os.getcwd() + "/PreprocessingComponent")
-
+from underthesea import sent_tokenize, word_tokenize
+#from pdfminer3 import Pdf_extract
 from PreprocessingComponent.pdfminer3 import Pdf_extract
 #
 # if ("PreprocessingComponent" in os.getcwd()):
@@ -246,26 +247,45 @@ def num_of_word(list_sentences):
 
 
 # hàm dùng để tách từ các đoạn văn para sang pos_tag
-def list_para2txt(list_para):
+#def list_para2txt(list_para):
     # split_sentence = []  ## list chứa danh sách câu được tách ra. mỗi phần tử là 1 câu.
     # for para in list_para:
-    #     split_sentence.extend(vncorenlp.pos_tag(para))
+    #     c = ViPosTagger.postagging(ViTokenizer.tokenize(para))
+    #     a = list(zip(c[0], c[1]))
+    #     temp = []
+    #     flag = 0
+    #     for i in a:
+    #         if (flag == 1):
+    #             temp = []
+    #             flag = 0
+    #         temp.append(i)
+    #         if (i[0] == "."):
+    #             flag = 1
+    #             split_sentence.append(temp)
     # return split_sentence  # update: trả ra pos_tag là có gán nhãn cho tưng từ về loại từ.
-    split_sentence = []  ## list chứa danh sách câu được tách ra. mỗi phần tử là 1 câu.
+END_OF_SENTENCE = ['.', '?', '!']
+
+def list_para2txt(list_para):
+    lst = []
+
+    # for p in list_para:
+    #     word = ViPosTagger.postagging(ViTokenizer.tokenize(p))[0]
+    #     #print("word dong 273",word)
+    #     sentence = []
+    #     for i in range(len(word)):
+    #         if word[i] in END_OF_SENTENCE or i == len(word) - 1:
+    #             lst.append(sentence)
+    #             sentence = []
+    #         else:
+    #             sentence.append(word[i].lower())
+    words = []
+    sentences = []
     for para in list_para:
-        c = ViPosTagger.postagging(ViTokenizer.tokenize(para))
-        a = list(zip(c[0], c[1]))
-        temp = []
-        flag = 0
-        for i in a:
-            if (flag == 1):
-                temp = []
-                flag = 0
-            temp.append(i)
-            if (i[0] == "."):
-                flag = 1
-                split_sentence.append(temp)
-    return split_sentence  # update: trả ra pos_tag là có gán nhãn cho tưng từ về loại từ.
+        b=sent_tokenize(para)
+        sentences.extend(b)
+        for j in b:
+            words.append(word_tokenize(j))
+    return words, sentences
 
 
 def preprocess(filename):
@@ -281,30 +301,23 @@ def preprocess(filename):
         raise TypeError("Wrong type document file")
     if (file_extension.lower() == ".doc"):
         new_filename_docx = doc2docx(filename)
-        list_para = docx2txt(new_filename_docx)  # list para: ds các
-        pos_tag = list_para2txt(list_para)  # postag của đoạn
+        list_para = docx2txt(new_filename_docx)  # list para: ds các doan
+        list_word,list_sentence  = list_para2txt(list_para)  # danh sach tu va danh sach cau của đoạn
         os.remove(new_filename_docx)  # xóa file docx tạm
-        list_sentence = convert2listsentence(
-            pos_tag)  # đay là list các câu.  list_sentence [0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
         num_word = num_of_word(list_sentence)  # số từ của câu đầu tiên tương tự cho a[1],....
 
     elif (file_extension.lower() == ".docx"):
-        list_para = docx2txt(filename)  # list para: ds các
-        pos_tag = list_para2txt(list_para)  # postag của đoạn
-        list_sentence = convert2listsentence(
-            pos_tag)  # đay là list các câu.  list_sentence [0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
+        list_para = docx2txt(filename)  # list para: ds các doan
+        list_word,list_sentence  = list_para2txt(list_para)  # danh sach tu va danh sach cau của đoạn
         num_word = num_of_word(list_sentence)  # số từ của câu đầu tiên tương tự cho a[1],....
 
     elif (file_extension.lower() == ".pdf"):
         list_para = Pdf_extract.pdf2txt(filename)  # list para: ds các
-        pos_tag = list_para2txt(list_para)  # postag của đoạn
-        list_sentence = convert2listsentence(
-            pos_tag)  # đay là list các câu.  list_sentence [0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
+        list_word, list_sentence = list_para2txt(list_para)  # danh sach tu va danh sach cau của đoạn
         num_word = num_of_word(list_sentence)  # số từ của câu đầu tiên tương tự cho a[1],....
 
     elif (file_extension.lower() == ".csv"):
-        list_sentence = csv2txt(
-            filename)  # đay là list các câu.  list_sentence [0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
+        list_sentence = csv2txt(filename)  # đay là list các câu.  list_sentence [0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
         num_word = num_of_word(list_sentence)  # số từ của câu đầu tiên tương tự cho a[1],....
 
     elif (file_extension.lower() == ".xlsx"):
@@ -313,21 +326,16 @@ def preprocess(filename):
 
     elif (file_extension.lower() == ".pptx"):
         list_para = ppt2txt(filename)  # list para: ds các
-        pos_tag = list_para2txt(list_para)  # postag của đoạn
-        list_sentence = convert2listsentence(
-            pos_tag)  # đay là list các câu.  list_sentence [0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
+        list_word, list_sentence = list_para2txt(list_para)  # danh sach tu va danh sach cau của đoạn
         num_word = num_of_word(list_sentence)  # số từ của câu đầu tiên tương tự cho a[1],....
 
     elif (file_extension.lower() == ".txt"):
         f = open(filename, "r", encoding="utf8")
         text = f.read()
         list_para = text.split("\n")  # list para: ds các
-        pos_tag = list_para2txt(list_para)  # postag của đoạn
-        list_sentence = convert2listsentence(
-            pos_tag)  # đay là list các câu.  list_sentence [0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
+        list_word, list_sentence = list_para2txt(list_para)  # danh sach tu va danh sach cau của đoạn
         num_word = num_of_word(list_sentence)  # số từ của câu đầu tiên tương tự cho a[1],....
-    # res.append([os.path.basename(filename), b, num_word])  # filename, list câu. số từ của mỗi câu
-    # print("Run time of file ",filename," là: --- %s seconds ---" % (time.time() - start_time))
+
     return os.path.basename(filename), list_sentence, num_word
 
 
@@ -344,30 +352,23 @@ def preprocess_link(filename):
         raise TypeError("Wrong type document file")
     if (file_extension.lower() == ".doc"):
         new_filename_docx = doc2docx(filename)
-        list_para = docx2txt(new_filename_docx)  # list para: ds các
-        pos_tag = list_para2txt(list_para)  # postag của đoạn
+        list_para = docx2txt(new_filename_docx)  # list para: ds các doan
+        list_word,list_sentence  = list_para2txt(list_para)  # danh sach tu va danh sach cau của đoạn
         os.remove(new_filename_docx)  # xóa file docx tạm
-        list_sentence = convert2listsentence(
-            pos_tag)  # đay là list các câu.  list_sentence [0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
         num_word = num_of_word(list_sentence)  # số từ của câu đầu tiên tương tự cho a[1],....
 
     elif (file_extension.lower() == ".docx"):
-        list_para = docx2txt(filename)  # list para: ds các
-        pos_tag = list_para2txt(list_para)  # postag của đoạn
-        list_sentence = convert2listsentence(
-            pos_tag)  # đay là list các câu.  list_sentence [0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
+        list_para = docx2txt(filename)  # list para: ds các doan
+        list_word,list_sentence  = list_para2txt(list_para)  # danh sach tu va danh sach cau của đoạn
         num_word = num_of_word(list_sentence)  # số từ của câu đầu tiên tương tự cho a[1],....
 
     elif (file_extension.lower() == ".pdf"):
         list_para = Pdf_extract.pdf2txt(filename)  # list para: ds các
-        pos_tag = list_para2txt(list_para)  # postag của đoạn
-        list_sentence = convert2listsentence(
-            pos_tag)  # đay là list các câu.  list_sentence [0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
+        list_word, list_sentence = list_para2txt(list_para)  # danh sach tu va danh sach cau của đoạn
         num_word = num_of_word(list_sentence)  # số từ của câu đầu tiên tương tự cho a[1],....
 
     elif (file_extension.lower() == ".csv"):
-        list_sentence = csv2txt(
-            filename)  # đay là list các câu.  list_sentence [0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
+        list_sentence = csv2txt(filename)  # đay là list các câu.  list_sentence [0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
         num_word = num_of_word(list_sentence)  # số từ của câu đầu tiên tương tự cho a[1],....
 
     elif (file_extension.lower() == ".xlsx"):
@@ -376,22 +377,16 @@ def preprocess_link(filename):
 
     elif (file_extension.lower() == ".pptx"):
         list_para = ppt2txt(filename)  # list para: ds các
-        pos_tag = list_para2txt(list_para)  # postag của đoạn
-        list_sentence = convert2listsentence(
-            pos_tag)  # đay là list các câu.  list_sentence [0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
+        list_word, list_sentence = list_para2txt(list_para)  # danh sach tu va danh sach cau của đoạn
         num_word = num_of_word(list_sentence)  # số từ của câu đầu tiên tương tự cho a[1],....
 
     elif (file_extension.lower() == ".txt"):
-        f = open("docFile_test/sample.txt", "r", encoding="utf8")
+        f = open(filename, "r", encoding="utf8")
         text = f.read()
         list_para = text.split("\n")  # list para: ds các
-        pos_tag = list_para2txt(list_para)  # postag của đoạn
-        list_sentence = convert2listsentence(
-            pos_tag)  # đay là list các câu.  list_sentence [0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
+        list_word, list_sentence = list_para2txt(list_para)  # danh sach tu va danh sach cau của đoạn
         num_word = num_of_word(list_sentence)  # số từ của câu đầu tiên tương tự cho a[1],....
-    # res.append([os.path.basename(filename), b, num_word])  # filename, list câu. số từ của mỗi câu
-    # print("Run time of file ",filename," là: --- %s seconds ---" % (time.time() - start_time))
-    return pos_tag, os.path.basename(filename), list_sentence, num_word
+    return list_word, os.path.basename(filename), list_sentence, num_word
 
 
 def rtf2txt(filename):

@@ -6,7 +6,6 @@
     <hr />
     <form nz-form [formGroup]="validateForm" (ngSubmit)="validate()">
       <nz-spin [nzSpinning]="isLoading">
-        
         <nz-form-item>
           <nz-form-control>
             <nz-input-group [nzPrefix]="prefixUser">
@@ -17,45 +16,33 @@
                 [placeholder]="'please enter activation code' | translate"
                 autocomplete="username"
               />
-              <input
-                type="hidden"
-                id = {{validCode}}
-              />
+              <input type="hidden" id="{{ validCode }}" />
             </nz-input-group>
             <div ngxErrors="username">
               <div *ngFor="let error of errors" [ngxError]="error.name" [when]="error.rules">
                 <nz-form-explain translate class="errors">
-                  {{ 'Username is required' | translate }}
+                  {{ 'validation is required' | translate }}
                 </nz-form-explain>
               </div>
             </div>
           </nz-form-control>
         </nz-form-item>
-        
       </nz-spin>
-      
 
       <nz-form-item>
         <nz-form-control>
-          <button
-            nz-button
-            class="w-100"
-            nzType="primary"
-            nzShape="omitted"
-            type="submit"
-            
-          >
-            <i nz-icon type="login" theme="outline"></i> <span translate>Validate</span>
+          <button nz-button class="w-100" nzType="primary" nzShape="omitted" type="submit">
+            <i nz-icon [nzType]="'login'" theme="outline"></i> <span translate>Validate</span>
           </button>
           <nz-form-explain *ngIf="isError" class="errors">
-            {{ 'Username or password incorrect.' | translate }}
+            {{ 'validation code incorrect.' | translate }}
           </nz-form-explain>
         </nz-form-control>
       </nz-form-item>
     </form>
-    <ng-template #prefixUser><i nz-icon type="user"></i></ng-template>
-    <ng-template #prefixLock><i nz-icon type="lock"></i></ng-template>
-    
+    <ng-template #prefixUser><i nz-icon [nzType]="'user'"></i></ng-template>
+    <ng-template #prefixLock><i nz-icon [nzType]="'lock'"></i></ng-template>
+
     <div nz-row nzType="flex" nzJustify="center">
       <ng-template ngFor let-lang [ngForOf]="languages" let-i="index">
         <nz-avatar

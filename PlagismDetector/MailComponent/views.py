@@ -80,7 +80,7 @@ def sendExportMail(data):
     html_message = render_to_string('mail_template.html', {'data': list})
     print(html_message)
     id = data['id']
-
+    
     plain_message = strip_tags(html_message)
     """email = EmailMessage(
             'Hello',
@@ -93,5 +93,34 @@ def sendExportMail(data):
 
     mail.send_mail('Hello', plain_message, 'kaitouthuan@gmail.com', [user], html_message=html_message)
 
+def sendExportMailV2(data,sessionId):
+    localsite = 'http://localhost:4200/daovan/'+str(sessionId)
+    print(data)
+    linkfile = os.getcwd() + '/MailComponent/mail_template2.html'
+    
+    print('user is')
 
+    
+    print('end')
+    link = localsite 
+    
+    # list.append(tmp)
+    # for i in list
+    #print(list)
+    html_message = render_to_string('mail_template2.html', {'link': link})
+    print(html_message)
+    id = data['id']
+    user = User.objects.get(id=id)
+    plain_message = strip_tags(html_message)
+    """email = EmailMessage(
+            'Hello',
+            plain_message,
+            'ldthuan1907@gmail.com',
+            ['kaitouthuan@gmail.com'], 
+            html_message=html_message,
+            headers={'Message-ID': 'foo'},)
+     """
+
+    #mail.send_mail('Hello', plain_message, 'kaitouthuan@gmail.com', [user], html_message=html_message)
+    mail.send_mail('Hello', plain_message, 'kaitouthuan@gmail.com', ['ldthuan1907@gmail.com'], html_message=html_message)
 

@@ -7,6 +7,7 @@ import { environment } from '@env/environment';
 import { TranslateService } from '@ngx-translate/core';
 import { merge } from 'rxjs';
 import { filter, map, mergeMap } from 'rxjs/operators';
+import { FileService } from './shell/shell-routing-service';
 import '@angular/localize/init';
 const log = new Logger('App');
 
@@ -21,7 +22,8 @@ export class AppComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private titleService: Title,
     private translateService: TranslateService,
-    private i18nService: I18nService
+    private i18nService: I18nService,
+    private fileService: FileService
   ) {
     this.translateService.setDefaultLang('en-US');
     this.translateService.use('en-US');

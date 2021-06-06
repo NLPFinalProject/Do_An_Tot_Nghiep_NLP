@@ -18,6 +18,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import authentication_classes,permission_classes
 from rest_framework.authentication import TokenAuthentication
 from MailComponent import views as mail
+from FileComponent.models import DocumentSession,DataDocument
 import random as rand
 
 @api_view([ 'POST'])
@@ -29,6 +30,7 @@ def register(request):
     try:
         user = User.objects.get(username = request.data["email"])
         content = {'data': 'username is existed'}
+        print("ddaij gi do")
         return Response(content, status=status.HTTP_400_BAD_REQUEST)
         
     except ObjectDoesNotExist:
@@ -40,13 +42,15 @@ def register(request):
         phone = request.data["phoneNumber"],
         is_active = False,
         DateOfBirth = request.data["ngaySinh"])
-        number = mail.sendVerificationMail(request.data["email"])
+        #number = mail.sendVerificationMail(request.data["email"])
+        #user.set_password(user.password)
         user.set_password(user.password)
         user.save()
         users = UserSerializer(user)
         users.data.key = '1243'
         print(users.data)
-        print(number)
+        #print(number)
+        number = mail.sendVerificationMail(request.data["email"])
         response = {'data' : users.data,'validCode' : number}
         return JsonResponse(response,status = status.HTTP_200_OK)
     #else:
@@ -113,6 +117,16 @@ def APIUser(request):
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
         
 
+@api_view([ 'GET','POST'])
+def isAdmin(request):
+    #if(request.data not None)
+    print(request.GET)
+    try: 
+        user = User.objects.get(username = request.GET['username'])
+        response = {'isAdmin' : user.is_admin}
+        return JsonResponse(response,status=status.HTTP_200_OK)
+    except ObjectDoesNotExist:
+         return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view([ 'POST'])
 def ActivateUser(request):
@@ -136,16 +150,23 @@ def ActivateUser(request):
 @api_view([ 'POST'])
 def ResetPassword(request):
     #if(request.data not None)
-    
-    
-    user = User.objects.get(username = request.data["username"])
-    print(user.username)
-    print(user.password)
-
-    
-    user.password = request.data.password
-    user.save()
-    return HttpResponse(status=status.HTTP_200_OK)
+    try:
+        print(request.data)
+        user = User.objects.get(username = request.data["username"])
+        print(user.username)
+        print(user.password)
+        flag = user.check_password(request.data['password'])
+        if flag==False:
+            
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+        
+        user.set_password(request.data['reset'])
+        #user.password = request.data['password']
+        user.save()
+        return HttpResponse(status=status.HTTP_200_OK)
+    except ObjectDoesNotExist:
+        content = "username or password is wrong, please try again"
+        return Response(content,status=status.HTTP_400_BAD_REQUEST)
 @api_view([ 'POST'])
 def ForgetPassword(request):
     #if(request.data not None)
@@ -154,10 +175,10 @@ def ForgetPassword(request):
     user = User.objects.get(username = request.data["username"])
     print(user.username)
     
-    user.set_password('12543')
+    user.set_password('125436')
     user.save()
     email = EmailMessage(
-    'Hello,Your new password is now 12543',
+    'Hello,Your new password is now 125436',
     
     'kaitouthuan@gmail.com',
     [user.username], 
@@ -191,13 +212,53 @@ def login(request):
         return Response(content, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
     # In order to serialize objects, we must set 'safe=False'
 
-   
+@api_view(('GET',))
+def Session(request):
+    print(request.GET)
+    content =None
+    userId = request.GET['id']
+    try:
+        # session=DocumentSession.objects.filter(SessionUser=str(userId))
+        # content = session
+    
+        
+        session = readSession(userId)
+        print(session)
+        # print("session là: ",content)
+        content ={"session":session} 
+        
+        return Response(content,status=status.HTTP_200_OK)  
+    except ObjectDoesNotExist:
+        return Response(None, status=status.HTTP_200_OK)
+    
 @api_view(['POST'])
 def fakelogin(request):
     content = None
     print('fake login is here')
     return Response(content, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+def readSession(userId):
+    sessionList = DocumentSession.objects.filter(SessionUser=str(userId))
+    ResponseContent = []
+    for i in range(len(sessionList)):
+        temp = {}
+        temp["Status"] = sessionList[i].Status
+        temp["id"]=sessionList[i].id
+        temp["NumOfFile"]= sessionList[i].NumOfFile
+        temp["Date"] = sessionList[i].Date
+        temp["SessionUser"] = sessionList[i].SessionUser
+        querys = DataDocument.objects.filter(
+        DataDocumentAuthor=str(sessionList[i].SessionUser)) \
+        .filter(SessionId=str(sessionList[i].id))
+        # temp['filename'] = querys[0].DataDocumentName
+        # ResponseContent.append(temp) 
+        temp2=[]
+        for j in range(len(querys)):
+            temp2.append(querys[j].DataDocumentName)
+        temp["filename"] = temp2
+        ResponseContent.append(temp)
 
+
+    return ResponseContent
 @api_view(['GET'])
 def GetProfile(request):
     try:

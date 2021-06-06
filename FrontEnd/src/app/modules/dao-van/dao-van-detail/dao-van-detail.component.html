@@ -6,17 +6,19 @@
           <app-articles></app-articles>
         </div>
         <div nz-col [nzXs]="{ span: 24 }" [nzLg]="{ span: 24 }" class="padding-top">
-          <app-section-diff></app-section-diff>
+          <app-section-diff [sessionData]="ListAllFile"></app-section-diff>
         </div>
       </div>
     </div>
     <div nz-col [nzXs]="{ span: 24 }" [nzLg]="{ span: 17, offset: 1 }">
-      <div nz-col [nzXs]="{ span: 24 }" [nzMd]="{ span: 16 }">
-        <app-diff-content></app-diff-content>
-      </div>
-      <div nz-col [nzXs]="{ span: 24 }" [nzMd]="{ span: 7, offset: 1 }">
-        <app-list-file-success></app-list-file-success>
-        <app-list-file-diff></app-list-file-diff>
+      <div nz-row>
+        <div nz-col [nzXs]="{ span: 24 }" [nzMd]="{ span: 16 }">
+          <app-diff-content [SessionData]="dataForDiff"></app-diff-content>
+        </div>
+        <div nz-col [nzXs]="{ span: 24 }" [nzMd]="{ span: 7, offset: 1 }">
+          <app-list-file-success [File1Name]="file1Name"></app-list-file-success>
+          <app-list-file-diff [FileList2]="FileList2"></app-list-file-diff>
+        </div>
       </div>
     </div>
   </div>

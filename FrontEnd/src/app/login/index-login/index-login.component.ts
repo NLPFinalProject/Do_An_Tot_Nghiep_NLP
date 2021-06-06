@@ -119,6 +119,12 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
                 this.isLoading = false;
                 console.log('where is my data');
                 console.log(data);
+                console.log(localStorage.getItem('id'));
+                // this.UserService.getSession(localStorage.getItem('id')).subscribe((data:any)=>
+                // {
+                //   console.log('lag');
+                //   console.log(data);
+                // })
                 if (data.isAdmin == false) {
                   setTimeout(() => {
                     this.router.navigate(['daovan'], { replaceUrl: true, state: { user: value } });

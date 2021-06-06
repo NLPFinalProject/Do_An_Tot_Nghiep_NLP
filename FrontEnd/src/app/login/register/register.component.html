@@ -195,16 +195,15 @@
       </label>
     </nz-form-control>
   </nz-form-item>
-  <nz-form-item nz-row style="margin-bottom: 8px">
-    <nz-form-item nz-row style="margin-bottom: 8px">
-      <nz-form-control [nzOffset]="16" [nzSpan]="8">
-        <button [routerLink]="['/login']" routerLinkActive="router-link-active" nz-button nzType="default" translate>
-          {{ 'Back' | translate }}
-        </button>
-        <button class="margin-left-8" [disabled]="registerForm.invalid" nz-button nzType="primary" translate>
-          {{ 'Register' | translate }}
-        </button>
-      </nz-form-control>
-    </nz-form-item>
+
+  <nz-form-item nz-row style="text-align: center">
+    <nz-form-control [nzSpan]="14" [nzOffset]="6">
+      <button [routerLink]="['/login']" routerLinkActive="router-link-active" nz-button nzType="default" translate>
+        {{ 'Back' | translate }}
+      </button>
+      <button class="margin-left-6" [disabled]="registerForm.invalid" nz-button nzType="primary" translate>
+        {{ 'Register' | translate }}
+      </button>
+    </nz-form-control>
   </nz-form-item>
 </form>
