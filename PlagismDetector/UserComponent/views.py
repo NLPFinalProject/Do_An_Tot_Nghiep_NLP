@@ -18,7 +18,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import authentication_classes,permission_classes
 from rest_framework.authentication import TokenAuthentication
 from MailComponent import views as mail
-from FileComponent.models import DocumentSession
+from FileComponent.models import DocumentSession,DataDocument
 import random as rand
 
 @api_view([ 'POST'])
@@ -148,13 +148,13 @@ def ActivateUser(request):
 def ResetPassword(request):
     #if(request.data not None)
     
-    
+    print(request.data)
     user = User.objects.get(username = request.data["username"])
     print(user.username)
     print(user.password)
 
-    
-    user.password = request.data.password
+    user.set_password(user.request.data['password'])
+    #user.password = request.data['password']
     user.save()
     return HttpResponse(status=status.HTTP_200_OK)
 @api_view([ 'POST'])
@@ -165,10 +165,10 @@ def ForgetPassword(request):
     user = User.objects.get(username = request.data["username"])
     print(user.username)
     
-    user.set_password('12543')
+    user.set_password('125436')
     user.save()
     email = EmailMessage(
-    'Hello,Your new password is now 12543',
+    'Hello,Your new password is now 125436',
     
     'kaitouthuan@gmail.com',
     [user.username], 
@@ -211,10 +211,13 @@ def Session(request):
         # session=DocumentSession.objects.filter(SessionUser=str(userId))
         # content = session
     
+        
+        session = readSession(userId)
+        print(session)
         # print("session là: ",content)
-        content = readSession(userId)
-        print(content[0].Status)
-        return Response(content)  
+        content ={"session":session} 
+        
+        return Response(content,status=status.HTTP_200_OK)  
     except ObjectDoesNotExist:
         return Response(None, status=status.HTTP_200_OK)
     
@@ -233,10 +236,19 @@ def readSession(userId):
         temp["NumOfFile"]= sessionList[i].NumOfFile
         temp["Date"] = sessionList[i].Date
         temp["SessionUser"] = sessionList[i].SessionUser
-        ResponseContent.append(temp) 
+        querys = DataDocument.objects.filter(
+        DataDocumentAuthor=str(sessionList[i].SessionUser)) \
+        .filter(SessionId=str(sessionList[i].id))
+        # temp['filename'] = querys[0].DataDocumentName
+        # ResponseContent.append(temp) 
+        temp2=[]
+        for j in range(len(querys)):
+            temp2.append(querys[j].DataDocumentName)
+        temp["filename"] = temp2
+        ResponseContent.append(temp)
 
 
-    return sessionList
+    return ResponseContent
 @api_view(['GET'])
 def GetProfile(request):
     try:

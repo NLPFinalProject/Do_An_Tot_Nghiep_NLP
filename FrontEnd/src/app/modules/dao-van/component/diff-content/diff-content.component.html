@@ -1,12 +1,12 @@
 <nz-alert nzType="info" nzMessage="Context Base"></nz-alert>
-<nz-table #filterTable [nzData]="displayData1" [nzLoading]="loading" nzSize="small" [nzScroll]="{ y: '240px' }">
+<nz-table #filterTable [nzData]="displayData1" [nzPageSize]="displayData1.length" [nzLoading]="loading" nzSize="small" [nzScroll]="{ y: '240px' }">
   <tbody>
     <tr *ngFor="let temp of filterTable.data">
       <td>
         
         <div  >
 
-          <a (click)="triggerScrollTo(temp.id)"
+          <a (click)="triggerScrollToV(temp.id)"
             ><span class="changeText" [ngClass]="[shouldHighlight(temp.id) ? 'highlight' : '']">{{ temp.data }}.</span></a>
           
         </div>
@@ -17,12 +17,12 @@
 </nz-table>
 <br />
 <nz-alert nzType="info" nzMessage="Context Diff"></nz-alert>
-<nz-table #diffTable [nzData]="displayData2" [nzLoading]="loading" nzSize="small" [nzScroll]="{ y: '240px' }">
+<nz-table #diffTable [nzData]="displayData2" [nzPageSize]="displayData2.length" [nzLoading]="loading" nzSize="small" [nzScroll]="{ y: '240px' }">
   <tbody>
     <tr *ngFor="let temp of diffTable.data">
       <td>
         <span
-        class="changeText" [ngClass]="[shouldHighlight(temp.id) ? 'highlight' : '']"
+        class="changeText" [ngClass]="[shouldHighlight2(temp.id) ? 'highlight' : '']"
         id="{{ temp.id }}"
         #{{temp.id}}>
        

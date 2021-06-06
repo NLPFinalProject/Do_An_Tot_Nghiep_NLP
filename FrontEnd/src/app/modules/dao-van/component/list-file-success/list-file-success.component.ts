@@ -15,30 +15,31 @@ export class ListFileSuccessComponent implements OnInit {
   searchAddress: string;
   displayData: Array<object> = [];
   loading = true;
-  data = [
-    {
-      name: 'Hoàn thiện các giải pháp QLNN đối với các hoạt động tôn giáo ở Việt Nam trong thời kỳ đổi mới.docx',
-    },
-    {
-      name: 'Quản lý nhà nước đối với tập đoàn kinh tế tư nhân ở Việt Nam hiện nay.pdf',
-    },
-    {
-      name: 'Quản lý nhà nước về văn thư, lưu trữ.docx',
-    },
-    {
-      name: 'Quản lý nhà nước về quy hoạch xây dựng nông thôn mới.docx',
-    },
-  ];
+  data : any[];
   fileList: Array<object> = [];
   constructor(private messageService: MessageService,private DaovanService:DaovanServiceService) {}
   ngOnInit(): void {
+    this.data=[];
     this.getData();
   }
+  ngOnChanges() {
+    //this.childFunction()
+    
+    this.getData();
+  }
+  doStep()
+  {
 
+  }
   getData(): void {
     const number = Math.floor(Math.random() * 100);
+    console.log("new data is");
+    console.log(this.data);
+    this.data = [];
+    this.data.push(this.File1Name);
+    
     setTimeout(() => {
-      this.displayData = [...this.File1Name];
+      this.displayData = [...this.data];
       this.loading = false;
     }, number);
   }
@@ -68,7 +69,7 @@ export class ListFileSuccessComponent implements OnInit {
           : -1
       );
     } else {
-      this.displayData = data;
+      this.displayData = this.File1Name;
     }
   }
 }

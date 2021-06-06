@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 //import{User} from '@../../../src/app/login/User'
 
@@ -15,6 +15,20 @@ export class FileService {
     /*console.log('there');
     return this.http.get(`${this.baseUrl}/api/file/test`);*/
     return this.http.get(`${this.baseUrl}/api/file/test2`);
+  }
+  
+  getResult(data: any):Observable<Object> {
+    let param = new HttpParams();
+    let data1 = {
+      id:localStorage.getItem('id'),
+      sessionId:data
+    }
+    param.set('id',localStorage.getItem('id'));
+    param.set('sessionId',data);
+    
+    
+    //console.log(params.toString());
+    return this.http.post(`${this.baseUrl}/api/file/getjsonresult`, data1);
   }
   ExportResultToEmail(data: Object): Observable<Object> {
     /*console.log('there');

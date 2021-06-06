@@ -1,6 +1,6 @@
 import { Component, OnInit,Input } from '@angular/core';
 import { MessageService } from '@app/core/services/Utils/message.service';
-import {DaovanServiceService} from '../../daovan-service.service'
+//import {DaovanServiceService} from '../../daovan-service.service'
 @Component({
   selector: 'app-section-diff',
   templateUrl: './section-diff.component.html',
@@ -29,7 +29,7 @@ export class SectionDiffComponent implements OnInit {
     },
   ];
   fileList: Array<object> = [];
-  constructor(private messageService: MessageService, private DaoVanService:DaovanServiceService) {
+  constructor(private messageService: MessageService, ) {
 
   }
   ngOnInit(): void {

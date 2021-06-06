@@ -1,6 +1,6 @@
 import { Component, OnInit,Input } from '@angular/core';
 import { MessageService } from '@app/core/services/Utils/message.service';
-
+import {DaovanServiceService} from '../../daovan-service.service'
 @Component({
   selector: 'app-list-file-diff',
   templateUrl: './list-file-diff.component.html',
@@ -33,17 +33,35 @@ export class ListFileDiffComponent implements OnInit {
     },
   ];
   fileList: Array<object> = [];
-  constructor(private messageService: MessageService) {}
+  constructor(private messageService: MessageService,private DaoVanService:DaovanServiceService) {}
   ngOnInit(): void {
     this.getData();
   }
 
   getData(): void {
+    console.log("stupid");
+    console.log(this.FileList2);
     const number = Math.floor(Math.random() * 100);
     setTimeout(() => {
       this.displayData = [...this.FileList2];
       this.loading = false;
     }, number);
+  }
+  sendMessage(name:string)
+  {
+    console.log("this is data",name)
+    for(var i = 0; i < this.FileList2.length;i++)
+    {
+      console.log("this is file name");
+      console.log(this.FileList2[i].name);
+      
+      if(this.FileList2[i].name==name)
+      {
+        this.DaoVanService.getSetting(i);
+        break;
+      }
+    }
+    
   }
   sort(sort: { key: string; value: string }): void {
     this.sortName = sort.key;

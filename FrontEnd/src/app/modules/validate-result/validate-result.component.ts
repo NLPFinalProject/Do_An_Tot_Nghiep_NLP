@@ -198,17 +198,7 @@ export class ValidateResultComponent implements OnInit {
   //   if (length == 1) return str + '-' + 1;
   //   else return str + '-' + (this.StoreNumber + 1);
   // }
-  public onClick(elementId: string): void {
-    console.log('here I can');
 
-    //elementId.scrollIntoView();
-
-    this.viewportScroller.scrollToAnchor(elementId);
-  }
-  public onClick2(elementId: string): void {
-    console.log(elementId);
-    //this.viewportScroller.scrollToAnchor(elementId);
-  }
   triggerScrollTo(id: number) {
     if (this.currentId != id) {
       this.currentId = id;

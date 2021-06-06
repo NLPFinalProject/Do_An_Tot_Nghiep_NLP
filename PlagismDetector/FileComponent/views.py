@@ -1293,7 +1293,7 @@ def uploadDocList2(PostData,FileData,ID, session,agreeStatus):
     content = None
     print("session la: ",session)
     id = ID
-    listfile = FileData.getlist('DataDocumentFile')
+    listfile = FileData.getlist('DataDocumentFileList')
     filenameList = []
     count = 0
     session = DocumentSession.objects.get(pk=session)
@@ -1501,8 +1501,10 @@ def readJson(session, userId):
 @api_view(('GET','POST'))
 def readJsonRequest(request):
     if request.method == 'POST':
+        print('why you post')
+        print(request.POST)
         session = request.data['sessionId']
-        userId = request.data['userId']
+        userId = request.data['id']
         temp=DataDocument.objects.filter(DataDocumentAuthor=str(userId))\
         .filter(SessionId=str(session))\
         .filter(DocumentStatus=True)
@@ -1513,10 +1515,12 @@ def readJsonRequest(request):
         fileJson.close()
         #os.remove(fileJson.name)
         print("report data là: ",reportData)
-        return reportData
+        return Response(reportData,status=status.HTTP_200_OK)
     elif request.method == 'GET':
+        print("what are thou")
+        print(request.GET)
         session = request.GET['sessionId']
-        userId = request.GET['userId']
+        userId = request.GET['id']
         temp=DataDocument.objects.filter(DataDocumentAuthor=str(userId))\
         .filter(SessionId=str(session))\
         .filter(DocumentStatus=True)
@@ -1527,7 +1531,7 @@ def readJsonRequest(request):
         fileJson.close()
         #os.remove(fileJson.name)
         print("report data là: ",reportData)
-        return reportData
+        return Response(reportData,status=status.HTTP_200_OK)
 
 
 # @api_view(['GET'])
