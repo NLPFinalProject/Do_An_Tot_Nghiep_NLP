@@ -81,7 +81,7 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
         phoneOrganization: this.registerForm.controls.phoneOrganization.value,
 
         fullName: this.registerForm.controls.fullName.value,
-        userId: this.registerForm.controls.userId.value,
+        //userId: this.registerForm.controls.userId.value,
         password: this.registerForm.controls.password.value,
 
         phoneNumber: this.registerForm.controls.phoneNumber.value,
@@ -121,7 +121,7 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
       phoneOrganization: [null],
       email: [null, [Validators.email, Validators.required]],
       fullName: [null, [Validators.required]],
-      userId: [null],
+      //userId: [null],
       password: [null, [Validators.required]],
       checkPassword: [null, [Validators.required, this.confirmationValidator]],
       phoneNumber: [null, [Validators.required]],

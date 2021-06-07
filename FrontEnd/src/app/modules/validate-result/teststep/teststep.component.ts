@@ -120,6 +120,7 @@ export class TeststepComponent implements OnInit {
               console.log(data);
               this.openDialog();
             });
+            this.openDialog();
           } else {
             //add warning here
           }
@@ -139,7 +140,7 @@ export class TeststepComponent implements OnInit {
           };
           this.fileService.checkPlagiasmUsingDatabase(tempdata).subscribe((data: any) => {
             console.log(data);
-            this.openDialog();
+            //this.openDialog();
           });
           console.log(tempdata);
           //this.openDialog();

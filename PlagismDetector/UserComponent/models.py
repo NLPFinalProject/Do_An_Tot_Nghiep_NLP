@@ -59,6 +59,7 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=False,blank=False)
     is_admin = models.BooleanField(default=False,blank=False)
     phone = models.CharField(max_length=15,null=True,blank=True,  default='')
+    is_lock = models.BooleanField(default=False,blank=False)
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['password']
     objects = UserManager()

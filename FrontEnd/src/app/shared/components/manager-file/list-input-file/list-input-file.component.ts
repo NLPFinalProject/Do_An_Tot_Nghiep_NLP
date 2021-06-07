@@ -1,7 +1,7 @@
-import { Component, OnInit,Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { MessageService } from '@app/core/services/Utils/message.service';
 import { UploadChangeParam, NzUploadModule, UploadFile, NzUploadComponent } from 'ng-zorro-antd/upload';
-import {SessionToHistoryService} from '../../session-to-history.service'
+import { SessionToHistoryService } from '../../session-to-history.service';
 
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { FileService } from '@../../../src/app/shell/shell-routing-service';
@@ -12,7 +12,7 @@ import { RouterModule, Router } from '@angular/router';
   styleUrls: ['./list-input-file.component.scss'],
 })
 export class ListInputFileComponent implements OnInit {
- // @Input() HisoryData:Array<any>;
+  // @Input() HisoryData:Array<any>;
   statusList = [
     { text: 'Chờ', value: 'Peding' },
     { text: 'Thành công', value: 'Sucess' },
@@ -21,7 +21,7 @@ export class ListInputFileComponent implements OnInit {
   isvalid: boolean = false;
   flag = false;
   msg: NzMessageService;
-  userData:any;
+  userData: any = 0;
   sortValue: any = null;
   sortName: any = null;
   listOfSearchName: any = [];
@@ -50,51 +50,45 @@ export class ListInputFileComponent implements OnInit {
     },
   ];
   fileList: Array<object> = [];
-  constructor(private messageService: MessageService,
-      private fileService: FileService,
-      private router: Router,
-      private sessionToHistory:SessionToHistoryService,
-    ) {}
+  constructor(
+    private messageService: MessageService,
+    private fileService: FileService,
+    private router: Router,
+    private sessionToHistory: SessionToHistoryService
+  ) {}
   ngOnInit(): void {
-    console.log("this is");
+    console.log('this is');
     this.fileService;
-    this.sessionToHistory.sendListFile.subscribe((data:any)=>{
-      
+    this.sessionToHistory.sendListFile.subscribe((data: any) => {
       console.log(data);
-     this.PushDataToDisplayData(data);
-     this.displayData = [...this.newDataList];
-    })
+      this.PushDataToDisplayData(data);
+      this.displayData = [...this.newDataList];
+    });
     this.getData();
   }
-  gotoDetail()
-  {
-    console.log("begin");
-    this.fileService.getResult(this.userData).subscribe((data:any)=>{
+  gotoDetail() {
+    console.log('begin');
+    this.fileService.getResult(this.userData).subscribe((data: any) => {
       console.log(data);
-      console.log("win");
-      console.log(this.userData)
+      console.log('win');
+      console.log(this.userData);
       //this.router.navigate([],{'data':data})
-      this.router.navigate(['daovan/'+this.userData], { replaceUrl: true, state: { data: data } });
-    })
+      this.router.navigate(['daovan/' + this.userData], { replaceUrl: true, state: { data: data } });
+    });
   }
-  PushDataToDisplayData(data:any)
-  {
+  PushDataToDisplayData(data: any) {
     this.flag = true;
     this.newDataList = [];
-    console.log("now");
+    console.log('now');
     console.log(data);
-    for (var i = 0; i < data.filename.length; i++)
-    {
-      let temp={
-        name : data.filename[i],
-        status : "Thành công",
-        
-      }
-      this.newDataList.push(temp); 
-      
+    for (var i = 0; i < data.filename.length; i++) {
+      let temp = {
+        name: data.filename[i],
+        status: 'Thành công',
+      };
+      this.newDataList.push(temp);
     }
     this.userData = data.sessionId;
-    
   }
   getData(): void {
     const number = Math.floor(Math.random() * 100);

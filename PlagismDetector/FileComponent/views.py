@@ -1512,7 +1512,8 @@ def readJson(session, userId):
 def readJsonRequest(request):
     if request.method == 'POST':
         print('why you post')
-        print(request.POST)
+        print(request.data['id'])
+        print(request.data["sessionId"])
         session = request.data['sessionId']
         userId = request.data['id']
         temp=DataDocument.objects.filter(DataDocumentAuthor=str(userId))\

@@ -75,16 +75,6 @@
               </div>
             </div>
           </div>
-          <div nz-col [nzSpan]="12">
-            <input
-              disabled
-              nz-input
-              type="text"
-              [placeholder]="'UserId' | translate"
-              id="userId"
-              formControlName="userId"
-            />
-          </div>
         </div>
       </nz-form-control>
     </nz-form-item>
@@ -195,8 +185,8 @@
       </label>
     </nz-form-control>
   </nz-form-item>
-  
-  <nz-form-item nz-row style="text-align: center;">
+
+  <nz-form-item nz-row style="text-align: center">
     <nz-form-control [nzSpan]="14" [nzOffset]="6">
       <button [routerLink]="['/login']" routerLinkActive="router-link-active" nz-button nzType="default" translate>
         {{ 'Back' | translate }}

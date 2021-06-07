@@ -175,6 +175,7 @@ export class AuthenticationService {
     localStorage.removeItem('expires_at');
     localStorage.removeItem('username');
     localStorage.removeItem('id');
+    localStorage.removeItem('isAdmin');
   }
 
   refreshToken() {
