@@ -116,10 +116,6 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
             console.log(this.loginForm.controls.username.value);
             this.UserService.isAdmin(this.loginForm.controls.username.value).subscribe(
               (data: any) => {
-                this.isLoading = false;
-                console.log('where is my data');
-                console.log(data);
-                console.log(localStorage.getItem('id'))
                 // this.UserService.getSession(localStorage.getItem('id')).subscribe((data:any)=>
                 // {
                 //   console.log('lag');
@@ -130,6 +126,7 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
                     this.router.navigate(['daovan'], { replaceUrl: true, state: { user: value } });
                   }, 1000);
                 } else {
+                  localStorage.setItem('isAdmin', 'Yes');
                   setTimeout(() => {
                     this.router.navigate(['admin'], { replaceUrl: true, state: { user: value } });
                   }, 1000);
@@ -137,7 +134,8 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
               },
               (error) => {
                 this.isLoading = false;
-
+                console.log('now error is');
+                console.log(error);
                 this.loading = false;
                 log.debug(`Login error: ${error}`);
                 this.error = error;
@@ -152,7 +150,8 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
         },
         (error) => {
           this.isLoading = false;
-
+          console.log('now error is');
+          console.log(error);
           this.loading = false;
           log.debug(`Login error: ${error}`);
           this.error = error;

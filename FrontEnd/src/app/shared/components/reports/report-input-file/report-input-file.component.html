@@ -7,14 +7,14 @@
     <thead (nzSortChange)="sort($event)" nzSingleSort>
       <tr>
         <th nzShowExpand></th>
-        <th nzShowSort nzSortKey="createdDate">Ngày tải lên</th>
+        <th nzShowSort nzSortKey="Date">Ngày tải lên</th>
         <th>Tổng tệp tải lên</th>
         <th>Trạng thái</th>
       </tr>
     </thead>
     <tbody>
       <ng-template ngFor let-data [ngForOf]="displayData">
-        <tr (click)="Warning(data.id)">
+        <tr (click)="Warning(data)">
           <td></td>
           <td>
             <b>{{ data.Date | date: 'medium' }}</b>

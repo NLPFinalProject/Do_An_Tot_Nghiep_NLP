@@ -8,5 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class ManageUserComponent implements OnInit {
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log("now I'm here");
+  }
 }

@@ -1511,22 +1511,24 @@ def readJson(session, userId):
 @api_view(('GET','POST'))
 def readJsonRequest(request):
     if request.method == 'POST':
-        print('why you post')
-        print(request.data['id'])
-        print(request.data["sessionId"])
-        session = request.data['sessionId']
-        userId = request.data['id']
-        temp=DataDocument.objects.filter(DataDocumentAuthor=str(userId))\
-        .filter(SessionId=str(session))\
-        .filter(DocumentStatus=True)
-        idFile=temp[0].id
-        data=ReportDocument.objects.get(DocumentJson_id=idFile)
-        fileJson = open(data.JsonFile, "r")
-        reportData = json.loads(fileJson.read())
-        fileJson.close()
-        #os.remove(fileJson.name)
-        print("report data là: ",reportData)
-        return Response(reportData,status=status.HTTP_200_OK)
+        try:
+            print(request.data['id'])
+            print(request.data["sessionId"])
+            session = request.data['sessionId']
+            userId = request.data['id']
+            temp=DataDocument.objects.filter(DataDocumentAuthor=str(userId))\
+            .filter(SessionId=str(session))\
+            .filter(DocumentStatus=True)
+            idFile=temp[0].id
+            data=ReportDocument.objects.get(DocumentJson_id=idFile)
+            fileJson = open(data.JsonFile, "r")
+            reportData = json.loads(fileJson.read())
+            fileJson.close()
+            #os.remove(fileJson.name)
+            print("report data là: ",reportData)
+            return Response(reportData,status=status.HTTP_200_OK)
+        except:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'GET':
         print("what are thou")
         print(request.GET)

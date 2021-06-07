@@ -183,8 +183,39 @@ def ForgetPassword(request):
     email.send()
     content =''
     return HttpResponse(status=status.HTTP_200_OK)
-
+@api_view([ 'POST','GET'])
+def UserList():
+    userList=User.objects.all()
+    #idFile=temp[0].id
+    #data=
     
+    return Response(userList, status=status.HTTP_200_OK)  
+@api_view([ 'POST','GET']) 
+def lockUser(request):
+    """for admin, fix later
+    isAdmin = request.GET('isAdmin')
+    if isAdmin == False
+    return HttpResponse(status=status=status.HTTP_400_BAD_REQUEST)
+    """
+    userId = request.GET['id']
+    user = User.objects.get(id = userId)
+    # if statement
+    user.isLock=TRUE
+    user.save()
+    return HttpResponse(status=status.HTTP_200_OK)
+@api_view([ 'POST','GET']) 
+def unlockUser(request):
+    """for admin, fix later
+    isAdmin = request.GET('isAdmin')
+    if isAdmin == False
+    return HttpResponse(status=status=status.HTTP_400_BAD_REQUEST)
+    """
+    userId = request.GET['id']
+    user = User.objects.get(id = userId)
+    # if statement
+    user.isLock=False
+    user.save()
+    return HttpResponse(status=status.HTTP_200_OK)
 @api_view(['POST'])
 def login(request):
     content = None

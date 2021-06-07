@@ -37,26 +37,35 @@ export class ReportInputFileComponent implements OnInit {
   }
   ngOnInit(): void {
     this.userService.getSession(localStorage.getItem('id')).subscribe((data: any) => {
+      console.log('this is new data');
       console.log(data);
       //this.loading = false;
       setTimeout(() => {
         this.displayData = data.session;
         this.ListOfTemp = data.session;
         console.log('this is');
-        this.Warning(0);
+        console.log(data.session);
+        let sort = {
+          key: 'Date',
+          value: 'descend',
+        };
+        this.sort(sort);
+        this.Warning(this.ListOfTemp[0]);
       }, 3000);
     });
 
     //this.getReportInputFile();
   }
-  Warning(id: number) {
+  Warning(sample: any) {
     this.loading = false;
+
     let data = {
       //'id':localStorage.getItem('id'),
-      sessionId: id,
-      filename: this.ListOfTemp[id].filename,
+      sessionId: sample.id,
+      filename: sample.filename,
     };
-    localStorage.setItem('sesstionId', id.toString());
+
+    localStorage.setItem('sesstionId', sample.id);
     this.sessionToHistoryService.sendFileList(data);
     // this.fileService.getResult(data).subscribe((data:any)=>{
     //   //this.router.navigate('daovan',{})
@@ -83,6 +92,8 @@ export class ReportInputFileComponent implements OnInit {
 
   //#region
   sort(sort: { key: string; value: string }): void {
+    console.log('have you suffer enough');
+    console.log(sort);
     this.sortName = sort.key;
     this.sortValue = sort.value;
     this.search();
@@ -91,7 +102,7 @@ export class ReportInputFileComponent implements OnInit {
   search(): void {
     // sort data
     if (this.sortName && this.sortValue) {
-      this.displayData = this.reportInputFile.sort((a, b) =>
+      this.displayData = this.displayData.sort((a, b) =>
         this.sortValue === 'ascend'
           ? a[this.sortName] > b[this.sortName]
             ? 1
@@ -101,7 +112,7 @@ export class ReportInputFileComponent implements OnInit {
           : -1
       );
     } else {
-      this.displayData = this.reportInputFile;
+      this.displayData = this.displayData;
     }
   }
   //#endregion

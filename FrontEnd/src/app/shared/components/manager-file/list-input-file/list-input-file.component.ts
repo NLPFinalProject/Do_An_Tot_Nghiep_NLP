@@ -61,6 +61,7 @@ export class ListInputFileComponent implements OnInit {
     this.fileService;
     this.sessionToHistory.sendListFile.subscribe((data: any) => {
       console.log(data);
+      console.log('yeah yeah yeah');
       this.PushDataToDisplayData(data);
       this.displayData = [...this.newDataList];
     });
@@ -68,13 +69,14 @@ export class ListInputFileComponent implements OnInit {
   }
   gotoDetail() {
     console.log('begin');
-    this.fileService.getResult(this.userData).subscribe((data: any) => {
-      console.log(data);
-      console.log('win');
-      console.log(this.userData);
-      //this.router.navigate([],{'data':data})
-      this.router.navigate(['daovan/' + this.userData], { replaceUrl: true, state: { data: data } });
-    });
+    this.router.navigate(['daovan/' + this.userData], { replaceUrl: true });
+    // this.fileService.getResult(this.userData).subscribe((data: any) => {
+    //   console.log(data);
+    //   console.log('win');
+    //   console.log(this.userData);
+    //   //this.router.navigate([],{'data':data})
+    //   this.router.navigate(['daovan/' + this.userData], { replaceUrl: true, state: { data: data } });
+    // });
   }
   PushDataToDisplayData(data: any) {
     this.flag = true;
@@ -98,6 +100,8 @@ export class ListInputFileComponent implements OnInit {
     }, number);
   }
   sort(sort: { key: string; value: string }): void {
+    console.log(sort);
+    console.log('why am I here, just to suffer?');
     this.sortName = sort.key;
     this.sortValue = sort.value;
     this.search();
