@@ -31,24 +31,8 @@ export class ListInputFileComponent implements OnInit {
   FileToUpload: File = null;
   ListFileToUpload: FileList = null;
   newDataList = Array<any>();
-  data = [
-    {
-      name: 'Hoàn thiện các giải pháp QLNN đối với các hoạt động tôn giáo ở Việt Nam trong thời kỳ đổi mới.docx',
-      status: 'Thất bại',
-    },
-    {
-      name: 'Quản lý nhà nước đối với tập đoàn kinh tế tư nhân ở Việt Nam hiện nay.pdf',
-      status: 'Chờ',
-    },
-    {
-      name: 'Quản lý nhà nước về văn thư, lưu trữ.docx',
-      status: 'Thất bại',
-    },
-    {
-      name: 'Quản lý nhà nước về quy hoạch xây dựng nông thôn mới.docx',
-      status: 'Thành công',
-    },
-  ];
+  data = Array<any>();
+
   fileList: Array<object> = [];
   constructor(
     private messageService: MessageService,

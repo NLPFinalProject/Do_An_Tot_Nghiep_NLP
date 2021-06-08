@@ -982,10 +982,7 @@ def documentimportDatabaseInternet(request):
     jsonFile(myDict1, fileName1, userId, session)
     # myDict1 = test1(data1)
     # EmyDict2 = test2(data1)
-    myDict = []
-    myDict.append(myDict1)
-    myDict.append(myDict2)
-    jsonFile(myDict, fileName1, userId, session)
+    
     jsonData = readJson(session, userId)
     session1 = DocumentSession.objects.get(pk=session)
     session1.Status = True
@@ -1311,8 +1308,8 @@ def uploadDocListRequest(request):
     PostData = request.POST
     FileData=request.FILES
     ID = request.data['id']
-    session="111"
-    print("session la: ",session)
+    
+   
     id = ID
     listfile = FileData.getlist('DataDocumentFileList')
     filenameList = []
@@ -1333,7 +1330,7 @@ def uploadDocListRequest(request):
             DataDocumentAuthor_id=id,
             DataDocumentType=extension,
             DataDocumentFile=file1,
-            SessionId=session.id
+            
         )
         print(data)
         data.save()
