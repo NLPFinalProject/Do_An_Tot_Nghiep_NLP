@@ -211,8 +211,8 @@ def lockUser(request):
     if isAdmin == False
     return HttpResponse(status=status=status.HTTP_400_BAD_REQUEST)
     """
-    userId = request.GET['id']
-    user = User.objects.get(id = userId)
+    username = request.GET['username']
+    user = User.objects.get(username = username)
     # if statement
     user.isLock=TRUE
     user.save()
@@ -224,8 +224,8 @@ def unlockUser(request):
     if isAdmin == False
     return HttpResponse(status=status=status.HTTP_400_BAD_REQUEST)
     """
-    userId = request.GET['id']
-    user = User.objects.get(id = userId)
+    username = request.GET['username']
+    user = User.objects.get(username = username)
     # if statement
     user.isLock=False
     user.save()
