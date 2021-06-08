@@ -9,11 +9,7 @@
         </span>
       </td>
       <td>
-        <div *ngIf="data.ratio == 0">{{ data.ratio }} %</div>
-        <div *ngIf="data.ratio != 0">
-          <nz-badge [nzCount]="data.ratio">{{ data.ratio }}</nz-badge>
-          %
-        </div>
+        <div>{{ data.ratio | number: '.2-2' }} %</div>
       </td>
     </tr>
   </tbody>

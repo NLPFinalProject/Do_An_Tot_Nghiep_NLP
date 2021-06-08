@@ -973,6 +973,13 @@ def documentimportDatabaseInternet(request):
         request.POST,request.FILES,request.data['id'],request.data["agreeStatus"])
     myDict1, fileName1, userId = test1(data1, session)
     myDict2, fileName1, userId = test2(data1, session)
+    myDict1["AllFileRatio"].extend(myDict2["AllFileRatio"])
+    myDict2["ListAllFile"].pop(0)
+    myDict1["ListAllFile"].extend(myDict2["ListAllFile"])
+    myDict1["ListFileName"].extend(myDict2["ListFileName"])
+    myDict1["ListFile"].extend(myDict2["ListFile"])
+
+    jsonFile(myDict1, fileName1, userId, session)
     # myDict1 = test1(data1)
     # EmyDict2 = test2(data1)
     myDict = []
@@ -1328,6 +1335,7 @@ def uploadDocListRequest(request):
             DataDocumentFile=file1,
             SessionId=session.id
         )
+        print(data)
         data.save()
         
         fName, lstSentence, lstLength = p.preprocess(
@@ -1571,6 +1579,7 @@ def readJsonRequest(request):
             fileJson.close()
             #os.remove(fileJson.name)
             print("report data là: ",reportData)
+            
             return Response(reportData,status=status.HTTP_200_OK)
         except:
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)

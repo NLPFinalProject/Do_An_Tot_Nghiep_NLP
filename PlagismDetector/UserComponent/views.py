@@ -20,7 +20,7 @@ from rest_framework.authentication import TokenAuthentication
 from MailComponent import views as mail
 from FileComponent.models import DocumentSession,DataDocument
 import random as rand
-
+from rest_framework_jwt.views import obtain_jwt_token as obtainToken
 @api_view([ 'POST'])
 #@permission_classes ( (AllowAny, ))
 
@@ -115,6 +115,9 @@ def APIUser(request):
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
         
 
+    
+    
+
 @api_view([ 'GET','POST'])
 def isAdmin(request):
     #if(request.data not None)
@@ -189,13 +192,7 @@ def UserList(request):
     
     users = []
     for user in userList:
-        
-       
         newUser  = UserSerializer(user)
-        print('user is')
-        print(newUser)
-        
-        
         users.append(newUser.data)
     content = {"users":users}
     print(content)

@@ -147,7 +147,7 @@ export class UploadDatabaseComponent implements OnInit {
   uploadList() {
     this.fileService.UploadFileList2(this.ListOfFile).subscribe((data: any) => {
       console.log(data);
-      this.router.navigate(['daovan', {}]);
+      this.openDialog();
     });
   }
   public dropped(files: NgxFileDropEntry[]) {

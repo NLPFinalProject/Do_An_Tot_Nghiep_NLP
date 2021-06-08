@@ -7,9 +7,10 @@ import { CommonConstant, MessageConstant } from '@app/shared';
 import { RoutingConstant } from '@app/shared/commons/routing.constant';
 import { environment } from '@env/environment';
 import { finalize } from 'rxjs/operators';
-
+import { TranslateService } from '@ngx-translate/core';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { UserService } from '@../../../src/app/login/user-authenticate-service';
+import { lang } from 'moment';
 
 const log = new Logger('Login');
 
@@ -36,7 +37,8 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
     private formBuilder: FormBuilder,
     private i18nService: I18nService,
     private authenticationService: AuthenticationService,
-    private UserService: UserService
+    private UserService: UserService,
+    private translateService: TranslateService
   ) {
     super(injector);
     this.createForm();
@@ -174,9 +176,20 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
 
   //#region  Language
   setLanguage(language: string) {
-    this.i18nService.language = language;
+    //this.i18nService.language = language;
+    console.log(language);
+    this.translateService.use('vn');
   }
+  setVNLanguage() {
+    //this.i18nService.language = language;
 
+    this.translateService.use('vn');
+  }
+  setENGLanguage() {
+    //this.i18nService.language = language;
+
+    this.translateService.use('en');
+  }
   get currentLanguage(): string {
     return this.i18nService.language;
   }
