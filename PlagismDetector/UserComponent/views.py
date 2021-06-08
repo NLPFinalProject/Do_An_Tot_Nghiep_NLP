@@ -149,10 +149,9 @@ def ActivateUser(request):
 def ResetPassword(request):
     #if(request.data not None)
     try:
-        print(request.data)
+        
         user = User.objects.get(username = request.data["username"])
-        print(user.username)
-        print(user.password)
+        
         flag = user.check_password(request.data['password'])
         if flag==False:
             
@@ -187,7 +186,7 @@ def ForgetPassword(request):
 @api_view([ 'POST','GET'])
 def UserList(request):
     userList=User.objects.all()
-    print(userList)
+    
     users = []
     for user in userList:
         
@@ -233,8 +232,7 @@ def unlockUser(request):
 @api_view(['POST'])
 def login(request):
     content = None
-    print(request.data["username"])
-    print(request.data["password"])
+    
     
     try:
         user = User.objects.get(username = request.data["username"])

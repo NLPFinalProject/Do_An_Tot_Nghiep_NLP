@@ -1,13 +1,13 @@
-import { Component, OnInit,Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { MessageService } from '@app/core/services/Utils/message.service';
-import {DaovanServiceService} from '../../daovan-service.service'
+import { DaovanServiceService } from '../../daovan-service.service';
 @Component({
   selector: 'app-list-file-diff',
   templateUrl: './list-file-diff.component.html',
   styleUrls: ['./list-file-diff.component.scss'],
 })
 export class ListFileDiffComponent implements OnInit {
-  @Input ()FileList2:Array<any>;
+  @Input() FileList2: Array<any>;
   sortValue: any = null;
   sortName: any = null;
   listOfSearchName: any = [];
@@ -33,13 +33,16 @@ export class ListFileDiffComponent implements OnInit {
     },
   ];
   fileList: Array<object> = [];
-  constructor(private messageService: MessageService,private DaoVanService:DaovanServiceService) {}
+  constructor(private messageService: MessageService, private DaoVanService: DaovanServiceService) {}
   ngOnInit(): void {
     this.getData();
   }
-
+  ngOnChanges() {
+    //this.childFunction()
+    this.getData();
+  }
   getData(): void {
-    console.log("stupid");
+    console.log('stupid');
     console.log(this.FileList2);
     const number = Math.floor(Math.random() * 100);
     setTimeout(() => {
@@ -47,21 +50,17 @@ export class ListFileDiffComponent implements OnInit {
       this.loading = false;
     }, number);
   }
-  sendMessage(name:string)
-  {
-    console.log("this is data",name)
-    for(var i = 0; i < this.FileList2.length;i++)
-    {
-      console.log("this is file name");
+  sendMessage(name: string) {
+    console.log('this is data', name);
+    for (var i = 0; i < this.FileList2.length; i++) {
+      console.log('this is file name');
       console.log(this.FileList2[i].name);
-      
-      if(this.FileList2[i].name==name)
-      {
+
+      if (this.FileList2[i].name == name) {
         this.DaoVanService.getSetting(i);
         break;
       }
     }
-    
   }
   sort(sort: { key: string; value: string }): void {
     this.sortName = sort.key;
