@@ -44,6 +44,7 @@ def register(request):
         number = mail.sendVerificationMail(request.data["email"])
         user.set_password(user.password)
         user.save()
+        
         users = UserSerializer(user)
         users.data.key = '1243'
         print(users.data)
@@ -184,12 +185,25 @@ def ForgetPassword(request):
     content =''
     return HttpResponse(status=status.HTTP_200_OK)
 @api_view([ 'POST','GET'])
-def UserList():
+def UserList(request):
     userList=User.objects.all()
+    print(userList)
+    users = []
+    for user in userList:
+        
+       
+        newUser  = UserSerializer(user)
+        print('user is')
+        print(newUser)
+        
+        
+        users.append(newUser.data)
+    content = {"users":users}
+    print(content)
     #idFile=temp[0].id
     #data=
     
-    return Response(userList, status=status.HTTP_200_OK)  
+    return Response(content, status=status.HTTP_200_OK)  
 @api_view([ 'POST','GET']) 
 def lockUser(request):
     """for admin, fix later

@@ -1297,7 +1297,52 @@ def uploadDoc2(PostData,FileData,ID,agreeStatus):
         return result, session.id
 
 
-
+@api_view(('POST', ))
+def uploadDocListRequest(request):
+    # chuong trinh test
+    content = None
+    PostData = request.POST
+    FileData=request.FILES
+    ID = request.data['id']
+    session="111"
+    print("session la: ",session)
+    id = ID
+    listfile = FileData.getlist('DataDocumentFileList')
+    filenameList = []
+    count = 0
+    #session = DocumentSession.objects.get(pk=session)
+    #session.NumOfFile = 1 + len(listfile)
+    #session.save()
+    for f in listfile:
+        # name = listname[count]
+        count = count + 1
+        file1: file
+        file1 = f  # abc.doc
+        file_name = file1.name.split(".")[0]  # doc
+        extension = file1.name.split(".")[-1]  # abc
+        filenameList.append(file1.name)
+        data = DataDocument(
+            DataDocumentName=file_name,
+            DataDocumentAuthor_id=id,
+            DataDocumentType=extension,
+            DataDocumentFile=file1,
+            SessionId=session.id
+        )
+        data.save()
+        
+        fName, lstSentence, lstLength = p.preprocess(
+            formatString(
+                'DocumentFile',
+                data.DataDocumentName,
+                data.DataDocumentType))
+        # //save to db//
+        length = len(lstSentence)
+        for i in range(length):
+            data.datadocumentcontent_set.create(
+                DataDocumentSentence=lstSentence[i],
+                DataDocumentSentenceLength=lstLength[i])
+    response = {'data': filenameList}
+    return Response(response,status=status.HTTP_200_OK)
 def uploadDocList2(PostData,FileData,ID, session,agreeStatus):
     # chuong trinh test
     content = None

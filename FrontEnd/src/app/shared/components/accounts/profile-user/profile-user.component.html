@@ -2,7 +2,7 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="10" nzRequired nzFor="email">E-mail</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
-      <input disabled nz-input formControlName="email" id="email" />
+      <input [readonly]="true" nz-input formControlName="email" id="email" />
       <nz-form-explain *ngIf="validateForm.get('email').dirty && validateForm.get('email').errors"></nz-form-explain>
     </nz-form-control>
   </nz-form-item>

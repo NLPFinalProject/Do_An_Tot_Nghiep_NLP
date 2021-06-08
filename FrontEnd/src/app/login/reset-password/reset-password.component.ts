@@ -70,7 +70,7 @@ export class ResetPasswordComponent extends AppComponentBase implements OnInit {
     };
     this.userService.ResetPassword(data).subscribe(
       (data: any) => {
-        this.notificationService.success(`${MessageConstant.RegisterSucssec} ${MessageConstant.GoToPage} 5 giây`);
+        this.notificationService.success(`Đổi mật khẩu thành công' ${MessageConstant.GoToPage} 5 giây`);
         setTimeout(() => {
           this.route.queryParams.subscribe((params) =>
             this.router.navigate([params.redirect || RoutingConstant.Base], { replaceUrl: true })

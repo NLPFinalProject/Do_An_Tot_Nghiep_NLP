@@ -75,110 +75,6 @@ export class UploadDatabaseComponent implements OnInit {
     }
   }
 
-  nextstep() {
-    //check which step it is
-    if (this.step == 1) {
-      //this.step1Unlock = true;
-      this.isSpinning = true;
-      this.step = this.step + 1;
-      console.log('data is');
-      this.isSpinning = false;
-      console.log(this.isSpinning);
-      localStorage.setItem('file', this.FileToUpload.name);
-      this.isvalid = false;
-      this.step = 2;
-      localStorage.setItem('choice', this.selectedOption.toString());
-      console.log('now');
-      if (this.selectedOption == 1) {
-        this.step1Unlock = true;
-      }
-    } else if (this.step == 2) {
-      this.isSpinning = true;
-      //this.fileService.UploadFileList(this.ListFileToUpload).subscribe((data: any) => {
-
-      console.log('hhhhh');
-
-      let id = localStorage.getItem('id');
-      //let choice = parseInt(localStorage.getItem('choice'));
-      let choice = this.selectedOption;
-      //let filename1 = localStorage.getItem('file');
-      this.fileList = this.ListOfFile;
-      console.log('choice is', choice);
-      switch (choice) {
-        case 1: {
-          if (this.ListOfFile != null) {
-            let tempdata = {
-              id: id,
-              filename1: this.FileToUpload,
-              listfile: this.fileList,
-
-              agreeStatus: this.agreeStatus,
-            };
-            console.log(tempdata);
-            this.fileService.checkPlagiasmNormal(tempdata).subscribe((data: any) => {
-              console.log(data);
-              this.openDialog();
-            });
-            this.openDialog();
-          } else {
-            //add warning here
-          }
-
-          //   console.log(data);
-          //   this.router.navigate(['checkresult/result'], { replaceUrl: true, state: { data: data } });
-          // })
-          break;
-        }
-        case 2: {
-          let tempdata = {
-            id: id,
-            filename1: this.FileToUpload,
-            //listfile: this.fileList,
-
-            agreeStatus: this.agreeStatus,
-          };
-          this.fileService.checkPlagiasmUsingDatabase(tempdata).subscribe((data: any) => {
-            console.log(data);
-            this.openDialog();
-          });
-          console.log(tempdata);
-          this.openDialog();
-          break;
-        }
-        case 3: {
-          let tempdata = {
-            id: id,
-            filename1: this.FileToUpload,
-            //listfile: this.fileList,
-
-            agreeStatus: this.agreeStatus,
-          };
-          this.fileService.checkPlagiasmUsingInternet(tempdata).subscribe((data: any) => {
-            console.log(data);
-            console.log('done my job');
-          });
-          this.openDialog();
-
-          break;
-        }
-        case 4: {
-          let tempdata = {
-            id: id,
-            filename1: this.FileToUpload,
-            //listfile: this.fileList,
-
-            agreeStatus: this.agreeStatus,
-          };
-          this.fileService.checkPlagiasmUsingAll(tempdata).subscribe((data: any) => {
-            console.log(data);
-            //this.router.navigate(['checkresult/result'], { replaceUrl: true, state: { data: data } });
-          });
-          console.log(tempdata);
-          break;
-        }
-      }
-    }
-  }
   upload = (file: any) => {
     console.log('welcome');
     console.log(file.name);
@@ -248,10 +144,15 @@ export class UploadDatabaseComponent implements OnInit {
       });
     }
   }
-
+  uploadList() {
+    this.fileService.UploadFileList2(this.ListOfFile).subscribe((data: any) => {
+      console.log(data);
+      this.router.navigate(['daovan', {}]);
+    });
+  }
   public dropped(files: NgxFileDropEntry[]) {
     //this.isvalid = true;
-
+    this.isvalid = true;
     this.files = files;
     for (const droppedFile of files) {
       // Is it a file?

@@ -107,7 +107,7 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
           //this.notificationService.warning(MessageConstant.LoginFailed);
         },
         (error) => {
-          this.notificationService.error('Tài khoản đã bị được sử dụng');
+          this.notificationService.error('Tài khoản đã được sử dụng');
         }
       );
     }

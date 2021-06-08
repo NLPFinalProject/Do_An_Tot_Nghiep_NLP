@@ -46,7 +46,9 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
     }, 1000);
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    localStorage.clear();
+  }
 
   optionAccount(value: boolean): void {
     this.optionAccounts = value === true ? 'Client' : 'Administator';

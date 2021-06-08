@@ -29,14 +29,14 @@ export class UserService {
     console.log(username);
     return this.http.get(`${this.baseUrl}/is-admin-user/`, { params: params });
   }
-  lockUser(data: any): Observable<Object> {
-    let params = new HttpParams().set('id', data.id);
+  lockUser(data: string): Observable<Object> {
+    let params = new HttpParams().set('username', data);
     //params.set("isAdmin",localStorage.getItem('isAdmin'));
     //console.log(username);
     return this.http.get(`${this.baseUrl}/lock-user`, { params: params });
   }
-  unlockUser(data: any): Observable<Object> {
-    let params = new HttpParams().set('id', data.id);
+  unlockUser(data: string): Observable<Object> {
+    let params = new HttpParams().set('username', data);
     //params.set("isAdmin",localStorage.getItem('isAdmin'));
     //console.log(username);
     return this.http.get(`${this.baseUrl}/unlock-user`, { params: params });
