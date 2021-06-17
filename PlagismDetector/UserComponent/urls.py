@@ -21,7 +21,7 @@ urlpatterns = [
      url(r'get-user-list',csrf_exempt(views.UserList)),
      url(r'^profile',views.GetProfile),
      #url(r'^login',views.login),
-     url(r'^login', obtain_jwt_token),
+     url(r'^login', views.NewAPILogin.as_view()),
      url(r'^is-admin-user', csrf_exempt(views.isAdmin)),
      url(r'^lock-user', csrf_exempt(views.lockUser)),
      url(r'^unlock-user', csrf_exempt(views.unlockUser)),

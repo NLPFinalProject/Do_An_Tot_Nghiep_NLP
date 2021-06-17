@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient,HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 //import{User} from '@../../../src/app/login/User'
 
@@ -16,17 +16,16 @@ export class FileService {
     return this.http.get(`${this.baseUrl}/api/file/test`);*/
     return this.http.get(`${this.baseUrl}/api/file/test2`);
   }
-  
-  getResult(data: any):Observable<Object> {
+
+  getResult(data: any): Observable<Object> {
     let param = new HttpParams();
     let data1 = {
-      id:localStorage.getItem('id'),
-      sessionId:data
-    }
-    param.set('id',localStorage.getItem('id'));
-    param.set('sessionId',data);
-    
-    
+      id: localStorage.getItem('id'),
+      sessionId: data,
+    };
+    param.set('id', localStorage.getItem('id'));
+    param.set('sessionId', data);
+
     //console.log(params.toString());
     return this.http.post(`${this.baseUrl}/api/file/getjsonresult`, data1);
   }
@@ -60,6 +59,7 @@ export class FileService {
     formData.append('agreeStatus', data.agreeStatus);
     formData.append('id', data.id);
     formData.append('DataDocumentFile', data.filename1);
+    formData.append('sessionName', data.sessionName);
     let file = data.listfile;
     for (var i = 0; i < file.length; i++) {
       let temp = file[i];
@@ -82,7 +82,7 @@ export class FileService {
     formData.append('id', data.id);
 
     formData.append('agreeStatus', data.agreeStatus);
-
+    formData.append('sessionName', data.sessionName);
     formData.append('DataDocumentFile', data.filename1);
 
     return this.http.post(`${this.baseUrl}/api/file/checkdatabase`, formData);
@@ -95,7 +95,7 @@ export class FileService {
     formData.append('id', data.id);
 
     formData.append('agreeStatus', data.agreeStatus);
-
+    formData.append('sessionName', data.sessionName);
     formData.append('DataDocumentFile', data.filename1);
 
     return this.http.post(`${this.baseUrl}/api/file/checkdatabaseinternet`, formData);
@@ -106,7 +106,7 @@ export class FileService {
     const formData: FormData = new FormData();
 
     formData.append('id', data.id);
-
+    formData.append('sessionName', data.sessionName);
     formData.append('agreeStatus', data.agreeStatus);
 
     formData.append('DataDocumentFile', data.filename1);
@@ -163,7 +163,7 @@ export class FileService {
     for (var i = 0; i < file.length; i++) {
       let temp = file[i];
 
-      formData.append('DataDocumentFile', temp);
+      formData.append('DataDocumentFileList', temp);
       //formData.append('title', temp.name);
 
       console.log(temp.name);

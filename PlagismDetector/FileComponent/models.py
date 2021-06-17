@@ -61,6 +61,7 @@ class DocumentSession(models.Model):
     Date = models.DateTimeField(auto_now_add=True)
     Status = models.BooleanField(default=False) # bua sau thanh string
     SessionUser = models.IntegerField(default=0)
+    SessionName = models.CharField(max_length=50, null=True)
 
 
 class ReportDocument(models.Model):

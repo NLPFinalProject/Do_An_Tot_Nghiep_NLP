@@ -894,7 +894,10 @@ def makeDataReadDoc(internetPage, userId):
 
             os.remove(file_pdf)
         else:
+            
             lstSentence = internetKeywordSearch.crawl_web(link)
+            if lstSentence == None:
+                continue
             data = DataDocument(
                 DataDocumentName=link,
                 DataDocumentAuthor_id=userId,
@@ -930,7 +933,7 @@ def documentimportDatabase(request):
     data1 = request.data
     print("data1: ",data1)
     data1["filenameA"], session = uploadDoc2(
-                request.POST,request.FILES,request.data['id'],request.data["agreeStatus"])
+                request.POST,request.FILES,request.data['id'],request.data["agreeStatus"],request.data["sessionName"])
     myDict, fileName1, userId = test1(data1, session)
     jsonFile(myDict, fileName1, userId, session)
     jsonData = readJson(session, userId)
@@ -950,7 +953,7 @@ def documentimportInternet(request):
     # userId = request.data['id']
     data1 = request.data
     print("data1: ",data1)
-    data1["filenameA"], session = uploadDoc2(request.POST,request.FILES,request.data['id'],request.data["agreeStatus"])
+    data1["filenameA"], session = uploadDoc2(request.POST,request.FILES,request.data['id'],request.data["agreeStatus"],request.data["sessionName"])
     myDict, fileName1, userId = test2(data1, session)
     jsonFile(myDict, fileName1, userId, session)
     jsonData = readJson(session,userId)
@@ -967,29 +970,40 @@ def documentimportInternet(request):
 def documentimportDatabaseInternet(request):
     # fileName1 = request.data["fileName1"]
     # userId = int(request.data["id"])
-
+    
     data1 = request.data
     data1["filenameA"], session = uploadDoc2(
-        request.POST,request.FILES,request.data['id'],request.data["agreeStatus"])
-    myDict1, fileName1, userId = test1(data1, session)
-    myDict2, fileName1, userId = test2(data1, session)
-    myDict1["AllFileRatio"].extend(myDict2["AllFileRatio"])
-    myDict2["ListAllFile"].pop(0)
-    myDict1["ListAllFile"].extend(myDict2["ListAllFile"])
-    myDict1["ListFileName"].extend(myDict2["ListFileName"])
-    myDict1["ListFile"].extend(myDict2["ListFile"])
+        request.POST,request.FILES,request.data['id'],request.data["agreeStatus"],request.data["sessionName"])
+    #try catch status here here
+    try:
+        myDict1, fileName1, userId = test1(data1, session)
+        myDict2, fileName1, userId = test2(data1, session)
+        myDict1["AllFileRatio"].extend(myDict2["AllFileRatio"])
+        myDict2["ListAllFile"].pop(0)
+        myDict1["ListAllFile"].extend(myDict2["ListAllFile"])
+        myDict1["ListFileName"].extend(myDict2["ListFileName"])
+        myDict1["ListFile"].extend(myDict2["ListFile"])
 
-    jsonFile(myDict1, fileName1, userId, session)
-    # myDict1 = test1(data1)
-    # EmyDict2 = test2(data1)
+        jsonFile(myDict1, fileName1, userId, session)
+        # myDict1 = test1(data1)
+        # EmyDict2 = test2(data1)
+        
+        jsonData = readJson(session, userId)
+        session1 = DocumentSession.objects.get(pk=session)
+        session1.Status = True
+        #session1.Status = "Thành công"
+        session1.save()
+        sessionId = session1.id
+        mail.sendExportMailV2(request.data,sessionId)
+        return Response(status=status.HTTP_200_OK)
+    except:
+        session1 = DocumentSession.objects.get(pk=session)
+        #session1.Status = False "Thất bại"
+        session1.save()
+        sessionId = session1.id
+        mail.sendExportMailV2(request.data,sessionId)
+        return Response(status=status.HTTP_200_OK)
     
-    jsonData = readJson(session, userId)
-    session1 = DocumentSession.objects.get(pk=session)
-    session1.Status = True
-    session1.save()
-    sessionId = session1.id
-    mail.sendExportMailV2(request.data,sessionId)
-    return Response(status=status.HTTP_200_OK)
 
 
 # import mới
@@ -1000,7 +1014,7 @@ def documentimport(request):
     #data1["filenameA"], session = uploadDoc(request)
     #data1["filenameB"] = uploadDocList(request, session)
     data1["filenameA"], session = uploadDoc2(
-        request.POST,request.FILES,request.data['id'],request.data["agreeStatus"])
+        request.POST,request.FILES,request.data['id'],request.data["agreeStatus"],request.data["sessionName"])
 
     data1["filenameB"] = uploadDocList2(
         request.POST,request.FILES,request.data['id'], session,request.data["agreeStatus"])
@@ -1252,7 +1266,7 @@ def FinalCheck(request):
 
 
 
-def uploadDoc2(PostData,FileData,ID,agreeStatus):
+def uploadDoc2(PostData,FileData,ID,agreeStatus,sessionName):
     content = None
    
     id = ID
@@ -1265,20 +1279,22 @@ def uploadDoc2(PostData,FileData,ID,agreeStatus):
         file_name = file1.name.split(".")[0]  # doc
         extension = file1.name.split(".")[-1]  # abc
         content = file_name
-        session = DocumentSession(NumOfFile=1,SessionUser=id)
+        session = DocumentSession(NumOfFile=1,SessionUser=id,SessionName=sessionName)
         session.save()
         data = DataDocument(
             DataDocumentName=file_name,
             DataDocumentAuthor_id=id,
             DataDocumentType=extension,
             DataDocumentFile=file1,
-            SessionId=session.id)
+            SessionId=session.id,
+            )
 
         data.save()
 
         # data= form1.save(commit = False)
         # agreeStatus = FileName if true, =0 if false
         if (agreeStatus):
+            
             fName, lstSentence, lstLength = p.preprocess(
                 formatString(
                     'DocumentFile',
@@ -1329,7 +1345,7 @@ def uploadDocListRequest(request):
             DataDocumentName=file_name,
             DataDocumentAuthor_id=id,
             DataDocumentType=extension,
-            DataDocumentFile=file1,
+            DataDocumentFile=file1
             
         )
         print(data)

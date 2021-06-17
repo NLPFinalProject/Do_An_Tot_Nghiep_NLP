@@ -29,8 +29,9 @@ export class TeststepComponent implements OnInit {
   public files: NgxFileDropEntry[] = [];
   fileList: any[];
   public step1Unlock: boolean = false;
-
+  public changeNameStatus: boolean = false;
   public selectedOption: number;
+  sessionName: string = '';
   option: string;
 
   constructor(
@@ -67,7 +68,13 @@ export class TeststepComponent implements OnInit {
     }
     //this.step2Unlock=true;
   }
-
+  HandleSelectionChangeName(id: any) {
+    if (id == '1') {
+      this.changeNameStatus = true;
+    } else {
+      this.changeNameStatus = false;
+    }
+  }
   HandleSelectionSaveFileChange(isSave: string) {
     if (isSave == 'yes') {
       this.agreeStatus = true;
@@ -105,6 +112,7 @@ export class TeststepComponent implements OnInit {
       //let filename1 = localStorage.getItem('file');
       this.fileList = this.ListOfFile;
       console.log('choice is', choice);
+      console.log(this.sessionName);
       switch (choice) {
         case 1: {
           if (this.ListOfFile != null) {
@@ -112,7 +120,7 @@ export class TeststepComponent implements OnInit {
               id: id,
               filename1: this.FileToUpload,
               listfile: this.fileList,
-
+              sessionName: this.sessionName,
               agreeStatus: this.agreeStatus,
             };
             console.log(tempdata);
@@ -135,7 +143,7 @@ export class TeststepComponent implements OnInit {
             id: id,
             filename1: this.FileToUpload,
             //listfile: this.fileList,
-
+            sessionName: this.sessionName,
             agreeStatus: this.agreeStatus,
           };
           this.fileService.checkPlagiasmUsingDatabase(tempdata).subscribe((data: any) => {
@@ -152,7 +160,7 @@ export class TeststepComponent implements OnInit {
             id: id,
             filename1: this.FileToUpload,
             //listfile: this.fileList,
-
+            sessionName: this.sessionName,
             agreeStatus: this.agreeStatus,
           };
           this.fileService.checkPlagiasmUsingInternet(tempdata).subscribe((data: any) => {
@@ -168,7 +176,7 @@ export class TeststepComponent implements OnInit {
             id: id,
             filename1: this.FileToUpload,
             //listfile: this.fileList,
-
+            sessionName: this.sessionName,
             agreeStatus: this.agreeStatus,
           };
           this.fileService.checkPlagiasmUsingAll(tempdata).subscribe((data: any) => {

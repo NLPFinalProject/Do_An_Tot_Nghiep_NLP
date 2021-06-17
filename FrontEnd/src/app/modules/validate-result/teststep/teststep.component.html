@@ -8,6 +8,18 @@
       Không
     </mat-radio-button>
   </mat-radio-group>
+  <div>Bạn có muốn nhập tên cho phiên của mình không (được phép trùng)</div>
+  <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group">
+    <mat-radio-button class="example-radio-button" value="1" (change)="HandleSelectionChangeName($event.value)">
+      Có
+    </mat-radio-button>
+    <mat-radio-button class="example-radio-button" value="2" (change)="HandleSelectionChangeName($event.value)">
+      Không
+    </mat-radio-button>
+  </mat-radio-group>
+  <div *ngIf="changeNameStatus">
+    <p>Mời bạn nhập tên file: <input type="text" id="sessionName" name="sessionName" [(ngModel)]="sessionName" /></p>
+  </div>
   <div class="center-button">
     <div class="center">
       <ngx-file-drop
@@ -94,6 +106,7 @@
       </div>
     </div>
   </div>
+
   <button nz-button class="w-25" nzType="primary" nzShape="omitted" (click)="nextstep()" [disabled]="isvalid !== true">
     <i theme="outline"></i> <span translate>Kiểm tra</span>
   </button>

@@ -9,12 +9,10 @@
 >
   <tbody>
     <tr *ngFor="let temp of filterTable.data">
-      <td>
+      <td [ngStyle]="{ 'background-color': shouldHighlight(temp.id) ? '#f2f2f2' : '' }">
         <div>
           <a (click)="triggerScrollTo(temp.id)"
-            ><span class="changeText" [ngClass]="[shouldHighlight(temp.id) ? 'highlight' : '']"
-              >{{ temp.data }}.</span
-            ></a
+            ><span>{{ temp.data }}.</span></a
           >
         </div>
       </td>

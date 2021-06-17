@@ -1,0 +1,42 @@
+chức năng chính: so sánh văn bản
++ nhập văn bản bằng bàn phím
++ nhập văn bản = cách load file word/ pdf
++ nhập văn bản = url => chỉ ra đoạn văn hay câu văn nào là sao chép.
++ liệt kê các nguồn trang mà phát hiện trùng lặp văn bản.
++ sửa lỗi chính tả ( nếu cần)
++ dịch (nếu cần).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////th
+<select  (change)="HandleSelectionChange($event.target.value)">
+    <option value ="1">So sánh với file của bạn</option>
+    <option value ="2">So sánh với dữ liệu của hệ thống</option>
+    <option value ="3">So sánh với dữ liệu internet</option>
+    <option value ="4">So sánh với cả file internet và dữ liệu của hệ thôngs</option>
+  </select>
+  <button
+            nz-button
+            class="w-100"
+            nzType="primary"
+            nzShape="omitted"
+            (click) = "checkChoice()"
+            
+          >
+            <i  theme="outline"></i> <span translate>Xác nhận</span>
+          </button>

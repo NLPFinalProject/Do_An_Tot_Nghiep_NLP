@@ -21,6 +21,43 @@ from MailComponent import views as mail
 from FileComponent.models import DocumentSession,DataDocument
 import random as rand
 from rest_framework_jwt.views import obtain_jwt_token as obtainToken
+from rest_framework_jwt.views import ObtainJSONWebToken,JSONWebTokenSerializer
+
+class NewAPILogin(ObtainJSONWebToken):
+    def post(self, request, *args, **kwargs):
+        content = None
+        response = super().post(request, *args, **kwargs)
+        
+        try:
+            print("123")
+            print(request.data)
+            user = User.objects.get(username=  request.data['username'])
+            #userStatus = UserSerializer(user)
+            print("4156")
+            userStatus = UserSerializer(user)
+            
+
+            user = userStatus.data
+            
+            
+            print("456")
+            if user['is_lock'] == True:
+                content = {'data': "Tài khoản đang bị khóa"}
+                return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            elif user['is_active'] == False:
+                content = {'data': "Tài khoản chưa được kích hoạt"}
+                return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return response
+        except:
+            return response
+        
+        """return Response({
+            'token': token.key,
+            'user_id': user.pk,
+            'email': user.email
+        })"""
+
 @api_view([ 'POST'])
 #@permission_classes ( (AllowAny, ))
 
@@ -210,7 +247,7 @@ def lockUser(request):
     username = request.GET['username']
     user = User.objects.get(username = username)
     # if statement
-    user.isLock=TRUE
+    user.is_lock=TRUE
     user.save()
     return HttpResponse(status=status.HTTP_200_OK)
 @api_view([ 'POST','GET']) 
@@ -223,7 +260,7 @@ def unlockUser(request):
     username = request.GET['username']
     user = User.objects.get(username = username)
     # if statement
-    user.isLock=False
+    user.is_lock=False
     user.save()
     return HttpResponse(status=status.HTTP_200_OK)
 @api_view(['POST'])
@@ -283,6 +320,7 @@ def readSession(userId):
         temp["NumOfFile"]= sessionList[i].NumOfFile
         temp["Date"] = sessionList[i].Date
         temp["SessionUser"] = sessionList[i].SessionUser
+        temp["SessionName"] = sessionList[i].SessionName
         querys = DataDocument.objects.filter(
         DataDocumentAuthor=str(sessionList[i].SessionUser)) \
         .filter(SessionId=str(sessionList[i].id))

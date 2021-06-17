@@ -8,7 +8,19 @@ import { FileService } from '../../../../shell/shell-routing-service';
 import { SessionToHistoryService } from '../../session-to-history.service';
 import { Router } from '@angular/router';
 import { fromPairs } from 'lodash';
+import { listLazyRoutes } from '@angular/compiler/src/aot/lazy_routes';
+import { NzTableFilterFn, NzTableFilterList, NzTableSortFn, NzTableSortOrder } from 'ng-zorro-antd/table';
+interface DataItem {
+  name: string;
+  age: number;
+  address: string;
+}
+interface ColumnItem {
+  name: string;
 
+  listOfFilter: NzTableFilterList;
+  filterFn: NzTableFilterFn | null;
+}
 @Component({
   selector: 'app-report-input-file',
   templateUrl: './report-input-file.component.html',
@@ -16,6 +28,40 @@ import { fromPairs } from 'lodash';
 })
 export class ReportInputFileComponent implements OnInit {
   @Input() SessionList: any;
+  columnFilter: ColumnItem = {
+    name: 'Trạng thái',
+    listOfFilter: [
+      { text: 'Thành công', value: 'success' },
+      { text: 'Đang Tải', value: 'loading' },
+      { text: 'Thất bại', value: 'fail' },
+    ],
+    filterFn: (address: string[], item: any) => {
+      //item.indexOf(address) !== -1
+
+      //console.log(item);
+      //if()
+      if (address[0] == 'success') {
+        if (item.Status == true) {
+          console.log(item.id);
+          console.log('meet requirement des after success');
+          return true;
+        }
+      }
+      if (address[0] == 'loading') {
+        if (item.Status != true) {
+          console.log('is loading and meet status');
+          return true;
+        }
+      }
+      return false;
+    },
+  };
+  public ListOfFilter: NzTableFilterList = [
+    { text: 'Thành công', value: 'success' },
+    { text: 'Đang Tải', value: 'loading' },
+    { text: 'Thất bại', value: 'fail' },
+  ];
+  filterFn: NzTableFilterFn | null;
   loading = true;
   reportInputFile: ReportInputFileDto[] = [];
   sortValue: any = null;
@@ -23,6 +69,7 @@ export class ReportInputFileComponent implements OnInit {
   listOfSearchName: any = [];
   searchAddress: string;
   displayData: Array<object> = [];
+
   ListOfTemp: any[];
   constructor(
     private reportInputFileService: ReportInputFileService,
@@ -35,7 +82,16 @@ export class ReportInputFileComponent implements OnInit {
   ngOnChanges() {
     this.loading = false;
   }
+  filtersth(a: any, b: any) {
+    console.log('new');
+    console.log(a);
+    console.log(b);
+  }
+  //filterFn: (list: string, item: String) =>list.i;
+  //filterFn: (list: string, item: DataItem) => list.some(name => item.name.indexOf(name) !== -1)
+
   ngOnInit(): void {
+    this.ListOfFilter;
     this.userService.getSession(localStorage.getItem('id')).subscribe((data: any) => {
       console.log('this is new data');
       console.log(data);
@@ -56,6 +112,7 @@ export class ReportInputFileComponent implements OnInit {
 
     //this.getReportInputFile();
   }
+
   Warning(sample: any) {
     this.loading = false;
 

@@ -158,11 +158,19 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
           this.isLoading = false;
           console.log('now error is');
           console.log(error);
-          this.loading = false;
+
           log.debug(`Login error: ${error}`);
           this.error = error;
+          if (error.error) {
+            this.showErrorNotification(error.error.data);
+            this.loading = false;
+          } else {
+            log.debug(`Login error: ${error}`);
+            this.error = error;
+            //this.notificationService.error("Tài khoản hoặc mật khẩu không chính xác");
+            this.showErrorNotification(`Tài khoản hoặc mật khẩu không chính xác`);
+          }
           //this.notificationService.error("Tài khoản hoặc mật khẩu không chính xác");
-          this.showErrorNotification(`Tài khoản hoặc mật khẩu không chính xác hoặc tài khoản chưa được kích hoạt`);
         }
       );
   }
