@@ -17,7 +17,7 @@ urlpatterns = [
      url(r'register',csrf_exempt(views.register)),
      url(r'update-user',csrf_exempt(views.UpdateUser)),
      url(r'SendMail',csrf_exempt(views.register)),
-     url(r'session',csrf_exempt(views.Session)),
+     url(r'session',views.Session),
      url(r'get-user-list',csrf_exempt(views.UserList)),
      url(r'^profile',views.GetProfile),
      #url(r'^login',views.login),

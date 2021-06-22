@@ -1,7 +1,7 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -19,6 +19,8 @@ import { VaildateResultModule } from './modules/validate-result/validate-result.
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
+import { AuthInterceptor } from './core/authentication/authentication.service';
+
 export function httpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(httpClient, 'http://localhost:4200/assets/translations/', '.json');
 }
@@ -49,7 +51,10 @@ export function httpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
     // must be imported as the last module as it contains the fallback route
   ],
   declarations: [AppComponent],
-  providers: [{ provide: NZ_I18N, useValue: en_US }],
+  providers: [
+    { provide: NZ_I18N, useValue: en_US },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -933,7 +933,7 @@ def documentimportDatabase(request):
     data1 = request.data
     print("data1: ",data1)
     data1["filenameA"], session = uploadDoc2(
-                request.POST,request.FILES,request.data['id'],request.data["agreeStatus"],request.data["sessionName"])
+                request.POST,request.FILES,request.data['id'],request.data["agreeStatus"],request.data["sessionName"],"Database")
     myDict, fileName1, userId = test1(data1, session)
     jsonFile(myDict, fileName1, userId, session)
     jsonData = readJson(session, userId)
@@ -953,7 +953,7 @@ def documentimportInternet(request):
     # userId = request.data['id']
     data1 = request.data
     print("data1: ",data1)
-    data1["filenameA"], session = uploadDoc2(request.POST,request.FILES,request.data['id'],request.data["agreeStatus"],request.data["sessionName"])
+    data1["filenameA"], session = uploadDoc2(request.POST,request.FILES,request.data['id'],request.data["agreeStatus"],request.data["sessionName"],"Internet")
     myDict, fileName1, userId = test2(data1, session)
     jsonFile(myDict, fileName1, userId, session)
     jsonData = readJson(session,userId)
@@ -973,7 +973,7 @@ def documentimportDatabaseInternet(request):
     
     data1 = request.data
     data1["filenameA"], session = uploadDoc2(
-        request.POST,request.FILES,request.data['id'],request.data["agreeStatus"],request.data["sessionName"])
+        request.POST,request.FILES,request.data['id'],request.data["agreeStatus"],request.data["sessionName"],"Database and internet")
     #try catch status here here
     try:
         myDict1, fileName1, userId = test1(data1, session)
@@ -1014,7 +1014,7 @@ def documentimport(request):
     #data1["filenameA"], session = uploadDoc(request)
     #data1["filenameB"] = uploadDocList(request, session)
     data1["filenameA"], session = uploadDoc2(
-        request.POST,request.FILES,request.data['id'],request.data["agreeStatus"],request.data["sessionName"])
+        request.POST,request.FILES,request.data['id'],request.data["agreeStatus"],request.data["sessionName"],"Multiple files")
 
     data1["filenameB"] = uploadDocList2(
         request.POST,request.FILES,request.data['id'], session,request.data["agreeStatus"])
@@ -1266,7 +1266,7 @@ def FinalCheck(request):
 
 
 
-def uploadDoc2(PostData,FileData,ID,agreeStatus,sessionName):
+def uploadDoc2(PostData,FileData,ID,agreeStatus,sessionName,sessionType):
     content = None
    
     id = ID
@@ -1279,7 +1279,7 @@ def uploadDoc2(PostData,FileData,ID,agreeStatus,sessionName):
         file_name = file1.name.split(".")[0]  # doc
         extension = file1.name.split(".")[-1]  # abc
         content = file_name
-        session = DocumentSession(NumOfFile=1,SessionUser=id,SessionName=sessionName)
+        session = DocumentSession(NumOfFile=1,SessionUser=id,SessionName=sessionName,SessionType = sessionType)
         session.save()
         data = DataDocument(
             DataDocumentName=file_name,

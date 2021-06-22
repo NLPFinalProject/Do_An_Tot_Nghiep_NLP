@@ -5,37 +5,13 @@
   <section>
     <nz-form-item>
       <nz-form-control [nzOffset]="6" [nzSm]="14" [nzXs]="24">
-        <input
-          nz-input
-          type="text"
-          [placeholder]="'Organization' | translate"
-          id="organization"
-          formControlName="organization"
-        />
-      </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-      <nz-form-control [nzOffset]="6" [nzSm]="14" [nzXs]="24">
-        <input nz-input type="text" [placeholder]="'Address' | translate" id="address" formControlName="address" />
-      </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-      <nz-form-control [nzOffset]="6" [nzSm]="14" [nzXs]="24">
         <div nz-row [nzGutter]="8">
-          <div nz-col [nzSpan]="12">
+          <div nz-col [nzSpan]="24">
             <input
               nz-input
               [placeholder]="'EmailOrganization' | translate"
               formControlName="emailOrganization"
               id="emailOrganization"
-            />
-          </div>
-          <div nz-col [nzSpan]="12">
-            <input
-              nz-input
-              [placeholder]="'PhoneOrganization' | translate"
-              formControlName="phoneOrganization"
-              id="phoneOrganization"
             />
           </div>
         </div>
@@ -59,7 +35,7 @@
     <nz-form-item>
       <nz-form-control [nzOffset]="6" [nzSm]="14" [nzXs]="24">
         <div nz-row [nzGutter]="8">
-          <div nz-col [nzSpan]="12">
+          <div nz-col [nzSpan]="24">
             <input
               nz-input
               type="text"

@@ -76,9 +76,9 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
       var data = {
         email: this.registerForm.controls.email.value,
         emailOrganization: this.registerForm.controls.emailOrganization.value,
-        organization: this.registerForm.controls.organization.value,
-        address: this.registerForm.controls.address.value,
-        phoneOrganization: this.registerForm.controls.phoneOrganization.value,
+        //organization: this.registerForm.controls.organization.value,
+        //address: this.registerForm.controls.address.value,
+        //phoneOrganization: this.registerForm.controls.phoneOrganization.value,
 
         fullName: this.registerForm.controls.fullName.value,
         //userId: this.registerForm.controls.userId.value,
@@ -112,13 +112,16 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
       );
     }
   }
+  checkSpecialCharacter() {
+    var format = '';
+  }
 
   createdFrom(): void {
     this.registerForm = this.formBuilder.group({
       emailOrganization: [null, [Validators.email]],
-      organization: [null],
-      address: [null],
-      phoneOrganization: [null],
+      //organization: [null],
+      //address: [null],
+      //phoneOrganization: [null],
       email: [null, [Validators.email, Validators.required]],
       fullName: [null, [Validators.required]],
       //userId: [null],

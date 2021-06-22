@@ -13,6 +13,7 @@
         <th nzShowSort nzSortKey="Date">Ngày tải lên</th>
         <th>Tổng tệp tải lên</th>
         <th [nzFilters]="columnFilter.listOfFilter" [nzFilterFn]="columnFilter.filterFn">{{ columnFilter.name }}</th>
+        <th>Loại so sánh</th>
       </tr>
     </thead>
     <tbody>
@@ -40,6 +41,13 @@
           <td>
             <div *ngIf="data.Status == true">Tải lên thành công</div>
             <div *ngIf="data.Status == false">Đang tải</div>
+          </td>
+
+          <td>
+            <div *ngIf="!data.SessionType"></div>
+            <div *ngIf="data.SessionType">
+              {{ data.SessionType }}
+            </div>
           </td>
         </tr>
       </ng-template>

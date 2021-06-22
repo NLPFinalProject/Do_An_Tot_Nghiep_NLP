@@ -62,6 +62,7 @@ class DocumentSession(models.Model):
     Status = models.BooleanField(default=False) # bua sau thanh string
     SessionUser = models.IntegerField(default=0)
     SessionName = models.CharField(max_length=50, null=True)
+    SessionType =  models.CharField(max_length=30, null=True)
 
 
 class ReportDocument(models.Model):

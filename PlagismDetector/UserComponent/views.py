@@ -6,7 +6,8 @@ from rest_framework.parsers import JSONParser
 from rest_framework import status
 from django.core.mail import EmailMessage
 from UserComponent.models import User
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from UserComponent.serializers import UserSerializer
 from tkinter import *
 from tkinter import messagebox
@@ -29,18 +30,17 @@ class NewAPILogin(ObtainJSONWebToken):
         response = super().post(request, *args, **kwargs)
         
         try:
-            print("123")
-            print(request.data)
+           
             user = User.objects.get(username=  request.data['username'])
             #userStatus = UserSerializer(user)
-            print("4156")
+           
             userStatus = UserSerializer(user)
             
 
             user = userStatus.data
             
             
-            print("456")
+            
             if user['is_lock'] == True:
                 content = {'data': "Tài khoản đang bị khóa"}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
@@ -48,6 +48,7 @@ class NewAPILogin(ObtainJSONWebToken):
                 content = {'data': "Tài khoản chưa được kích hoạt"}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
             else:
+                print(request.user)
                 return response
         except:
             return response
@@ -287,8 +288,10 @@ def login(request):
     # In order to serialize objects, we must set 'safe=False'
 
 @api_view(('GET',))
+@permission_classes([IsAuthenticated])
 def Session(request):
     print(request.GET)
+
     content =None
     userId = request.GET['id']
     try:
@@ -321,6 +324,7 @@ def readSession(userId):
         temp["Date"] = sessionList[i].Date
         temp["SessionUser"] = sessionList[i].SessionUser
         temp["SessionName"] = sessionList[i].SessionName
+        temp["SessionType"] = sessionList[i].SessionType
         querys = DataDocument.objects.filter(
         DataDocumentAuthor=str(sessionList[i].SessionUser)) \
         .filter(SessionId=str(sessionList[i].id))
@@ -337,11 +341,7 @@ def readSession(userId):
 @api_view(['GET'])
 def GetProfile(request):
     try:
-        print('---------------------')
-    
-    
-        print(request.body)
-        print('---------------------')
+
         user = User.objects.get(username=  request.GET.get('username'))
         users =UserSerializer(user)
         return Response(users.data, status=status.HTTP_200_OK)

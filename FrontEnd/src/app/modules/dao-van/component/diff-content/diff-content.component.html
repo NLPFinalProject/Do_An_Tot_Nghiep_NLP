@@ -31,15 +31,8 @@
 >
   <tbody>
     <tr *ngFor="let temp of diffTable.data">
-      <td>
-        <span
-          class="changeText"
-          [ngClass]="[shouldHighlight2(temp.id) ? 'highlight' : '']"
-          id="{{ temp.id }}"
-          #{{temp.id}}
-        >
-          {{ temp.data }}.</span
-        >
+      <td [ngStyle]="{ 'background-color': shouldHighlight2(temp.id) ? '#f2f2f2' : '' }">
+        <span class="changeText" id="{{ temp.id }}" #{{temp.id}}> {{ temp.data }}.</span>
       </td>
     </tr>
   </tbody>

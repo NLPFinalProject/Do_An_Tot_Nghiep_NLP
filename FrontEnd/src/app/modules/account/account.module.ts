@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import { AccountComponent } from '.';
 import { AccountRoutingModule } from './account-routing.module';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { AuthInterceptor } from '../../core/authentication/authentication.service';
 const COMPONENT = [AccountComponent];
 const MODULE = [
   CommonModule,
@@ -16,6 +17,7 @@ const MODULE = [
   SharedModule,
   RouterModule,
   NzDropDownModule,
+  //AuthInterceptor
 ];
 @NgModule({
   declarations: [...COMPONENT],

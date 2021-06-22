@@ -30,6 +30,8 @@
     </tr>
   </tbody>
   <div *ngIf="flag">
-    <button (click)="gotoDetail()">{{ 'Go to detail' | translate }}</button>
+    <button nz-button class="w-50" nzType="primary" nzShape="omitted" class="middle" (click)="gotoDetail()">
+      {{ 'Go to detail' | translate }}
+    </button>
   </div>
 </nz-table>
