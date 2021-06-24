@@ -165,7 +165,7 @@ export class UploadDatabaseComponent implements OnInit {
             console.log(file);
             this.ListOfFile.push(file);
           } else {
-            this.ListOfFile = null;
+            this.ListOfFile = [];
             this.WarningSize();
           }
 

@@ -257,6 +257,7 @@ export class TeststepComponent implements OnInit {
       fileEntry.file((file: File) => {
         if (file.size > 10 * 1024 * 1024) {
           this.WarningSize();
+          this.files.splice(0);
         }
         // Here you can access the real file
         else {
@@ -281,9 +282,11 @@ export class TeststepComponent implements OnInit {
           // Here you can access the real file
           if (file.size <= 10 * 1024 * 1024) {
             console.log(file);
+
             this.ListOfFile.push(file);
           } else {
-            this.ListOfFile = null;
+            this.ListOfFile = [];
+            //this.fi
             this.WarningSize();
           }
 

@@ -13,7 +13,8 @@
         <th nzShowSort nzSortKey="Date">Ngày tải lên</th>
         <th>Tổng tệp tải lên</th>
         <th [nzFilters]="columnFilter.listOfFilter" [nzFilterFn]="columnFilter.filterFn">{{ columnFilter.name }}</th>
-        <th>Loại so sánh</th>
+
+        <th [nzFilters]="columnFilter2.listOfFilter" [nzFilterFn]="columnFilter2.filterFn">{{ columnFilter2.name }}</th>
       </tr>
     </thead>
     <tbody>

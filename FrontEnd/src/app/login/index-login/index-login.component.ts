@@ -41,6 +41,7 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
     private translateService: TranslateService
   ) {
     super(injector);
+
     this.createForm();
     this.loading = true;
     setTimeout(() => {
@@ -49,6 +50,7 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit() {
+    //to clear login data
     localStorage.clear();
   }
 

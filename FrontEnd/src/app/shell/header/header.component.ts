@@ -43,7 +43,6 @@ export class HeaderComponent implements OnInit {
   test() {
     console.log('here');
     return this.fileService.testform().subscribe((data) => {
-      console.log(data);
       this.router.navigate(['result'], { replaceUrl: true, state: { data: data } });
     });
   }
@@ -55,7 +54,6 @@ export class HeaderComponent implements OnInit {
     });
   }
   account() {
-    console.log('account pass');
     let id = localStorage.getItem('username');
     return this.userService.profile(id).subscribe((data) => {
       console.log(data);

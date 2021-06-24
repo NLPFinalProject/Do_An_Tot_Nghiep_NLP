@@ -43,24 +43,29 @@ export class ReportInputFileComponent implements OnInit {
       if (address[0] == 'success') {
         if (item.Status == true) {
           console.log(item.id);
-          console.log('meet requirement des after success');
+
           return true;
         }
       }
       if (address[0] == 'loading') {
         if (item.Status != true) {
-          console.log('is loading and meet status');
           return true;
         }
       }
       return false;
     },
   };
-  public ListOfFilter: NzTableFilterList = [
-    { text: 'Thành công', value: 'success' },
-    { text: 'Đang Tải', value: 'loading' },
-    { text: 'Thất bại', value: 'fail' },
-  ];
+  columnFilter2: ColumnItem = {
+    name: 'Loại so sánh',
+    listOfFilter: [
+      { text: 'Multiple files', value: 'Multiple files' },
+      { text: 'Database', value: 'Database' },
+      { text: 'Internet', value: 'Internet' },
+      { text: 'Database and Internet', value: ' Database and Internet' },
+    ],
+    filterFn: (TypeList: string[], item: any) => TypeList.indexOf(item.SessionType) !== -1,
+  };
+
   filterFn: NzTableFilterFn | null;
   loading = true;
   reportInputFile: ReportInputFileDto[] = [];
@@ -91,7 +96,6 @@ export class ReportInputFileComponent implements OnInit {
   //filterFn: (list: string, item: DataItem) => list.some(name => item.name.indexOf(name) !== -1)
 
   ngOnInit(): void {
-    this.ListOfFilter;
     this.userService.getSession(localStorage.getItem('id')).subscribe((data: any) => {
       console.log('this is new data');
       console.log(data);

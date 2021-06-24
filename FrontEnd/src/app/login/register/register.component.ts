@@ -6,6 +6,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MessageConstant } from '@app/shared';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from '@../../../src/app/login/user-authenticate-service';
+import { DatePickerService } from 'ng-zorro-antd/date-picker/date-picker.service';
+import { now } from 'lodash';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -112,8 +114,41 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
       );
     }
   }
-  checkSpecialCharacter() {
-    var format = '';
+  checkSpecialCharacter(str: string) {
+    var format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+
+    if (format.test(str)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  checkValidEmail(str: string) {
+    var format = /[ `!#$%^&*()_+\-=\[\]{};':"\\|,<>\/?~]/;
+
+    if (format.test(str)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  checkValidPhoneNumber(str: string) {
+    let isnum = /^\d+$/.test(str);
+    if (isnum) {
+      if (str.length < 9 || str.length > 12) {
+        return false;
+      }
+      return true;
+    }
+  }
+  checkValidBirthDate(date: string) {
+    var currentDate = new Date();
+    var checkDate = new Date(date);
+    if (currentDate < checkDate) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   createdFrom(): void {
@@ -131,7 +166,7 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
       phoneNumberPrefix: ['+84'],
       ngaySinh: [null, [Validators.required]],
       gioiTinh: [true],
-      //captcha: [null, [Validators.required]],
+      captcha: [null, [Validators.required]],
       agree: [false],
     });
   }
