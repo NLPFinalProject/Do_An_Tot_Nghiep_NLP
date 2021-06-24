@@ -60,6 +60,7 @@
           <div nz-col [nzSpan]="12">
             <nz-date-picker formControlName="ngaySinh" [nzFormat]="dateFormat"></nz-date-picker>
           </div>
+
           <div nz-col [nzSpan]="12">
             <label nz-checkbox formControlName="gioiTinh">
               <span> {{ 'Gender' | translate }}</span>
@@ -79,6 +80,7 @@
           </ng-template>
           <input formControlName="phoneNumber" [placeholder]="'Phone' | translate" id="'phoneNumber'" nz-input />
         </nz-input-group>
+
         <div ngxErrors="phoneNumber">
           <div *ngFor="let error of errors" [ngxError]="error.name" [when]="error.rules">
             <nz-form-explain translate class="errors">

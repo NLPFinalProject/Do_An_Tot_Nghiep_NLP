@@ -37,6 +37,10 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
     /** wait for refresh value */
     Promise.resolve().then(() => this.registerForm.controls.checkPassword.updateValueAndValidity());
   }
+  updatePhoneValidator(): void {
+    /** wait for refresh value */
+    Promise.resolve().then(() => this.registerForm.controls.phoneNumber.updateValueAndValidity());
+  }
 
   confirmationValidator = (control: FormControl): { [s: string]: boolean } => {
     if (!control.value) {
@@ -46,7 +50,25 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
     }
     return {};
   };
+  PhoneNumberValidator = (control: FormControl): { [s: string]: boolean } => {
+    if (!control.value) {
+      return { required: true };
+    } else if (!this.checkValidPhoneNumber(control.value)) {
+      return { confirm: true, error: true };
+    }
 
+    return {};
+  };
+  DateOfBirthValidator = (control: FormControl): { [s: string]: boolean } => {
+    if (!control.value) {
+      return { required: true };
+    } else if (!this.checkValidBirthDate(control.value)) {
+      console.log('die 1 million times you piece of shit');
+      return { confirm: true, error: true };
+    }
+    console.log('you fail???');
+    return {};
+  };
   //#endregion
 
   ngOnInit() {
@@ -134,6 +156,7 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
   }
   checkValidPhoneNumber(str: string) {
     let isnum = /^\d+$/.test(str);
+    console.log(isnum);
     if (isnum) {
       if (str.length < 9 || str.length > 12) {
         return false;
