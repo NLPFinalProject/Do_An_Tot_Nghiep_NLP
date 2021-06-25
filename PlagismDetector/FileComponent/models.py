@@ -12,7 +12,7 @@ class DataDocument(models.Model):
     DataDocumentName = models.CharField(max_length=1000)
     DataDocumentType = models.CharField(max_length=20)
     DataDocumentAuthor = models.ForeignKey(User, on_delete=models.CASCADE)
-    DataDocumentFile = models.FileField(upload_to='DocumentFile/',max_length=1000)
+    DataDocumentFile = models.FileField(upload_to='DocumentFile/', max_length=1000)
     SessionId = models.IntegerField(default=0)
     DocumentStatus = models.BooleanField(default=False)  # luu cau vao database
 
@@ -31,6 +31,7 @@ class DataDocument(models.Model):
 # class này k đưa vào database
 class DataDocumentFile(models.Model):
     DataDocumentFile = models.FileField(upload_to='DocumentFile/')
+
 
 # nội dung file được tách thành các câu
 # class ReportDocument(models.Model):
@@ -53,14 +54,17 @@ class DataDocumentContent(models.Model):
         indexes = [
             models.Index(fields=['DataDocumentNo', 'DataDocumentSentence'], name='DataDocumentNo_idx'),
             models.Index(fields=['DataDocumentSentence'], name='DataDocumentSentence_idx'),
-            ]
+        ]
 
 
 class DocumentSession(models.Model):
     NumOfFile = models.IntegerField(default=0)
     Date = models.DateTimeField(auto_now_add=True)
-    Status = models.BooleanField(default=False) # bua sau thanh string
+    Status = models.CharField(max_length=20,default="Loading")
     SessionUser = models.IntegerField(default=0)
+    SessionName = models.CharField(max_length=50, null=True)
+    SessionType = models.CharField(max_length=30, null=True)
+    ChildReport = models.IntegerField(default=0)
 
 
 class ReportDocument(models.Model):
