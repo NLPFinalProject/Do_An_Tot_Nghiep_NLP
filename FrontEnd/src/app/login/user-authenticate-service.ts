@@ -29,6 +29,24 @@ export class UserService {
     console.log(username);
     return this.http.get(`${this.baseUrl}/is-admin-user/`, { params: params });
   }
+  lockUser(data: string): Observable<Object> {
+    let params = new HttpParams().set('username', data);
+    //params.set("isAdmin",localStorage.getItem('isAdmin'));
+    //console.log(username);
+    return this.http.get(`${this.baseUrl}/lock-user`, { params: params });
+  }
+  unlockUser(data: string): Observable<Object> {
+    let params = new HttpParams().set('username', data);
+    //params.set("isAdmin",localStorage.getItem('isAdmin'));
+    //console.log(username);
+    return this.http.get(`${this.baseUrl}/unlock-user`, { params: params });
+  }
+  getUserList(data: any): Observable<Object> {
+    let params = new HttpParams().set('isAdmin', localStorage.getItem('isAdmin'));
+    //params.set("isAdmin",localStorage.getItem('isAdmin'));
+    //console.log(username);
+    return this.http.get(`${this.baseUrl}/get-user-list`, { params: params });
+  }
   ActivateUser(user: Object): Observable<Object> {
     return this.http.post(`${this.baseUrl}/activate`, user);
   }

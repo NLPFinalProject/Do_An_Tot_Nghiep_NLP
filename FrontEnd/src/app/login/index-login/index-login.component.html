@@ -66,7 +66,7 @@
             <i nz-icon [nzType]="'login'" theme="outline"></i> <span translate>Login</span>
           </button>
           <nz-form-explain *ngIf="isError" class="errors">
-            {{ 'Username or password incorrect.' | translate }}
+            {{ 'Login failed.' | translate }}
           </nz-form-explain>
         </nz-form-control>
       </nz-form-item>
@@ -88,13 +88,13 @@
           *ngIf="lang === 'vn-VN'"
           nzIcon="user"
           nzSrc="../../assets/Images/Login/icon/Vietnam-Flag-icon.png"
-          (click)="setLanguage(lang)"
+          (click)="setVNLanguage()"
         ></nz-avatar>
         <nz-avatar
           *ngIf="lang === 'en-US'"
           nzIcon="user"
           nzSrc="../../assets/Images/Login/icon/United-Kingdom-flag-icon.png"
-          (click)="setLanguage(lang)"
+          (click)="setENGLanguage()"
         >
         </nz-avatar>
       </ng-template>

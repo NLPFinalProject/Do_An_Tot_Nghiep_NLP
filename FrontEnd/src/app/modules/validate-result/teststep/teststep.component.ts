@@ -29,8 +29,9 @@ export class TeststepComponent implements OnInit {
   public files: NgxFileDropEntry[] = [];
   fileList: any[];
   public step1Unlock: boolean = false;
-
+  public changeNameStatus: boolean = false;
   public selectedOption: number;
+  sessionName: string = '';
   option: string;
 
   constructor(
@@ -67,7 +68,13 @@ export class TeststepComponent implements OnInit {
     }
     //this.step2Unlock=true;
   }
-
+  HandleSelectionChangeName(id: any) {
+    if (id == '1') {
+      this.changeNameStatus = true;
+    } else {
+      this.changeNameStatus = false;
+    }
+  }
   HandleSelectionSaveFileChange(isSave: string) {
     if (isSave == 'yes') {
       this.agreeStatus = true;
@@ -105,6 +112,7 @@ export class TeststepComponent implements OnInit {
       //let filename1 = localStorage.getItem('file');
       this.fileList = this.ListOfFile;
       console.log('choice is', choice);
+      console.log(this.sessionName);
       switch (choice) {
         case 1: {
           if (this.ListOfFile != null) {
@@ -112,14 +120,15 @@ export class TeststepComponent implements OnInit {
               id: id,
               filename1: this.FileToUpload,
               listfile: this.fileList,
-
+              sessionName: this.sessionName,
               agreeStatus: this.agreeStatus,
             };
             console.log(tempdata);
             this.fileService.checkPlagiasmNormal(tempdata).subscribe((data: any) => {
               console.log(data);
-              this.openDialog();
+              this.SuccessDialog();
             });
+            this.openDialog();
           } else {
             //add warning here
           }
@@ -134,7 +143,7 @@ export class TeststepComponent implements OnInit {
             id: id,
             filename1: this.FileToUpload,
             //listfile: this.fileList,
-
+            sessionName: this.sessionName,
             agreeStatus: this.agreeStatus,
           };
           this.fileService.checkPlagiasmUsingDatabase(tempdata).subscribe((data: any) => {
@@ -142,6 +151,7 @@ export class TeststepComponent implements OnInit {
             this.openDialog();
           });
           console.log(tempdata);
+          this.SuccessDialog();
           //this.openDialog();
           break;
         }
@@ -150,7 +160,7 @@ export class TeststepComponent implements OnInit {
             id: id,
             filename1: this.FileToUpload,
             //listfile: this.fileList,
-
+            sessionName: this.sessionName,
             agreeStatus: this.agreeStatus,
           };
           this.fileService.checkPlagiasmUsingInternet(tempdata).subscribe((data: any) => {
@@ -166,14 +176,17 @@ export class TeststepComponent implements OnInit {
             id: id,
             filename1: this.FileToUpload,
             //listfile: this.fileList,
-
+            sessionName: this.sessionName,
             agreeStatus: this.agreeStatus,
           };
-          // this.fileService.checkPlagiasmUsingAll2(tempdata).subscribe((data:any)=>{
-          //   console.log(data);
-          //   this.router.navigate(['checkresult/result'], { replaceUrl: true, state: { data: data } });
-          // })
+          this.fileService.checkPlagiasmUsingAll(tempdata).subscribe((data: any) => {
+            console.log(data);
+            this.SuccessDialog();
+            //this.router.navigate(['checkresult/result'], { replaceUrl: true, state: { data: data } });
+          });
+
           console.log(tempdata);
+          this.openDialog();
           break;
         }
       }
@@ -223,6 +236,12 @@ export class TeststepComponent implements OnInit {
       //data: {name: this.name, animal: this.animal}
     });
   }
+  SuccessDialog() {
+    const dialogRef = this.dialog.open(SuccessTransition, {
+      width: '250px',
+      //data: {name: this.name, animal: this.animal}
+    });
+  }
   handleChangeFileList(file: FileList): void {
     this.ListFileToUpload = file;
     this.isvalid = true;
@@ -238,6 +257,7 @@ export class TeststepComponent implements OnInit {
       fileEntry.file((file: File) => {
         if (file.size > 10 * 1024 * 1024) {
           this.WarningSize();
+          this.files.splice(0);
         }
         // Here you can access the real file
         else {
@@ -262,9 +282,11 @@ export class TeststepComponent implements OnInit {
           // Here you can access the real file
           if (file.size <= 10 * 1024 * 1024) {
             console.log(file);
+
             this.ListOfFile.push(file);
           } else {
-            this.ListOfFile = null;
+            this.ListOfFile = [];
+            //this.fi
             this.WarningSize();
           }
 
@@ -340,6 +362,23 @@ export class SuccessUploadDialog {
   templateUrl: 'warning-size-dialog.html',
 })
 export class WarningFileSizeDialog {
+  constructor(
+    public dialogRef: MatDialogRef<WarningFileSizeDialog>,
+
+    @Inject(MAT_DIALOG_DATA) public data: DialogData
+  ) {}
+
+  ConfirmClick(): void {
+    this.dialogRef.close();
+    // let value = localStorage.getItem('username');
+    // this.router.navigate(['daovan'], { replaceUrl: true, state: { user: value } });
+  }
+}
+@Component({
+  selector: 'success-validate-dialog',
+  templateUrl: 'success-validate-dialog.html',
+})
+export class SuccessTransition {
   constructor(
     public dialogRef: MatDialogRef<WarningFileSizeDialog>,
 

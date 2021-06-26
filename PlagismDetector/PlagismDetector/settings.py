@@ -75,6 +75,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        
         
         #'rest_framework.permissions.AllowAny',
         #'rest_framework.authentication.BasicAuthentication',
@@ -137,7 +140,7 @@ WSGI_APPLICATION = 'PlagismDetector.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'test5',
+        'NAME': 'test4',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': '127.0.0.1',

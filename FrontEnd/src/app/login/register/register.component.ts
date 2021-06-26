@@ -6,6 +6,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MessageConstant } from '@app/shared';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from '@../../../src/app/login/user-authenticate-service';
+import { DatePickerService } from 'ng-zorro-antd/date-picker/date-picker.service';
+import { now } from 'lodash';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -35,6 +37,10 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
     /** wait for refresh value */
     Promise.resolve().then(() => this.registerForm.controls.checkPassword.updateValueAndValidity());
   }
+  updatePhoneValidator(): void {
+    /** wait for refresh value */
+    Promise.resolve().then(() => this.registerForm.controls.phoneNumber.updateValueAndValidity());
+  }
 
   confirmationValidator = (control: FormControl): { [s: string]: boolean } => {
     if (!control.value) {
@@ -44,7 +50,25 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
     }
     return {};
   };
+  PhoneNumberValidator = (control: FormControl): { [s: string]: boolean } => {
+    if (!control.value) {
+      return { required: true };
+    } else if (!this.checkValidPhoneNumber(control.value)) {
+      return { confirm: true, error: true };
+    }
 
+    return {};
+  };
+  DateOfBirthValidator = (control: FormControl): { [s: string]: boolean } => {
+    if (!control.value) {
+      return { required: true };
+    } else if (!this.checkValidBirthDate(control.value)) {
+      console.log('die 1 million times you piece of shit');
+      return { confirm: true, error: true };
+    }
+    console.log('you fail???');
+    return {};
+  };
   //#endregion
 
   ngOnInit() {
@@ -76,12 +100,12 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
       var data = {
         email: this.registerForm.controls.email.value,
         emailOrganization: this.registerForm.controls.emailOrganization.value,
-        organization: this.registerForm.controls.organization.value,
-        address: this.registerForm.controls.address.value,
-        phoneOrganization: this.registerForm.controls.phoneOrganization.value,
+        //organization: this.registerForm.controls.organization.value,
+        //address: this.registerForm.controls.address.value,
+        //phoneOrganization: this.registerForm.controls.phoneOrganization.value,
 
         fullName: this.registerForm.controls.fullName.value,
-        userId: this.registerForm.controls.userId.value,
+        //userId: this.registerForm.controls.userId.value,
         password: this.registerForm.controls.password.value,
 
         phoneNumber: this.registerForm.controls.phoneNumber.value,
@@ -107,28 +131,65 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
           //this.notificationService.warning(MessageConstant.LoginFailed);
         },
         (error) => {
-          this.notificationService.error('Tài khoản đã bị được sử dụng');
+          this.notificationService.error('Tài khoản đã được sử dụng');
         }
       );
+    }
+  }
+  checkSpecialCharacter(str: string) {
+    var format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+
+    if (format.test(str)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  checkValidEmail(str: string) {
+    var format = /[ `!#$%^&*()_+\-=\[\]{};':"\\|,<>\/?~]/;
+
+    if (format.test(str)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  checkValidPhoneNumber(str: string) {
+    let isnum = /^\d+$/.test(str);
+    console.log(isnum);
+    if (isnum) {
+      if (str.length < 9 || str.length > 12) {
+        return false;
+      }
+      return true;
+    }
+  }
+  checkValidBirthDate(date: string) {
+    var currentDate = new Date();
+    var checkDate = new Date(date);
+    if (currentDate < checkDate) {
+      return false;
+    } else {
+      return true;
     }
   }
 
   createdFrom(): void {
     this.registerForm = this.formBuilder.group({
       emailOrganization: [null, [Validators.email]],
-      organization: [null],
-      address: [null],
-      phoneOrganization: [null],
+      //organization: [null],
+      //address: [null],
+      //phoneOrganization: [null],
       email: [null, [Validators.email, Validators.required]],
       fullName: [null, [Validators.required]],
-      userId: [null],
+      //userId: [null],
       password: [null, [Validators.required]],
       checkPassword: [null, [Validators.required, this.confirmationValidator]],
       phoneNumber: [null, [Validators.required]],
       phoneNumberPrefix: ['+84'],
       ngaySinh: [null, [Validators.required]],
       gioiTinh: [true],
-      //captcha: [null, [Validators.required]],
+      captcha: [null, [Validators.required]],
       agree: [false],
     });
   }

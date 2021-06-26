@@ -47,7 +47,7 @@ export class ForgotPasswordComponent extends AppComponentBase implements OnInit 
     }
     this.UserService.ForgotPassword(data).subscribe(
       (data) => {
-        this.notificationService.success(MessageConstant.RegisterSucssec);
+        this.notificationService.success('Đã gửi email thành công, vui lòng xác nhận email');
         this.isSend = true;
         setTimeout(() => {
           this.route.queryParams.subscribe((params) =>
@@ -58,7 +58,7 @@ export class ForgotPasswordComponent extends AppComponentBase implements OnInit 
       (error) => {
         this.errors = error;
         //this.notificationService.error("Tài khoản hoặc mật khẩu không chính xác");
-        this.showErrorNotification(`${MessageConstant.LoginFailed}`);
+        this.showErrorNotification(`Có lỗi xảy ra, vui lòng thử lại`);
       }
     );
   }

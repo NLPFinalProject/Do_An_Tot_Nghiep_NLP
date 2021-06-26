@@ -97,33 +97,28 @@ def databaseSearch(fileName1Sentence):
 def makeDataReadDoc(internetPage, userId):
     dataReadDoc = []
     successlink = []
-    for i in internetPage:
-        if ("123doc" in i):
-            internetPage.remove(i)
     for link in internetPage:
         try:
             if (internetKeywordSearch.is_downloadable(link)):
                 # link_pdf.append(link)
                 file_pdf = internetKeywordSearch.download_document(link)
-                fName, lstSentence, lstLength = p.preprocess(file_pdf)
+                file_preprocessed = p.preprocess(file_pdf)
                 data = DataDocument(
                     DataDocumentName=link,
                     DataDocumentAuthor_id=userId,
                     DataDocumentType="internetPdf",
-                    DataDocumentFile=fName
+                    DataDocumentFile=file_preprocessed[2]
                 )
                 data.save()
-                dataReadDoc.append(lstSentence)
+                dataReadDoc.append(file_preprocessed[0])
                 successlink.append(link)
-                length = len(lstSentence)
-                for i in range(length):
+                print("\nlink này thành công:=====\n",link)
+                for sentence in file_preprocessed[0]:
                     data.datadocumentcontent_set.create(
-                        DataDocumentSentence=lstSentence[i],
-                        DataDocumentSentenceLength=lstLength[i])
-
+                        DataDocumentSentence=sentence,
+                        DataDocumentSentenceLength=len(sentence))
                 os.remove(file_pdf)
             else:
-
                 lstSentence = internetKeywordSearch.crawl_web(link)
                 if lstSentence == None:
                     continue
@@ -136,11 +131,13 @@ def makeDataReadDoc(internetPage, userId):
                 data.save()
                 dataReadDoc.append(lstSentence)
                 successlink.append(link)
-                length = len(lstSentence)
-                for i in range(length):
+                print("\nlink này thành công:=====\n",link)
+                for sentence in lstSentence:
                     data.datadocumentcontent_set.create(
-                        DataDocumentSentence=lstSentence[i],
-                        DataDocumentSentenceLength=len(lstSentence[i]))
+                        DataDocumentSentence=sentence,
+                        DataDocumentSentenceLength=len(sentence))
+            if(len(dataReadDoc) >= 5):
+                break
         except:
             pass
     return dataReadDoc, successlink
@@ -168,10 +165,13 @@ def documentimportDatabase(request):
             request.POST, request.FILES, request.data['id'], request.data["agreeStatus"], request.data["sessionName"],
             "Database")
     except:
-        session = DocumentSession(NumOfFile=1, SessionUser=id, status="Fail")
+        session = DocumentSession(NumOfFile=1, SessionUser=id, Status="Fail")
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
     myDict, fileName1, userId = test1(data1, session)
+    if(myDict == None and fileName1==None and userId==None):
+        session = DocumentSession(NumOfFile=1, SessionUser=id, Status="Fail")
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
     jsonFile(myDict, fileName1, userId, session)
     jsonData = readJson(session, userId)
     session1 = DocumentSession.objects.get(pk=session)
@@ -179,9 +179,6 @@ def documentimportDatabase(request):
     session1.save()
     # mail.sendExportMailV2(request.data)
     sessionId = session1.id
-    a = DataDocument.objects.filter(DataDocumentAuthor_id=userId).filter(SessionId=sessionId)
-    b = a.filter(DocumentStatus=True)
-    print("--------------", userId, "\n", sessionId, "\n", a, "\n", b, "\n", len(a), "\n", len(b))
     mail.sendExportMailV2(request.data, sessionId)
     return Response(status=status.HTTP_200_OK)
 
@@ -197,7 +194,7 @@ def documentimportInternet(request):
             request.POST, request.FILES, request.data['id'], request.data["agreeStatus"], request.data["sessionName"],
             "Internet")
     except:
-        session = DocumentSession(NumOfFile=1, SessionUser=id, status="Fail")
+        session = DocumentSession(NumOfFile=1, SessionUser=id, Status="Fail")
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
     myDict, fileName1, userId = test2(data1, session)
     jsonFile(myDict, fileName1, userId, session)
@@ -222,7 +219,7 @@ def documentimportDatabaseInternet(request):
             request.POST, request.FILES, request.data['id'], request.data["agreeStatus"], request.data["sessionName"],
             "Database and internet")
     except:
-        session = DocumentSession(NumOfFile=1, SessionUser=id, status="Fail")
+        session = DocumentSession(NumOfFile=1, SessionUser=id, Status="Fail")
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
     # try catch status here here
@@ -268,7 +265,7 @@ def documentimport(request):
             request.POST, request.FILES, request.data['id'], request.data["agreeStatus"], request.data["sessionName"],
             "Multiple files")
     except:
-        session = DocumentSession(NumOfFile=1, SessionUser=id, status="Fail")
+        session = DocumentSession(NumOfFile=1, SessionUser=id, Status="Fail")
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
     data1["filenameB"] = uploadDocList2(
@@ -283,8 +280,6 @@ def documentimport(request):
     else:
         session1.Status = "Fail"
     session1.save()
-
-
     sessionId = session1.id
     mail.sendExportMailV2(request.data, sessionId)
     return Response(status=status.HTTP_200_OK)
@@ -304,9 +299,9 @@ def test1(data, session):
         .filter(SessionId=session)
     fetchQuery = querys[0].DataDocumentFile
     try:
-        fName, lstSentence, lstLength = p.preprocess(
+        file_preprocessed = p.preprocess(
             formatQuery('DocumentFile', os.path.basename(str(fetchQuery))))
-        fileName1Sentence = lstSentence
+        fileName1Sentence = file_preprocessed[0]
     except:
         return -1, -1, -1
 
@@ -378,20 +373,16 @@ def test2(data, session):
     fetchQuery = querys[0].DataDocumentFile
     # return tag preprocess
     try:
-        fName, lstSentence, lstLength = p.preprocess(
+        file_preprocessed = p.preprocess(
             formatQuery('DocumentFile', os.path.basename(str(fetchQuery))))
-        fileName1Sentence = lstSentence
+        fileName1Sentence = file_preprocessed[0]
     except:
-        return -1, -1, -1
+        return None, None, None
 
     # internet search
-    internetPage = internetKeywordSearch.get_link(
-        tagPage, fName, lstSentence, lstLength)
-    if (len(internetPage) > numPageSearch):
-        internetPage = internetPage[:numPageSearch]
-    print("Link: ", internetPage)
+    internetPage = internetKeywordSearch.get_link(file_preprocessed[0],file_preprocessed[1])
+    print("link tìm được là: ", internetPage)
     dataReadDoc, sucessLink = makeDataReadDoc(internetPage, userId)
-
     # B2 trả json
     reportDataReadDoc = []
     fileRatio = []
@@ -406,9 +397,9 @@ def test2(data, session):
     myDict["ListAllFile"].append(fileName1)
     myDict["ListAllFile"].extend(sucessLink)
 
-    myDict4 = makeData(len(internetPage), dataReadDoc, reportDataReadDoc)
+    myDict4 = makeData(len(sucessLink), dataReadDoc, reportDataReadDoc)
 
-    listFileName = internetPage
+    listFileName = sucessLink
     myDict["ListFileName"] = listFileName
     myDict["File1Name"] = fileName1
     myDict["ListFile"] = myDict4
@@ -447,9 +438,9 @@ def test3(data, session):
         .filter(SessionId=session)
     fetchQuery = querys[0].DataDocumentFile
     try:
-        fName, lstSentence, lstLength = p.preprocess(
+        file_preprocessed = p.preprocess(
             formatQuery('DocumentFile', os.path.basename(str(fetchQuery))))
-        fileName1Sentence = lstSentence
+        fileName1Sentence = file_preprocessed[0]
     except:
         return -1, -1, -1
 
@@ -466,9 +457,9 @@ def test3(data, session):
                 .filter(DataDocumentType=fileUName.split(".")[1]) \
                 .filter(SessionId=session)
             fetchQuery = querys[0].DataDocumentFile
-            fName, lstSentence, lstLength = p.preprocess(
+            file_preprocessed = p.preprocess(
                 formatQuery('DocumentFile', os.path.basename(str(fetchQuery))))
-            lst2 = lstSentence
+            lst2 = file_preprocessed[0]
             dataReadDoc.append(lst2)
             successFile.append(fileUName)
             a = DocumentSession.objects.get(pk=session)
@@ -566,18 +557,18 @@ def uploadDoc2(PostData, FileData, ID, agreeStatus, sessionName, sessionType):
         # agreeStatus = FileName if true, =0 if false
         if (agreeStatus):
 
-            fName, lstSentence, lstLength = p.preprocess(
+            file_preprocessed = p.preprocess(
                 formatString(
                     'DocumentFile',
                     data.DataDocumentName,
                     data.DataDocumentType))
 
             # //save to db//
-            length = len(lstSentence)
+            length = len(file_preprocessed[0])
             for i in range(length):
                 a = data.datadocumentcontent_set.create(
-                    DataDocumentSentence=lstSentence[i],
-                    DataDocumentSentenceLength=lstLength[i])
+                    DataDocumentSentence=file_preprocessed[0][i],
+                    DataDocumentSentenceLength=len(file_preprocessed[0][i]))
         result = file_name + '.' + extension
         content = {'filename': file1}
         return result, session.id
@@ -616,17 +607,17 @@ def uploadDocListRequest(request):
 
         data.save()
 
-        fName, lstSentence, lstLength = p.preprocess(
+        file_preprocessed = p.preprocess(
             formatString(
                 'DocumentFile',
                 data.DataDocumentName,
                 data.DataDocumentType))
         # //save to db//
-        length = len(lstSentence)
+        length = len(file_preprocessed[0])
         for i in range(length):
             data.datadocumentcontent_set.create(
-                DataDocumentSentence=lstSentence[i],
-                DataDocumentSentenceLength=lstLength[i])
+                DataDocumentSentence=file_preprocessed[0][i],
+                DataDocumentSentenceLength=len(file_preprocessed[0][i]))
     response = {'data': filenameList}
     return Response(response, status=status.HTTP_200_OK)
 
@@ -660,17 +651,17 @@ def uploadDocList2(PostData, FileData, ID, session, agreeStatus):
             )
             data.save()
             if (agreeStatus):
-                fName, lstSentence, lstLength = p.preprocess(
+                file_preprocessed = p.preprocess(
                     formatString(
                         'DocumentFile',
                         data.DataDocumentName,
                         data.DataDocumentType))
                 # //save to db//
-                length = len(lstSentence)
+                length = len(file_preprocessed[0])
                 for i in range(length):
                     data.datadocumentcontent_set.create(
-                        DataDocumentSentence=lstSentence[i],
-                        DataDocumentSentenceLength=lstLength[i])
+                        DataDocumentSentence=file_preprocessed[0][i],
+                        DataDocumentSentenceLength=len(file_preprocessed[0][i]))
         except:
             pass
     response = {'data': filenameList}
@@ -725,18 +716,17 @@ def uploadDocumentSentenceToDatabase(request):
             data.save()
             # data= form1.save(commit = False)
 
-            fName, lstSentence, lstLength = p.preprocess(
+            file_preprocessed = p.preprocess(
                 formatString(
                     'DocumentFile',
                     data.DataDocumentName,
                     data.DataDocumentType))
             # //save to db//
-            length = len(lstSentence)
+            length = len(file_preprocessed[0])
             for i in range(length):
                 data.datadocumentcontent_set.create(
-                    DataDocumentSentence=lstSentence[i],
-                    DataDocumentSentenceLength=lstLength[i]
-                )
+                    DataDocumentSentence=file_preprocessed[0][i],
+                    DataDocumentSentenceLength=len(file_preprocessed[0][i]))
             result = file_name + '.' + extension
             res = result
             content = {'filename': file1}
@@ -781,17 +771,17 @@ def uploadMultipleDocumentSentenceToDatabase(request):
             )
             data.save()
 
-            fName, lstSentence, lstLength = p.preprocess(
+            file_preprocessed = p.preprocess(
                 formatString(
                     'DocumentFile',
                     data.DataDocumentName,
                     data.DataDocumentType))
             # //save to db//
-            length = len(lstSentence)
+            length = len(file_preprocessed[0])
             for i in range(length):
                 data.datadocumentcontent_set.create(
-                    DataDocumentSentence=lstSentence[i],
-                    DataDocumentSentenceLength=lstLength[i]
+                    DataDocumentSentence=file_preprocessed[0][i],
+                    DataDocumentSentenceLength=len(file_preprocessed[0][i])
                 )
 
         response = {'data': filenameList}
@@ -853,8 +843,8 @@ def readJson(session, userId):
 def readJsonRequest(request):
     if request.method == 'POST':
         try:
-            print(request.data['id'])
-            print(request.data["sessionId"])
+            #print(request.data['id'])
+            #print(request.data["sessionId"])
             session = request.data['sessionId']
             userId = request.data['id']
             temp = DataDocument.objects.filter(DataDocumentAuthor=str(userId)) \
@@ -887,5 +877,10 @@ def readJsonRequest(request):
         # os.remove(fileJson.name)
         print("report data là: ", reportData)
         return Response(reportData, status=status.HTTP_200_OK)
+
+
+
+
+
 
 

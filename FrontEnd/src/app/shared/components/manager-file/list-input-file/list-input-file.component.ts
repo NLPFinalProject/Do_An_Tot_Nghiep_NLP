@@ -21,7 +21,7 @@ export class ListInputFileComponent implements OnInit {
   isvalid: boolean = false;
   flag = false;
   msg: NzMessageService;
-  userData: any;
+  userData: any = 0;
   sortValue: any = null;
   sortName: any = null;
   listOfSearchName: any = [];
@@ -31,24 +31,8 @@ export class ListInputFileComponent implements OnInit {
   FileToUpload: File = null;
   ListFileToUpload: FileList = null;
   newDataList = Array<any>();
-  data = [
-    {
-      name: 'Hoàn thiện các giải pháp QLNN đối với các hoạt động tôn giáo ở Việt Nam trong thời kỳ đổi mới.docx',
-      status: 'Thất bại',
-    },
-    {
-      name: 'Quản lý nhà nước đối với tập đoàn kinh tế tư nhân ở Việt Nam hiện nay.pdf',
-      status: 'Chờ',
-    },
-    {
-      name: 'Quản lý nhà nước về văn thư, lưu trữ.docx',
-      status: 'Thất bại',
-    },
-    {
-      name: 'Quản lý nhà nước về quy hoạch xây dựng nông thôn mới.docx',
-      status: 'Thành công',
-    },
-  ];
+  data = Array<any>();
+
   fileList: Array<object> = [];
   constructor(
     private messageService: MessageService,
@@ -61,6 +45,7 @@ export class ListInputFileComponent implements OnInit {
     this.fileService;
     this.sessionToHistory.sendListFile.subscribe((data: any) => {
       console.log(data);
+      console.log('yeah yeah yeah');
       this.PushDataToDisplayData(data);
       this.displayData = [...this.newDataList];
     });
@@ -68,13 +53,14 @@ export class ListInputFileComponent implements OnInit {
   }
   gotoDetail() {
     console.log('begin');
-    this.fileService.getResult(this.userData).subscribe((data: any) => {
-      console.log(data);
-      console.log('win');
-      console.log(this.userData);
-      //this.router.navigate([],{'data':data})
-      this.router.navigate(['daovan/' + this.userData], { replaceUrl: true, state: { data: data } });
-    });
+    this.router.navigate(['daovan/' + this.userData], { replaceUrl: true });
+    // this.fileService.getResult(this.userData).subscribe((data: any) => {
+    //   console.log(data);
+    //   console.log('win');
+    //   console.log(this.userData);
+    //   //this.router.navigate([],{'data':data})
+    //   this.router.navigate(['daovan/' + this.userData], { replaceUrl: true, state: { data: data } });
+    // });
   }
   PushDataToDisplayData(data: any) {
     this.flag = true;
@@ -98,6 +84,8 @@ export class ListInputFileComponent implements OnInit {
     }, number);
   }
   sort(sort: { key: string; value: string }): void {
+    console.log(sort);
+    console.log('why am I here, just to suffer?');
     this.sortName = sort.key;
     this.sortValue = sort.value;
     this.search();

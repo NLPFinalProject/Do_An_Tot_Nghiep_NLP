@@ -1,21 +1,34 @@
 <br />
-<h5><b>Lịch sử tải lên</b></h5>
+<h5>
+  <b>{{ 'History' | translate }} </b>
+</h5>
 <br />
 
 <div class="gutter-box">
-  <nz-table [nzData]="displayData" [nzLoading]="loading" [nzPageSize]="10">
+  <nz-table #filterTable [nzData]="displayData" [nzLoading]="loading" [nzPageSize]="10">
     <thead (nzSortChange)="sort($event)" nzSingleSort>
       <tr>
         <th nzShowExpand></th>
-        <th nzShowSort nzSortKey="createdDate">Ngày tải lên</th>
+        <th>Tên phiên</th>
+        <th nzShowSort nzSortKey="Date">Ngày tải lên</th>
         <th>Tổng tệp tải lên</th>
-        <th>Trạng thái</th>
+        <th [nzFilters]="columnFilter.listOfFilter" [nzFilterFn]="columnFilter.filterFn">{{ columnFilter.name }}</th>
+
+        <th [nzFilters]="columnFilter2.listOfFilter" [nzFilterFn]="columnFilter2.filterFn">{{ columnFilter2.name }}</th>
       </tr>
     </thead>
     <tbody>
-      <ng-template ngFor let-data [ngForOf]="displayData">
-        <tr (click)="Warning(data.id)">
+      <ng-template ngFor let-data [ngForOf]="filterTable.data">
+        <tr (click)="Warning(data)">
           <td></td>
+          <td>
+            <div *ngIf="data.SessionName">
+              {{ data.SessionName }}
+            </div>
+            <div *ngIf="!data.SessionName">
+              {{ data.id }}
+            </div>
+          </td>
           <td>
             <b>{{ data.Date | date: 'medium' }}</b>
           </td>
@@ -29,6 +42,13 @@
           <td>
             <div *ngIf="data.Status == true">Tải lên thành công</div>
             <div *ngIf="data.Status == false">Đang tải</div>
+          </td>
+
+          <td>
+            <div *ngIf="!data.SessionType"></div>
+            <div *ngIf="data.SessionType">
+              {{ data.SessionType }}
+            </div>
           </td>
         </tr>
       </ng-template>

@@ -59,6 +59,7 @@ export class FileService {
     formData.append('agreeStatus', data.agreeStatus);
     formData.append('id', data.id);
     formData.append('DataDocumentFile', data.filename1);
+    formData.append('sessionName', data.sessionName);
     let file = data.listfile;
     for (var i = 0; i < file.length; i++) {
       let temp = file[i];
@@ -81,7 +82,7 @@ export class FileService {
     formData.append('id', data.id);
 
     formData.append('agreeStatus', data.agreeStatus);
-
+    formData.append('sessionName', data.sessionName);
     formData.append('DataDocumentFile', data.filename1);
 
     return this.http.post(`${this.baseUrl}/api/file/checkdatabase`, formData);
@@ -94,7 +95,7 @@ export class FileService {
     formData.append('id', data.id);
 
     formData.append('agreeStatus', data.agreeStatus);
-
+    formData.append('sessionName', data.sessionName);
     formData.append('DataDocumentFile', data.filename1);
 
     return this.http.post(`${this.baseUrl}/api/file/checkdatabaseinternet`, formData);
@@ -105,7 +106,7 @@ export class FileService {
     const formData: FormData = new FormData();
 
     formData.append('id', data.id);
-
+    formData.append('sessionName', data.sessionName);
     formData.append('agreeStatus', data.agreeStatus);
 
     formData.append('DataDocumentFile', data.filename1);
@@ -162,7 +163,7 @@ export class FileService {
     for (var i = 0; i < file.length; i++) {
       let temp = file[i];
 
-      formData.append('DataDocumentFile', temp);
+      formData.append('DataDocumentFileList', temp);
       //formData.append('title', temp.name);
 
       console.log(temp.name);

@@ -6,7 +6,8 @@ from rest_framework.parsers import JSONParser
 from rest_framework import status
 from django.core.mail import EmailMessage
 from UserComponent.models import User
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from UserComponent.serializers import UserSerializer
 from tkinter import *
 from tkinter import messagebox
@@ -20,6 +21,43 @@ from rest_framework.authentication import TokenAuthentication
 from MailComponent import views as mail
 from FileComponent.models import DocumentSession,DataDocument
 import random as rand
+from rest_framework_jwt.views import obtain_jwt_token as obtainToken
+from rest_framework_jwt.views import ObtainJSONWebToken,JSONWebTokenSerializer
+
+class NewAPILogin(ObtainJSONWebToken):
+    def post(self, request, *args, **kwargs):
+        content = None
+        response = super().post(request, *args, **kwargs)
+        
+        try:
+           
+            user = User.objects.get(username=  request.data['username'])
+            #userStatus = UserSerializer(user)
+           
+            userStatus = UserSerializer(user)
+            
+
+            user = userStatus.data
+            
+            
+            
+            if user['is_lock'] == True:
+                content = {'data': "Tài khoản đang bị khóa"}
+                return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            elif user['is_active'] == False:
+                content = {'data': "Tài khoản chưa được kích hoạt"}
+                return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                print(request.user)
+                return response
+        except:
+            return response
+        
+        """return Response({
+            'token': token.key,
+            'user_id': user.pk,
+            'email': user.email
+        })"""
 
 @api_view([ 'POST'])
 #@permission_classes ( (AllowAny, ))
@@ -30,7 +68,6 @@ def register(request):
     try:
         user = User.objects.get(username = request.data["email"])
         content = {'data': 'username is existed'}
-        print("ddaij gi do")
         return Response(content, status=status.HTTP_400_BAD_REQUEST)
         
     except ObjectDoesNotExist:
@@ -42,15 +79,14 @@ def register(request):
         phone = request.data["phoneNumber"],
         is_active = False,
         DateOfBirth = request.data["ngaySinh"])
-        #number = mail.sendVerificationMail(request.data["email"])
-        #user.set_password(user.password)
+        number = mail.sendVerificationMail(request.data["email"])
         user.set_password(user.password)
         user.save()
+        
         users = UserSerializer(user)
         users.data.key = '1243'
         print(users.data)
-        #print(number)
-        number = mail.sendVerificationMail(request.data["email"])
+        print(number)
         response = {'data' : users.data,'validCode' : number}
         return JsonResponse(response,status = status.HTTP_200_OK)
     #else:
@@ -117,6 +153,9 @@ def APIUser(request):
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
         
 
+    
+    
+
 @api_view([ 'GET','POST'])
 def isAdmin(request):
     #if(request.data not None)
@@ -151,10 +190,9 @@ def ActivateUser(request):
 def ResetPassword(request):
     #if(request.data not None)
     try:
-        print(request.data)
+        
         user = User.objects.get(username = request.data["username"])
-        print(user.username)
-        print(user.password)
+        
         flag = user.check_password(request.data['password'])
         if flag==False:
             
@@ -186,13 +224,50 @@ def ForgetPassword(request):
     email.send()
     content =''
     return HttpResponse(status=status.HTTP_200_OK)
-
+@api_view([ 'POST','GET'])
+def UserList(request):
+    userList=User.objects.all()
     
+    users = []
+    for user in userList:
+        newUser  = UserSerializer(user)
+        users.append(newUser.data)
+    content = {"users":users}
+    print(content)
+    #idFile=temp[0].id
+    #data=
+    
+    return Response(content, status=status.HTTP_200_OK)  
+@api_view([ 'POST','GET']) 
+def lockUser(request):
+    """for admin, fix later
+    isAdmin = request.GET('isAdmin')
+    if isAdmin == False
+    return HttpResponse(status=status=status.HTTP_400_BAD_REQUEST)
+    """
+    username = request.GET['username']
+    user = User.objects.get(username = username)
+    # if statement
+    user.is_lock=TRUE
+    user.save()
+    return HttpResponse(status=status.HTTP_200_OK)
+@api_view([ 'POST','GET']) 
+def unlockUser(request):
+    """for admin, fix later
+    isAdmin = request.GET('isAdmin')
+    if isAdmin == False
+    return HttpResponse(status=status=status.HTTP_400_BAD_REQUEST)
+    """
+    username = request.GET['username']
+    user = User.objects.get(username = username)
+    # if statement
+    user.is_lock=False
+    user.save()
+    return HttpResponse(status=status.HTTP_200_OK)
 @api_view(['POST'])
 def login(request):
     content = None
-    print(request.data["username"])
-    print(request.data["password"])
+    
     
     try:
         user = User.objects.get(username = request.data["username"])
@@ -213,8 +288,10 @@ def login(request):
     # In order to serialize objects, we must set 'safe=False'
 
 @api_view(('GET',))
+@permission_classes([IsAuthenticated])
 def Session(request):
     print(request.GET)
+
     content =None
     userId = request.GET['id']
     try:
@@ -246,6 +323,8 @@ def readSession(userId):
         temp["NumOfFile"]= sessionList[i].NumOfFile
         temp["Date"] = sessionList[i].Date
         temp["SessionUser"] = sessionList[i].SessionUser
+        temp["SessionName"] = sessionList[i].SessionName
+        temp["SessionType"] = sessionList[i].SessionType
         querys = DataDocument.objects.filter(
         DataDocumentAuthor=str(sessionList[i].SessionUser)) \
         .filter(SessionId=str(sessionList[i].id))
@@ -262,11 +341,7 @@ def readSession(userId):
 @api_view(['GET'])
 def GetProfile(request):
     try:
-        print('---------------------')
-    
-    
-        print(request.body)
-        print('---------------------')
+
         user = User.objects.get(username=  request.GET.get('username'))
         users =UserSerializer(user)
         return Response(users.data, status=status.HTTP_200_OK)

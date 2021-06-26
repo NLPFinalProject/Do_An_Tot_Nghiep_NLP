@@ -33,7 +33,10 @@ export class SectionDiffComponent implements OnInit {
   ngOnInit(): void {
     this.getData();
   }
-
+  ngOnChanges() {
+    //this.childFunction()
+    this.getData();
+  }
   getData(): void {
     const number = Math.floor(Math.random() * 100);
     setTimeout(() => {

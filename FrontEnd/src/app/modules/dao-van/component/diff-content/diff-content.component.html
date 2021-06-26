@@ -9,12 +9,10 @@
 >
   <tbody>
     <tr *ngFor="let temp of filterTable.data">
-      <td>
+      <td [ngStyle]="{ 'background-color': shouldHighlight(temp.id) ? '#f2f2f2' : '' }">
         <div>
-          <a (click)="triggerScrollToV(temp.id)"
-            ><span class="changeText" [ngClass]="[shouldHighlight(temp.id) ? 'highlight' : '']"
-              >{{ temp.data }}.</span
-            ></a
+          <a (click)="triggerScrollTo(temp.id)"
+            ><span>{{ temp.data }}.</span></a
           >
         </div>
       </td>
@@ -33,15 +31,8 @@
 >
   <tbody>
     <tr *ngFor="let temp of diffTable.data">
-      <td>
-        <span
-          class="changeText"
-          [ngClass]="[shouldHighlight2(temp.id) ? 'highlight' : '']"
-          id="{{ temp.id }}"
-          #{{temp.id}}
-        >
-          {{ temp.data }}.</span
-        >
+      <td [ngStyle]="{ 'background-color': shouldHighlight2(temp.id) ? '#f2f2f2' : '' }">
+        <span class="changeText" id="{{ temp.id }}" #{{temp.id}}> {{ temp.data }}.</span>
       </td>
     </tr>
   </tbody>

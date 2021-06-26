@@ -90,67 +90,38 @@ export class DaoVanDetailComponent implements OnInit {
       ls2: null,
       ls3: null,
     };
-    this.activatedRoute.queryParams.subscribe((params) => {
-      console.log('new file');
-      console.log(params);
+    this.activatedRoute.queryParams.subscribe(
+      (params) => {
+        console.log('new file');
+        console.log(params);
 
-      this.params = params;
-      if (params.filename1 == undefined && params.File1Name == undefined) {
-        console.log('false');
-        console.log(this.router.getCurrentNavigation());
-        if (this.router.getCurrentNavigation().extras.state != null) {
-          this.data1 = this.router.getCurrentNavigation().extras.state.data;
-          console.log(this.data1);
-          console.log('end here');
-          this.file1Name = this.data1.File1Name;
-          this.FileList2 = [];
-          for (var i = 0; i < this.data1.ListFileName.length; i++) {
-            let temp = {
-              name: this.data1.ListFileName[i],
-              ratio: this.data1.AllFileRatio[i],
-            };
-            this.FileList2.push(temp);
-          }
+        this.params = params;
+        if (params.filename1 == undefined && params.File1Name == undefined) {
+          console.log('false');
+          console.log(this.router.getCurrentNavigation());
+          if (this.router.getCurrentNavigation().extras.state != null) {
+          } else {
+            if (this.params.file1Name != undefined) {
+              console.log(this.params.File1Name);
+              this.file1Name = this.params.File1Name;
+              this.FileList2 = this.params.fileList2;
+              this.ListAllFile = this.params.ListAllFile;
+              this.file1 = this.params.file1;
+              this.stt = this.params.stt;
 
-          this.ListAllFile = this.data1.ListAllFile;
-          this.file1 = this.data1.data;
-          this.stt = this.data1.stt;
+              this.data1 = this.params.data;
+              console.log('true');
+              console.log(this.ListAllFile);
+              let temp = [];
+              this.dataForDiff = {
+                file1: this.file1,
+                data: this.data1,
+                stt: this.stt,
+              };
 
-          //this.data1 = this.params.data;
+              temp.push(this.params.listfile);
 
-          console.log(this.ListAllFile);
-          let temp = [];
-          this.dataForDiff = {
-            file1: this.data1.file1,
-
-            ListFile: this.data1.ListFile,
-          };
-          console.log('this is new data for diff');
-          console.log(this.dataForDiff);
-        } else {
-          console.log('different escape');
-          if (this.params.file1Name != undefined) {
-            console.log(this.params.File1Name);
-            this.file1Name = this.params.File1Name;
-            this.FileList2 = this.params.fileList2;
-            this.ListAllFile = this.params.ListAllFile;
-            this.file1 = this.params.file1;
-            this.stt = this.params.stt;
-
-            this.data1 = this.params.data;
-            console.log('true');
-            console.log(this.ListAllFile);
-            let temp = [];
-            this.dataForDiff = {
-              file1: this.file1,
-              data: this.data1,
-              stt: this.stt,
-            };
-            console.log('this is new data for diff');
-            console.log(this.dataForDiff);
-            temp.push(this.params.listfile);
-
-            /*let data = {
+              /*let data = {
             id: this.params.id,
             filename1: this.params.filename1,
             listfile: temp,
@@ -170,15 +141,19 @@ export class DaoVanDetailComponent implements OnInit {
             },
             (error) => {}
           );*/
-          } else {
-            console.log('dieeeeeeeeeeeeeeeeeee');
+            } else {
+              console.log('dieeeeeeeeeeeeeeeeeee');
 
-            this.safetyFlag = false;
+              this.safetyFlag = false;
+            }
           }
         }
+        // Print the parameter to the console.
+      },
+      (error) => {
+        this.router.navigate(['daovan'], {});
       }
-      // Print the parameter to the console.
-    });
+    );
   }
 
   ngOnInit() {
@@ -187,34 +162,41 @@ export class DaoVanDetailComponent implements OnInit {
         console.log(params); //log the entire params object
         console.log(params['id']); //log the value of id
         let data = Number(params['id']);
-        this.fileService.getResult(data).subscribe((data: any) => {
-          this.data1 = data;
-          this.file1Name = this.data1.File1Name;
-          this.FileList2 = [];
-          for (var i = 0; i < this.data1.ListFileName.length; i++) {
-            let temp = {
-              name: this.data1.ListFileName[i],
-              ratio: this.data1.AllFileRatio[i],
+        this.fileService.getResult(data).subscribe(
+          (data: any) => {
+            console.log('end loading');
+            console.log(data);
+            this.data1 = data;
+            this.file1Name = this.data1.File1Name;
+            this.FileList2 = [];
+            for (var i = 0; i < this.data1.ListFileName.length; i++) {
+              let temp = {
+                name: this.data1.ListFileName[i],
+                ratio: this.data1.AllFileRatio[i],
+              };
+              this.FileList2.push(temp);
+            }
+
+            this.ListAllFile = this.data1.ListAllFile;
+            this.file1 = this.data1.data;
+            this.stt = this.data1.stt;
+
+            //this.data1 = this.params.data;
+
+            console.log(this.ListAllFile);
+            let temp = [];
+            this.dataForDiff = {
+              file1: this.data1.file1,
+
+              ListFile: this.data1.ListFile,
             };
-            this.FileList2.push(temp);
+            console.log('this is new data for diff');
+            console.log(this.dataForDiff);
+          },
+          (error) => {
+            this.router.navigate(['daovan'], {});
           }
-
-          this.ListAllFile = this.data1.ListAllFile;
-          this.file1 = this.data1.data;
-          this.stt = this.data1.stt;
-
-          //this.data1 = this.params.data;
-
-          console.log(this.ListAllFile);
-          let temp = [];
-          this.dataForDiff = {
-            file1: this.data1.file1,
-
-            ListFile: this.data1.ListFile,
-          };
-          console.log('this is new data for diff');
-          console.log(this.dataForDiff);
-        });
+        );
       });
     }
 

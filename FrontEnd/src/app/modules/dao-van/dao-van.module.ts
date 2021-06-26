@@ -12,6 +12,7 @@ import { SectionDiffComponent } from './component/section-diff/section-diff.comp
 import { ListFileDiffComponent } from './component/list-file-diff/list-file-diff.component';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
+import { TranslateModule } from '@ngx-translate/core';
 import { DaovanServiceService } from './daovan-service.service';
 const COMPONENT = [DaoVanControlComponent, DaoVanDetailComponent, DaoVanComponent];
 const MODULE = [
@@ -22,6 +23,7 @@ const MODULE = [
   RouterModule,
   NzDropDownModule,
   ScrollToModule,
+  TranslateModule,
 ];
 @NgModule({
   declarations: [

@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^checkdatabaseinternet', csrf_exempt(views.documentimportDatabaseInternet)),
     url(r'^checkdatabase', csrf_exempt(views.documentimportDatabase)),
     url(r'^final-check', csrf_exempt(views.FinalCheck)),
+    url(r'^uploadfilelist', csrf_exempt(views.uploadDocListRequest)),
     url(r'^checkinternet', csrf_exempt(views.documentimportInternet)),
     url(r'^getjsonresult', csrf_exempt(views.readJsonRequest)),
     #url(r'^checkdatabaseinternet', csrf_exempt(views.documentimportDatabaseInternet)),

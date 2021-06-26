@@ -7,9 +7,10 @@ import { CommonConstant, MessageConstant } from '@app/shared';
 import { RoutingConstant } from '@app/shared/commons/routing.constant';
 import { environment } from '@env/environment';
 import { finalize } from 'rxjs/operators';
-
+import { TranslateService } from '@ngx-translate/core';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { UserService } from '@../../../src/app/login/user-authenticate-service';
+import { lang } from 'moment';
 
 const log = new Logger('Login');
 
@@ -36,9 +37,11 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
     private formBuilder: FormBuilder,
     private i18nService: I18nService,
     private authenticationService: AuthenticationService,
-    private UserService: UserService
+    private UserService: UserService,
+    private translateService: TranslateService
   ) {
     super(injector);
+
     this.createForm();
     this.loading = true;
     setTimeout(() => {
@@ -46,7 +49,10 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
     }, 1000);
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    //to clear login data
+    localStorage.clear();
+  }
 
   optionAccount(value: boolean): void {
     this.optionAccounts = value === true ? 'Client' : 'Administator';
@@ -116,10 +122,6 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
             console.log(this.loginForm.controls.username.value);
             this.UserService.isAdmin(this.loginForm.controls.username.value).subscribe(
               (data: any) => {
-                this.isLoading = false;
-                console.log('where is my data');
-                console.log(data);
-                console.log(localStorage.getItem('id'));
                 // this.UserService.getSession(localStorage.getItem('id')).subscribe((data:any)=>
                 // {
                 //   console.log('lag');
@@ -130,6 +132,7 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
                     this.router.navigate(['daovan'], { replaceUrl: true, state: { user: value } });
                   }, 1000);
                 } else {
+                  localStorage.setItem('isAdmin', 'Yes');
                   setTimeout(() => {
                     this.router.navigate(['admin'], { replaceUrl: true, state: { user: value } });
                   }, 1000);
@@ -137,12 +140,15 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
               },
               (error) => {
                 this.isLoading = false;
-
+                console.log('now error is');
+                console.log(error);
                 this.loading = false;
                 log.debug(`Login error: ${error}`);
                 this.error = error;
                 //this.notificationService.error("Tài khoản hoặc mật khẩu không chính xác");
-                this.showErrorNotification(`${MessageConstant.LoginFailed}`);
+                this.showErrorNotification(
+                  `Tài khoản hoặc mật khẩu không chính xác hoặc tài khoản chưa được kích hoạt`
+                );
               }
             );
           } else {
@@ -152,12 +158,21 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
         },
         (error) => {
           this.isLoading = false;
+          console.log('now error is');
+          console.log(error);
 
-          this.loading = false;
           log.debug(`Login error: ${error}`);
           this.error = error;
+          if (error.error) {
+            this.showErrorNotification(error.error.data);
+            this.loading = false;
+          } else {
+            log.debug(`Login error: ${error}`);
+            this.error = error;
+            //this.notificationService.error("Tài khoản hoặc mật khẩu không chính xác");
+            this.showErrorNotification(`Tài khoản hoặc mật khẩu không chính xác`);
+          }
           //this.notificationService.error("Tài khoản hoặc mật khẩu không chính xác");
-          this.showErrorNotification(`${MessageConstant.LoginFailed}`);
         }
       );
   }
@@ -173,9 +188,20 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
 
   //#region  Language
   setLanguage(language: string) {
-    this.i18nService.language = language;
+    //this.i18nService.language = language;
+    console.log(language);
+    this.translateService.use('vn');
   }
+  setVNLanguage() {
+    //this.i18nService.language = language;
 
+    this.translateService.use('vn');
+  }
+  setENGLanguage() {
+    //this.i18nService.language = language;
+
+    this.translateService.use('en');
+  }
   get currentLanguage(): string {
     return this.i18nService.language;
   }

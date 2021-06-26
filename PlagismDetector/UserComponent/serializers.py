@@ -29,6 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
                   'EmailOrganization',
                   'DateOfBirth',
                   'is_active',
-                  'phone'
+                  'phone',
+                  'is_lock'
                   
         ]

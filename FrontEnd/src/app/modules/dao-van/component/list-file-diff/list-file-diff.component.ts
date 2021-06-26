@@ -37,7 +37,10 @@ export class ListFileDiffComponent implements OnInit {
   ngOnInit(): void {
     this.getData();
   }
-
+  ngOnChanges() {
+    //this.childFunction()
+    this.getData();
+  }
   getData(): void {
     console.log('stupid');
     console.log(this.FileList2);

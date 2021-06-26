@@ -10,6 +10,13 @@ import { AdministratorComponent } from './administrator.component';
 import { ListAccountComponent } from './list-account/list-account.component';
 import { ManageUserComponent } from './manage-user/manage-user.component';
 import { UploadDatabaseComponent } from './upload-database/upload-database.component';
+import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
+//import { NgHighlightModule } from 'ngx-text-highlight';
+import { NgxFileDropModule } from 'ngx-file-drop';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatDialogModule } from '@angular/material/dialog';
+
+//import { MaterialModule } from './material.module';
 
 const MODULE = [
   CommonModule,
@@ -18,6 +25,9 @@ const MODULE = [
   SharedModule,
   AdministratorRoutingModule,
   ReactiveFormsModule,
+  NgxFileDropModule,
+  MatRadioModule,
+  MatDialogModule,
 ];
 @NgModule({
   declarations: [AdministratorComponent, ListAccountComponent, ManageUserComponent, UploadDatabaseComponent],

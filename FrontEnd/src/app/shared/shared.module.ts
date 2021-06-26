@@ -6,13 +6,13 @@ import { NzNotificationModule } from 'ng-zorro-antd/notification';
 import { ArticlesComponent, ProfileUserComponent, ReportInputFileComponent } from '.';
 import { ListInputFileComponent } from './components/manager-file/list-input-file/list-input-file.component';
 import { LoaderComponent } from './loader/loader.component';
-
+import { TranslateModule } from '@ngx-translate/core';
 import { ErrorComponent } from './components/errors/error/error.component';
 
 const ACCOUNT = [ProfileUserComponent, ArticlesComponent];
 const MANAGER_FILE = [ListInputFileComponent];
 const COMPOENT = [LoaderComponent, ReportInputFileComponent, ErrorComponent];
-const MODULE = [CommonModule, NgZorroAntdModule, ReactiveFormsModule, NzNotificationModule];
+const MODULE = [CommonModule, NgZorroAntdModule, ReactiveFormsModule, NzNotificationModule, TranslateModule];
 @NgModule({
   imports: [...MODULE],
   declarations: [...COMPOENT, ...ACCOUNT, ...MANAGER_FILE, ErrorComponent],

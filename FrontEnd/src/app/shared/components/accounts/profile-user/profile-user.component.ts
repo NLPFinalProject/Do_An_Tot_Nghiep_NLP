@@ -52,12 +52,12 @@ export class ProfileUserComponent implements OnInit {
     this.userService.updateUSer(data).subscribe(
       (data) => {
         console.log('sucess');
-        this.notification.success('Thành công', 'Đổi mật khẩu thành công');
+        this.notification.success('Thành công', 'Cập nhật thông tin thành công');
         //     this.showErrorNotification(`${MessageConstant.LoginFailed}`);
       },
       (error) => {
         console.log('Lỗi người dùng');
-        this.notification.error('Thất bại', 'Đổi mật khẩu thất bại');
+        this.notification.error('Thất bại', 'Cập nhật thông tin thất bại');
       }
     );
   }
@@ -72,7 +72,20 @@ export class ProfileUserComponent implements OnInit {
     /** wait for refresh value */
     Promise.resolve().then(() => this.validateForm.controls.checkPassword.updateValueAndValidity());
   }
-
+  ngOnChanges() {
+    console.log(this.data.DateOfBirth);
+    let momentVariable = moment(this.data.DateOfBirth, 'MM-DD-YYYY');
+    let newDate = momentVariable.format('YYYY-MM-DD');
+    console.log(this.data);
+    this.validateForm = this.fb.group({
+      email: [this.data.username, [Validators.email, Validators.required]],
+      phoneNumber: [this.data.phone, [Validators.required]],
+      emailOrganization: [this.data.EmailOrganization, [Validators.email]],
+      phoneOrganization: [this.data.phonelOrganization],
+      fullName: [this.data.name, [Validators.required]],
+      ngaySinh: [this.data.DateOfBirth, [Validators.required]],
+    });
+  }
   confirmationValidator = (control: FormControl): { [s: string]: boolean } => {
     if (!control.value) {
       return { required: true };
@@ -101,13 +114,13 @@ export class ProfileUserComponent implements OnInit {
       });
     } else {
       this.validateForm = this.fb.group({
-        email: ['acb@gmail.com', [Validators.email, Validators.required]],
-        phoneNumber: ['1234567890', [Validators.required]],
-        emailOrganization: ['1234567890', [Validators.required]],
-        website: ['ACB', [Validators.required]],
-        phoneOrganization: ['0123456789'],
-        fullName: ['Nguyen Van A', [Validators.required]],
-        ngaySinh: ['1/1/2001', [Validators.required]],
+        email: ['', [Validators.email, Validators.required]],
+        phoneNumber: ['', [Validators.required]],
+        emailOrganization: ['', [Validators.required]],
+        website: ['', [Validators.required]],
+        phoneOrganization: [''],
+        fullName: ['', [Validators.required]],
+        ngaySinh: ['', [Validators.required]],
       });
     }
   }

@@ -1,1 +1,47 @@
-<p>upload-database works!</p>
+<div class="container">
+  <div class="block">Mời bạn upload file lên database của hệ thống</div>
+  <div class="center-button">
+    <div class="center">
+      <ngx-file-drop
+        dropZoneLabel="Drop files here"
+        id="2"
+        (onFileDrop)="dropped($event)"
+        accept=".doc,.docx,.pptx,.txt"
+        dropZoneClassName="my-zone-style"
+        contentClassName="my-content-style"
+        (onFileOver)="fileOver($event)"
+        (onFileLeave)="fileLeave($event)"
+      >
+        <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+          <button type="button" (click)="openFileSelector()">Browse Files</button>
+        </ng-template>
+      </ngx-file-drop>
+      <div class="upload-table">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+            </tr>
+          </thead>
+          <tbody class="upload-name-style">
+            <tr *ngFor="let item of ListOfFile">
+              <td>
+                <strong>{{ item.name }}</strong>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <button
+    nz-button
+    class="w-25"
+    nzType="primary"
+    nzShape="omitted"
+    (click)="uploadList()"
+    [disabled]="isvalid !== true"
+  >
+    <i theme="outline"></i> <span translate>Xác nhận up file</span>
+  </button>
+</div>
