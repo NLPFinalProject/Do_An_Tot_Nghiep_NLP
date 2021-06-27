@@ -24,14 +24,16 @@ import MailComponent.views as mail
 # import cho tách câu
 import os
 from collections import Counter
-
+from func_timeout import func_timeout, FunctionTimedOut
+from UserComponent.models import User
+import time
 # import json
 
 numPageSearch = 5
 resultRatio = 50
 maxFile = 1
 rat = 50
-
+timeout=6 # 6 seconds
 
 # tinh trong exportorder4 cai phan tram lai
 # them try catch owr cac ham inport va test, makedatareadoc.
@@ -119,7 +121,10 @@ def makeDataReadDoc(internetPage, userId):
                         DataDocumentSentenceLength=len(sentence))
                 os.remove(file_pdf)
             else:
-                lstSentence = internetKeywordSearch.crawl_web(link)
+                try:
+                    lstSentence = func_timeout(timeout, internetKeywordSearch.crawl_web(link))
+                except FunctionTimedOut:
+                    continue
                 if lstSentence == None:
                     continue
                 data = DataDocument(
@@ -157,8 +162,9 @@ def makeData(countReport, ReportFileName2Sentence, reportDataReadDoc):
 # systemSearch
 @api_view(('POST',))
 def documentimportDatabase(request):
-    # fileName1 = request.data["filename1"]
-    # userId = int(request.data["id"])
+    query = User.objects.get(pk=request.data['id'])
+    if(query.is_lock==1):
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
     data1 = request.data
     try:
         data1["filenameA"], session = uploadDoc2(
@@ -186,9 +192,11 @@ def documentimportDatabase(request):
 # kiểm vs internet
 @api_view(('POST',))
 def documentimportInternet(request):
-    # fileName1 = request.data['fileName1']
-    # userId = request.data['id']
+    query = User.objects.get(pk=request.data['id'])
+    if (query.is_lock == 1):
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
     data1 = request.data
+
     try:
         data1["filenameA"], session = uploadDoc2(
             request.POST, request.FILES, request.data['id'], request.data["agreeStatus"], request.data["sessionName"],
@@ -210,8 +218,9 @@ def documentimportInternet(request):
 
 @api_view(('POST',))
 def documentimportDatabaseInternet(request):
-    # fileName1 = request.data["fileName1"]
-    # userId = int(request.data["id"])
+    query = User.objects.get(pk=request.data['id'])
+    if (query.is_lock == 1):
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
     data1 = request.data
     try:
@@ -257,9 +266,10 @@ def documentimportDatabaseInternet(request):
 # dùng kiểm với data ng dùng
 @api_view(('POST', 'GET'))
 def documentimport(request):
+    query = User.objects.get(pk=request.data['id'])
+    if(query.is_lock==1):
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
     data1 = request.data
-    # data1["filenameA"], session = uploadDoc(request)
-    # data1["filenameB"] = uploadDocList(request, session)
     try:
         data1["filenameA"], session = uploadDoc2(
             request.POST, request.FILES, request.data['id'], request.data["agreeStatus"], request.data["sessionName"],
@@ -466,6 +476,10 @@ def test3(data, session):
             a.ChildReport = a.ChildReport + 1
             a.save()
         except Exception:
+            if(len(fileName2)==1):
+                a = DocumentSession.objects.get(pk=session)
+                a.Status="Fail"
+                a.save()
             pass
     fileName2 = successFile
     # B2 trả json

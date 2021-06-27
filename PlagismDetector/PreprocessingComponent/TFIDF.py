@@ -99,6 +99,37 @@ def crawl_web(url):
     except:
         return None
 
+def crawl_web(url):
+    try:
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)'
+                 ' Chrome/89.0.4389.114 Safari/537.36 Edg/89.0.774.68'}
+        req=Request(url,headers=headers)
+        html = urlopen(req).read()
+        soup = BeautifulSoup(html, features="html.parser")
+
+
+        # kill all script and style elements
+        for script in soup(["script", "style"]):
+            script.extract()  # rip it out
+        # get text
+        text = soup.get_text()
+
+        # break into lines and remove leading and trailing space on each
+        lines = (line.strip() for line in text.splitlines())
+        # break multi-headlines into a line each
+        chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+
+        # drop blank lines
+        text = '\n'.join(chunk for chunk in chunks if chunk)
+        temp = p.list_para2txt(text.split("\n"))
+        res  = p.convert2listsentence(temp)
+        return res #list sentence
+    except:
+        return None
+
+
+
+
 
 def get_path():
     return os.getcwd()
@@ -107,8 +138,8 @@ def get_path():
 # Cách chạy chương trình:
 # Sửa path của các file và thực thi chương trình
 
-STOPWORD_FILE_PATH = 'stopword.txt'
-ALPHABET_FILE_PATH = 'alphabet.txt'
+STOPWORD_FILE_PATH = 'PreprocessingComponent/stopword'
+ALPHABET_FILE_PATH = 'PreprocessingComponent/alphabet'
 
 
 # Tách dòng của text và lưu vào mảng
