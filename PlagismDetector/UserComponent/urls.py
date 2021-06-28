@@ -26,24 +26,16 @@ urlpatterns = [
      url(r'^lock-user', csrf_exempt(views.lockUser)),
      url(r'^unlock-user', csrf_exempt(views.unlockUser)),
      url(r'^refresh-token/', refresh_jwt_token),
-     #url(r'^api/login',obtain_jwt_token),
-     #path('api/login/', obtain_jwt_token),
      path('api/refresh-token/', refresh_jwt_token),
-     #url(r'^api/login',obtain_jwt_token),
-     #url(r'^login',views.fakelogin),
      url(r'^reset-password',views.ResetPassword),
      url(r'^forgot-password',views.ForgetPassword),
      url(r'^api/register',csrf_exempt(views.register)),
      url(r'^api/activate',views.ActivateUser),
      url(r'^activate',views.ActivateUser),
-     
      #path(r'^SendMail',include('allauth.urls')),
-    
-     
+     #remove if not affected
      path('api/token/',TokenObtainPairView.as_view()),
      path('api/token/refresh/',TokenRefreshView.as_view()),
      path('api-auth/', include('rest_framework.urls')),
 
-     
-     #url('api/register',views.register),
 ]

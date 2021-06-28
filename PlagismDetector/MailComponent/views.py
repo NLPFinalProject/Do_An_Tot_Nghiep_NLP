@@ -28,7 +28,7 @@ from django.utils.html import strip_tags
 
 
 def CreateValidateCode():
-    number = rand.randrange(1000, 9999)
+    number = rand.randrange(100000, 999999)
     return number
 
 
@@ -37,6 +37,18 @@ def sendVerificationMail(email):
     email = EmailMessage(
         'Hello',
         'this is a confirmnation mail, please enter the code below ' + str(number),
+        # user.username
+        'ldthuan1907@gmail.com',
+        [email],
+        headers={'Message-ID': 'foo'}, )
+    email.send()
+
+    return number
+def sendNewPasswordEmail(email):
+    number = CreateValidateCode()
+    email = EmailMessage(
+        'Hello',
+        'Your new password is ' + str(number),
         # user.username
         'ldthuan1907@gmail.com',
         [email],

@@ -163,7 +163,8 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
 
           log.debug(`Login error: ${error}`);
           this.error = error;
-          if (error.error) {
+
+          if (error.error.data) {
             this.showErrorNotification(error.error.data);
             this.loading = false;
           } else {

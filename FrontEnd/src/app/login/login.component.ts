@@ -28,5 +28,7 @@ export class LoginComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log('me at login');
+  }
 }

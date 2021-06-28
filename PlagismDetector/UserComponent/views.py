@@ -28,19 +28,10 @@ class NewAPILogin(ObtainJSONWebToken):
     def post(self, request, *args, **kwargs):
         content = None
         response = super().post(request, *args, **kwargs)
-        
         try:
-           
             user = User.objects.get(username=  request.data['username'])
-            #userStatus = UserSerializer(user)
-           
             userStatus = UserSerializer(user)
-            
-
             user = userStatus.data
-            
-            
-            
             if user['is_lock'] == True:
                 content = {'data': "Tài khoản đang bị khóa"}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
@@ -48,28 +39,21 @@ class NewAPILogin(ObtainJSONWebToken):
                 content = {'data': "Tài khoản chưa được kích hoạt"}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
             else:
-                print(request.user)
                 return response
         except:
             return response
         
-        """return Response({
-            'token': token.key,
-            'user_id': user.pk,
-            'email': user.email
-        })"""
+       
 
 @api_view([ 'POST'])
 #@permission_classes ( (AllowAny, ))
 
 @csrf_exempt
 def register(request):
-    
     try:
         user = User.objects.get(username = request.data["email"])
         content = {'data': 'username is existed'}
         return Response(content, status=status.HTTP_400_BAD_REQUEST)
-        
     except ObjectDoesNotExist:
         print(request.data["phoneNumber"])
         user = User.objects.create(username = request.data["email"],
@@ -82,20 +66,11 @@ def register(request):
         number = mail.sendVerificationMail(request.data["email"])
         user.set_password(user.password)
         user.save()
-        
         users = UserSerializer(user)
-        users.data.key = '1243'
-        print(users.data)
-        print(number)
+        #print(users.data)
         response = {'data' : users.data,'validCode' : number}
         return JsonResponse(response,status = status.HTTP_200_OK)
-    #else:
-        
 
-    
-    
-        #return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-        # In order to serialize objects, we must set 'safe=False'
 @api_view([ 'POST','GET','PUT'])
 def APIUser(request):
     #post user = save user with user
@@ -122,9 +97,6 @@ def APIUser(request):
             print(users.data)
             response = {'data' : users.data,'validCode' : number}
             return JsonResponse(response,status = status.HTTP_200_OK)
-        
-            #return HttpResponse(status=status.HTTP_200_OK)
-        #get user = get user based on id
     elif request.method == 'GET':
         try:
             #if get user successfull
@@ -142,7 +114,6 @@ def APIUser(request):
             user.EmailOrganization = request.PUT["emailOrganization"],
             user.phone = request.PUT["phoneNumber"],
             user.DateOfBirth = request.PUT["ngaySinh"]
-            
             #user.set_password(user.password)
             user.save()
             users = UserSerializer(user)
@@ -159,7 +130,7 @@ def APIUser(request):
 @api_view([ 'GET','POST'])
 def isAdmin(request):
     #if(request.data not None)
-    print(request.GET)
+    
     try: 
         user = User.objects.get(username = request.GET['username'])
         response = {'isAdmin' : user.is_admin}
@@ -182,7 +153,6 @@ def ActivateUser(request):
         user.is_active = True
         user.active = True
         user.save()
-    
         return HttpResponse(status=status.HTTP_200_OK)
     else:
         return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
@@ -190,14 +160,10 @@ def ActivateUser(request):
 def ResetPassword(request):
     #if(request.data not None)
     try:
-        
         user = User.objects.get(username = request.data["username"])
-        
         flag = user.check_password(request.data['password'])
         if flag==False:
-            
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
-        
         user.set_password(request.data['reset'])
         #user.password = request.data['password']
         user.save()
@@ -208,22 +174,16 @@ def ResetPassword(request):
 @api_view([ 'POST'])
 def ForgetPassword(request):
     #if(request.data not None)
+    try:
+        user = User.objects.get(username = request.data["username"])
+        print(user.username)
+        emailPassword = mail.sendNewPasswordEmail(request.data["username"])
+        user.set_password(str(emailPassword))
+        user.save()
+        return HttpResponse(status=status.HTTP_200_OK)
+    except:
+        return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
     
-    
-    user = User.objects.get(username = request.data["username"])
-    print(user.username)
-    
-    user.set_password('125436')
-    user.save()
-    email = EmailMessage(
-    'Hello,Your new password is now 125436',
-    
-    'kaitouthuan@gmail.com',
-    [user.username], 
-    headers={'Message-ID': 'foo'},)
-    email.send()
-    content =''
-    return HttpResponse(status=status.HTTP_200_OK)
 @api_view([ 'POST','GET'])
 def UserList(request):
     userList=User.objects.all()
@@ -267,8 +227,6 @@ def unlockUser(request):
 @api_view(['POST'])
 def login(request):
     content = None
-    
-    
     try:
         user = User.objects.get(username = request.data["username"])
         
@@ -290,29 +248,20 @@ def login(request):
 @api_view(('GET',))
 @permission_classes([IsAuthenticated])
 def Session(request):
-    print(request.GET)
-
+   
     content =None
     userId = request.GET['id']
     try:
         # session=DocumentSession.objects.filter(SessionUser=str(userId))
         # content = session
-    
-        
         session = readSession(userId)
         print(session)
         # print("session là: ",content)
         content ={"session":session} 
-        
         return Response(content,status=status.HTTP_200_OK)  
     except ObjectDoesNotExist:
         return Response(None, status=status.HTTP_200_OK)
-    
-@api_view(['POST'])
-def fakelogin(request):
-    content = None
-    print('fake login is here')
-    return Response(content, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+
 def readSession(userId):
     sessionList = DocumentSession.objects.filter(SessionUser=str(userId))
     ResponseContent = []

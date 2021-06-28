@@ -28,7 +28,7 @@
         (onFileDrop)="droppedFile($event)"
         dropZoneClassName="my-zone-style"
         contentClassName="my-content-style"
-        accept=".doc,.docx,.pptx,.txt"
+        accept=".doc,.docx,.pptx,.txt,.csv,.pdf,.xlsx"
         (onFileOver)="fileOver($event)"
         (onFileLeave)="fileLeave($event)"
       >
@@ -36,6 +36,7 @@
           <button type="button" (click)="openFileSelector()">Browse Files</button>
         </ng-template>
       </ngx-file-drop>
+
       <div class="upload-table">
         <table class="table">
           <thead>
@@ -77,7 +78,7 @@
           dropZoneLabel="Drop files here"
           id="2"
           (onFileDrop)="dropped($event)"
-          accept=".doc,.docx,.pptx,.txt"
+          accept=".doc,.docx,.pptx,.txt,.csv,.pdf,.xlsx"
           dropZoneClassName="my-zone-style"
           contentClassName="my-content-style"
           (onFileOver)="fileOver($event)"
@@ -107,7 +108,14 @@
     </div>
   </div>
 
-  <button nz-button class="w-25" nzType="primary" nzShape="omitted" (click)="nextstep()" [disabled]="isvalid !== true">
+  <button
+    nz-button
+    class="w-25"
+    nzType="primary"
+    nzShape="omitted"
+    (click)="nextstep()"
+    [disabled]="isvalid !== true || isFirstFileValid == false"
+  >
     <i theme="outline"></i> <span translate>Kiểm tra</span>
   </button>
 </div>
