@@ -11,7 +11,7 @@ from rest_framework import status
 from .models import DataDocument, DataDocumentContent, DocumentSession, ReportDocument
 from django.db import connections, connection
 # can import cho levenshtein
-from .levenshtein import ExportOrder, ExportOrder4
+from .levenshtein import ExportOrder
 from PreprocessingComponent.views import *
 # cần import cho up file
 from django.core.files.storage import FileSystemStorage
@@ -35,7 +35,7 @@ maxFile = 1
 rat = 50
 timeout=6 # 6 seconds
 
-# tinh trong exportorder4 cai phan tram lai
+# tinh trong exportorder cai phan tram lai
 # them try catch owr cac ham inport va test, makedatareadoc.
 # sua document status thanh 0,1,2
 
@@ -332,7 +332,7 @@ def test1(data, session):
                 DataDocumentNo_id=int(idFile[0])).order_by('id')
             fileName2Sentence = [
                 querys[i].DataDocumentSentence for i in range(len(querys))]
-            result = ExportOrder4(
+            result = ExportOrder(
                 fileName1Sentence, fileName2Sentence, resultRatio)
 
             if (result[1] >= resultRatio and countReport < maxFile):
@@ -397,7 +397,7 @@ def test2(data, session):
     reportDataReadDoc = []
     fileRatio = []
     for i in range(len(dataReadDoc)):
-        result = ExportOrder4(fileName1Sentence, dataReadDoc[i], rat)
+        result = ExportOrder(fileName1Sentence, dataReadDoc[i], rat)
         reportDataReadDoc.append(result[0])
         fileRatio.append(result[1])
     myDict = {}
@@ -487,7 +487,7 @@ def test3(data, session):
     reportDataReadDoc = []
     fileRatio = []
     for i in range(len(dataReadDoc)):
-        result = ExportOrder4(fileName1Sentence, dataReadDoc[i], rat)
+        result = ExportOrder(fileName1Sentence, dataReadDoc[i], rat)
         reportDataReadDoc.append(result[0])
         fileRatio.append(result[1])
     myDict = {}

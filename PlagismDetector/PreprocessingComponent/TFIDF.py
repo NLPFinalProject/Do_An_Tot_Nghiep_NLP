@@ -75,38 +75,10 @@ def download_document(url):
 def crawl_web(url):
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)'
-                                 ' Chrome/89.0.4389.114 Safari/537.36 Edg/89.0.774.68'}
-        req = Request(url, headers=headers)
-        html = urlopen(req).read()
-        soup = BeautifulSoup(html, features="html.parser")
-
-        for script in soup(["script", "style"]):
-            script.extract()
-
-        pTag = soup.findAll('p')
-        res = []
-        for tag in pTag:
-            # print(tag.text)
-            string = tag.string
-            if (string != None):
-                res.append(string.strip())
-        list_sentence=[]
-        for para in res:
-            list_sentence.extend(sent_tokenize(para))
-            temp=p.split_sent_list(list_sentence,450)
-            res = [sen.replace("\xa0", "") for sen in temp]
-        return res # list sentence
-    except:
-        return None
-
-def crawl_web(url):
-    try:
-        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)'
                  ' Chrome/89.0.4389.114 Safari/537.36 Edg/89.0.774.68'}
         req=Request(url,headers=headers)
         html = urlopen(req).read()
         soup = BeautifulSoup(html, features="html.parser")
-
 
         # kill all script and style elements
         for script in soup(["script", "style"]):
@@ -121,18 +93,30 @@ def crawl_web(url):
 
         # drop blank lines
         text = '\n'.join(chunk for chunk in chunks if chunk)
-        temp = p.list_para2txt(text.split("\n"))
-        res  = p.convert2listsentence(temp)
+        temp = text.split("\n")
+        for para in temp:
+            list_sentence.extend(sent_tokenize(para))
+            temp1=p.split_sent_list(list_sentence,450)
+            res = [sen.replace("\xa0", "") for sen in temp1]
         return res #list sentence
     except:
         return None
 
+# Lower tất cả các từ
+# Input: Danh sách các từ (list in list)
+# Output: Danh sách từ đã lower (list in list)
+def tokenize_lower(tokenize):
+    lst = []
+
+    for sent in tokenize:
+        sen = []
+        for word in sent:
+            sen.append(word.lower())
+        lst.append(sen)
+
+    return lst
 
 
-
-
-def get_path():
-    return os.getcwd()
 
 
 # Cách chạy chương trình:
@@ -179,21 +163,18 @@ def check(string):
 #    + Dictionary của tất cả từ phân biệt không bao gồm stop word, dấu câu với
 #      key là từ A, value là số lượng từ A có trong văn bản (dict). VD: {hài_hước: 3, 'Bảo_Đại': 5}
 #    + Tổng số từ của văn bản (int)
-def total_words_and_len(tokenize):
+def total_words(tokenize_lower):
     words = dict()
-    doc_len = 0
 
-    for s in tokenize:
+    for s in tokenize_lower:
         for w in s:
-            w_temp = w.lower()
-            doc_len += 1
-            if w_temp not in stopwords and check(w_temp) == True:
-                if w_temp in words:
-                    words[w_temp] += 1
+            if w not in stopwords and check(w) == True:
+                if w in words:
+                    words[w] += 1
                 else:
-                    words[w_temp] = 1
+                    words[w] = 1
 
-    return words, doc_len
+    return words
 
 
 # Đếm số câu chứa từ cần check
@@ -219,23 +200,23 @@ def get_top(dic, n):
 # Tính giá trị TF của tất cả từ
 # Input: Dictionary của tất cả các từ đã tính ở hàm total_word_and_len và tổng số từ của văn bản (đã loại bỏ stopword)
 # Output: Giá trị TF của từng từ (dict). VD: {hài_hước: 0.4, 'Bảo_Đại': 0.2}
-def TF(total_words_dict, doc_len):
+
+def TF(words):
     tf = dict()
 
-    for key, val in total_words_dict.items():
-        tf[key] = val / doc_len
+    for key, val in words.items():
+        tf[key] = val / len(words)
 
     return tf
-
 
 # Tính giá trị IDF của tất cả từ
 # Input: Dictionary của tất cả các từ đã tính ở hàm total_word_and_len và list đã tách từ tách câu
 # Output: Giá trị IDF của từng từ (dict). VD: {hài_hước: 0.01297742362, 'Bảo_Đại': 0.0643231124}
-def IDF(total_words_dict, tokenize):
+def IDF(words, tokenize_lower):
     idf = dict()
 
-    for key, val in total_words_dict.items():
-        idf[key] = math.log(len(tokenize) / (1 + check_word_in_sent(key, tokenize)))
+    for key, val in words.items():
+        idf[key] = math.log(len(tokenize_lower) / (1 + check_word_in_sent(key, tokenize_lower)))
 
     return idf
 
@@ -313,17 +294,17 @@ stopwords = preprocess_text_file(STOPWORD_FILE_PATH)
 alphabet = preprocess_text_file(ALPHABET_FILE_PATH)
 
 
-def get_link(sentence,tokenize):
-    words, length = total_words_and_len(tokenize)
-    print(words)
-    tf = TF(words, length)
-    idf = IDF(words, tokenize)
+def get_link(sentence, tokenize):
+    wordseg = tokenize_lower(tokenize)
+    words = total_words(wordseg)
+    tf = TF(words)
+    idf = IDF(words, wordseg)
     tfidf = TFIDF(tf, idf)
 
-    sen_tfidf_val = sentence_tfidf_val(words, tokenize, tfidf)
+    sen_tfidf_val = sentence_tfidf_val(words, wordseg, tfidf)
     key = list(sen_tfidf_val.keys())
 
-    link = []
+    link = None
     if len(key) != 0:
         for i in range(0, len(key)):
             key[i] = int(key[i])
@@ -344,26 +325,3 @@ if __name__ == '__main__':
     end = time.time()
 
     print("Time", end - start)
-
-    # list_para = p.docx2txt("xla.docx")  # list para: ds các
-    # pos_tag = p.list_para2txt(list_para)  # postag của đoạn
-    # list_sentence = p.convert2listsentence(
-    #     pos_tag)  # đay là list các câu.  list_sentence [0] là câu đầu tiên, b[1],2,3... là các câu tiếp theo
-    # num_word = p.num_of_word(list_sentence)  # số từ của câu đầu tiên tương tự cho a[1],....
-    # print(list_para)
-    # print("\n",pos_tag)
-    # from pyvi import ViTokenizer, ViPosTagger
-    # print(ViTokenizer.tokenize(s))
-    # print("1\n")
-    # print(ViPosTagger.postagging(ViTokenizer.tokenize(s)))
-    # print("1\n")
-    # from pyvi import ViUtils
-    # print("1\n")
-    # print(ViUtils.remove_accents(u"Trường đại học bách khoa hà nội"))
-    #
-    # from pyvi import ViUtils
-    # print("1\n")
-    # print(ViUtils.add_accents(u'truong dai hoc bach khoa ha noi'))
-    # a,b,c,d=p.preprocess_link("xla.docx")
-    # print(a)
-    # get_link(a,b,c,d)
