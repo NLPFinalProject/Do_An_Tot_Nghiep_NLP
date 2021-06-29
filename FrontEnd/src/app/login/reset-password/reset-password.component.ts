@@ -53,9 +53,6 @@ export class ResetPasswordComponent extends AppComponentBase implements OnInit {
     }, 1000);
   }
 
-  getCaptcha(e: MouseEvent): void {
-    e.preventDefault();
-  }
   account() {
     let id = localStorage.getItem('username');
     return this.userService.profile(id).subscribe((data) => {

@@ -31,29 +31,12 @@ export class ReportInputFileComponent implements OnInit {
   columnFilter: ColumnItem = {
     name: 'Trạng thái',
     listOfFilter: [
-      { text: 'Thành công', value: 'success' },
-      { text: 'Đang Tải', value: 'loading' },
-      { text: 'Thất bại', value: 'fail' },
+      { text: 'Success', value: 'Success' },
+      { text: 'Loading', value: 'Loading' },
+      { text: 'Fail', value: 'Fail' },
     ],
-    filterFn: (address: string[], item: any) => {
-      //item.indexOf(address) !== -1
 
-      //console.log(item);
-      //if()
-      if (address[0] == 'success') {
-        if (item.Status == true) {
-          console.log(item.id);
-
-          return true;
-        }
-      }
-      if (address[0] == 'loading') {
-        if (item.Status != true) {
-          return true;
-        }
-      }
-      return false;
-    },
+    filterFn: (statusList: string[], item: any) => statusList.indexOf(item.Status) !== -1,
   };
   columnFilter2: ColumnItem = {
     name: 'Loại so sánh',
@@ -63,7 +46,7 @@ export class ReportInputFileComponent implements OnInit {
       { text: 'Internet', value: 'Internet' },
       { text: 'Database and Internet', value: ' Database and Internet' },
     ],
-    filterFn: (TypeList: string[], item: any) => TypeList.indexOf(item.SessionType) !== -1,
+    filterFn: (typeList: string[], item: any) => typeList.indexOf(item.SessionType) !== -1,
   };
 
   filterFn: NzTableFilterFn | null;
@@ -87,24 +70,14 @@ export class ReportInputFileComponent implements OnInit {
   ngOnChanges() {
     this.loading = false;
   }
-  filtersth(a: any, b: any) {
-    console.log('new');
-    console.log(a);
-    console.log(b);
-  }
-  //filterFn: (list: string, item: String) =>list.i;
-  //filterFn: (list: string, item: DataItem) => list.some(name => item.name.indexOf(name) !== -1)
 
   ngOnInit(): void {
     this.userService.getSession(localStorage.getItem('id')).subscribe((data: any) => {
-      console.log('this is new data');
-      console.log(data);
       //this.loading = false;
       setTimeout(() => {
         this.displayData = data.session;
         this.ListOfTemp = data.session;
-        console.log('this is');
-        console.log(data.session);
+
         let sort = {
           key: 'Date',
           value: 'descend',
@@ -113,35 +86,26 @@ export class ReportInputFileComponent implements OnInit {
         this.Warning(this.ListOfTemp[0]);
       }, 3000);
     });
-
-    //this.getReportInputFile();
   }
-
   Warning(sample: any) {
     this.loading = false;
-
     let data = {
-      //'id':localStorage.getItem('id'),
       sessionId: sample.id,
       filename: sample.filename,
     };
 
     localStorage.setItem('sesstionId', sample.id);
     this.sessionToHistoryService.sendFileList(data);
-    // this.fileService.getResult(data).subscribe((data:any)=>{
-    //   //this.router.navigate('daovan',{})
-    // })
   }
   // Routing
   goToDetail(event: any): void {
     this.routingService.navigateToUpdate('/daovan/', event.id);
   }
-
+  /*
   getReportInputFile(): void {
     this.reportInputFileService.getJSON().subscribe((res: any) => {
       setTimeout(() => {
         this.loading = false;
-        console.log(res);
         this.reportInputFile = res;
         for (var i = 0; i < this.reportInputFile.length; i++) {
           console.log(this.reportInputFile[i]);
@@ -149,11 +113,9 @@ export class ReportInputFileComponent implements OnInit {
       }, 3000);
     });
   }
-
+*/
   //#region
   sort(sort: { key: string; value: string }): void {
-    console.log('have you suffer enough');
-    console.log(sort);
     this.sortName = sort.key;
     this.sortValue = sort.value;
     this.search();

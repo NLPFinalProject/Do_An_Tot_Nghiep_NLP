@@ -262,31 +262,7 @@ def Session(request):
     except ObjectDoesNotExist:
         return Response(None, status=status.HTTP_200_OK)
 
-"""def readSession(userId):
-    sessionList = DocumentSession.objects.filter(SessionUser=str(userId))
-    ResponseContent = []
-    for i in range(len(sessionList)):
-        temp = {}
-        temp["Status"] = sessionList[i].Status
-        temp["id"]=sessionList[i].id
-        temp["NumOfFile"]= sessionList[i].NumOfFile
-        temp["Date"] = sessionList[i].Date
-        temp["SessionUser"] = sessionList[i].SessionUser
-        temp["SessionName"] = sessionList[i].SessionName
-        temp["SessionType"] = sessionList[i].SessionType
-        querys = DataDocument.objects.filter(
-        DataDocumentAuthor=str(sessionList[i].SessionUser)) \
-        .filter(SessionId=str(sessionList[i].id))
-        # temp['filename'] = querys[0].DataDocumentName
-        # ResponseContent.append(temp) 
-        temp2=[]
-        for j in range(len(querys)):
-            temp2.append(querys[j].DataDocumentName)
-        temp["filename"] = temp2
-        ResponseContent.append(temp)
 
-
-    return ResponseContent"""
 def readSession(userId):
     sessionList = DocumentSession.objects.filter(SessionUser=str(userId))
     ResponseContent = []

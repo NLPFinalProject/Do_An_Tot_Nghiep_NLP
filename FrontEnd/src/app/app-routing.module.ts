@@ -9,9 +9,7 @@ const routes: Routes = [
   Shell.childRoutes([
     { path: 'account', loadChildren: () => import('app/modules/account/account.module').then((m) => m.AccountModule) },
   ]),
-  Shell.childRoutes([
-    { path: 'blogs', loadChildren: () => import('app/modules/blogs/blogs.module').then((m) => m.BlogsModule) },
-  ]),
+
   Shell.childRoutes([
     {
       path: 'checkresult',

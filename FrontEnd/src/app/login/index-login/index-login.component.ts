@@ -33,7 +33,6 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private router: Router,
-    private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private i18nService: I18nService,
     private authenticationService: AuthenticationService,
@@ -58,43 +57,7 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
     this.optionAccounts = value === true ? 'Client' : 'Administator';
     this.statusAccount = value;
   }
-  /*
-  login() {
-    this.isLoading = true;
-    this.authenticationService
-      .login(this.loginForm.value)
-      .pipe(
-        finalize(() => {
-          this.loginForm.markAsPristine();
-          
-          setTimeout(() => {
-            this.isLoading = false;
-          }, 1000);
-        })
-      )
-      .subscribe(
-        (credentials: Credentials) => {
-          console.log("sucess ");
-          const rememberValue = this.loginForm.get('remember').value;
-          this.authenticationService.setCredentials(credentials, rememberValue);
-          const url = this.statusAccount ? RoutingConstant.DaoVan : RoutingConstant.Admin;
-          if (credentials) {
-            setTimeout(() => {
-              this.route.queryParams.subscribe(params =>
-                this.router.navigate([params.redirect || url], { replaceUrl: true })
-              );
-            }, 1000);
-          } else {
-            this.isError = true;
-          }
-        },
-        error => {
-          log.debug(`Login error: ${error}`);
-          this.error = error;
-          this.showErrorNotification(`${MessageConstant.LoginFailed}`);
-        }
-      );
-  }*/
+
   login() {
     this.isLoading = true;
     var data = {
@@ -108,25 +71,12 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
 
       .subscribe(
         (value: any) => {
-          console.log('sucess ');
-          console.log(value);
           this.isLoading = false;
           this.loading = false;
           this.authenticationService.setSession(value);
-          //const rememberValue = this.loginForm.get('remember').value;
-          //this.authenticationService.setCredentials(credentials, rememberValue);
-          //const url = this.statusAccount ? RoutingConstant.DaoVan : RoutingConstant.Admin;
-          console.log(value);
-
           if (value.token != null) {
-            console.log(this.loginForm.controls.username.value);
             this.UserService.isAdmin(this.loginForm.controls.username.value).subscribe(
               (data: any) => {
-                // this.UserService.getSession(localStorage.getItem('id')).subscribe((data:any)=>
-                // {
-                //   console.log('lag');
-                //   console.log(data);
-                // })
                 if (data.isAdmin == false) {
                   setTimeout(() => {
                     this.router.navigate(['daovan'], { replaceUrl: true, state: { user: value } });
@@ -140,15 +90,12 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
               },
               (error) => {
                 this.isLoading = false;
-                console.log('now error is');
-                console.log(error);
+
                 this.loading = false;
                 log.debug(`Login error: ${error}`);
                 this.error = error;
                 //this.notificationService.error("Tài khoản hoặc mật khẩu không chính xác");
-                this.showErrorNotification(
-                  `Tài khoản hoặc mật khẩu không chính xác hoặc tài khoản chưa được kích hoạt`
-                );
+                this.showErrorNotification(`Tài khoản hoặc mật khẩu không chính xác`);
               }
             );
           } else {
@@ -158,22 +105,17 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
         },
         (error) => {
           this.isLoading = false;
-          console.log('now error is');
-          console.log(error);
-
           log.debug(`Login error: ${error}`);
           this.error = error;
-
           if (error.error.data) {
             this.showErrorNotification(error.error.data);
             this.loading = false;
           } else {
             log.debug(`Login error: ${error}`);
             this.error = error;
-            //this.notificationService.error("Tài khoản hoặc mật khẩu không chính xác");
+
             this.showErrorNotification(`Tài khoản hoặc mật khẩu không chính xác`);
           }
-          //this.notificationService.error("Tài khoản hoặc mật khẩu không chính xác");
         }
       );
   }

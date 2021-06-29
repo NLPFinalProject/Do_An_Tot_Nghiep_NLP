@@ -41,32 +41,7 @@ export class DaoVanDetailComponent implements OnInit {
   public safetyFlag = true;
   HighestHitRate: any;
 
-  public data: Array<any> = [
-    {
-      name: 'yuragi sou',
-      id: 1,
-      genre: 'ecchi',
-      ratio: 10,
-    },
-    {
-      name: 'to love ru',
-      id: 2,
-      genre: 'ecchi',
-      ratio: 20,
-    },
-    {
-      name: 'nisekoi',
-      id: 3,
-      genre: 'ecchi',
-      ratio: 30,
-    },
-    {
-      name: 'gotoubun',
-      id: 4,
-      genre: 'ecchi',
-      ratio: 25,
-    },
-  ];
+  public data: Array<any> = [{}];
   //public File1Name= this.data;
   public FileList2: Array<any> = [];
   public ListAllFile: any[];
@@ -92,24 +67,17 @@ export class DaoVanDetailComponent implements OnInit {
     };
     this.activatedRoute.queryParams.subscribe(
       (params) => {
-        console.log('new file');
-        console.log(params);
+        //console.log(params);
 
         this.params = params;
         if (params.filename1 == undefined && params.File1Name == undefined) {
-          console.log('false');
-          console.log(this.router.getCurrentNavigation());
           if (this.router.getCurrentNavigation().extras.state != null) {
           } else {
             if (this.params.file1Name != undefined) {
               if (this.params.fileList2 == null) {
-                console.log('die you bitch');
               } else {
-                console.log('now you gay');
-                console.log(this.params.fileList2);
               }
 
-              console.log(this.params.File1Name);
               this.file1Name = this.params.File1Name;
               this.FileList2 = this.params.fileList2;
               this.ListAllFile = this.params.ListAllFile;
@@ -117,40 +85,15 @@ export class DaoVanDetailComponent implements OnInit {
               this.stt = this.params.stt;
 
               this.data1 = this.params.data;
-              console.log('true');
-              console.log(this.ListAllFile);
+
               let temp = [];
               this.dataForDiff = {
                 file1: this.file1,
                 data: this.data1,
                 stt: this.stt,
               };
-
               temp.push(this.params.listfile);
-
-              /*let data = {
-            id: this.params.id,
-            filename1: this.params.filename1,
-            listfile: temp,
-            choice: 1,
-          };
-          console.log('data is');
-          console.log(data);
-          this.fileService.checkPlagiasm(data).subscribe(
-            (data: any) => {
-              this.data = data;
-              this.trolling = false;
-    
-              // this.getFirstSentences();
-    
-              // this.ShowResult(0);
-              // this.createOptionList();
-            },
-            (error) => {}
-          );*/
             } else {
-              console.log('dieeeeeeeeeeeeeeeeeee');
-
               this.safetyFlag = false;
             }
           }
@@ -172,13 +115,9 @@ export class DaoVanDetailComponent implements OnInit {
         this.fileService.getResult(data).subscribe(
           (data: any) => {
             this.data1 = data;
-
             this.file1Name = this.data1.File1Name;
-            //this.FileList2 = [];
-
             console.log(this.data1);
             if (this.data1.ListFileName.length == 0) {
-              console.log('lọt lưới');
               let temp = {
                 name: 'Không có kết quả phù hợp với yêu cầu',
                 ratio: -1,
@@ -205,15 +144,12 @@ export class DaoVanDetailComponent implements OnInit {
 
               //this.data1 = this.params.data;
 
-              console.log(this.ListAllFile);
               let temp = [];
               this.dataForDiff = {
                 file1: this.data1.file1,
 
                 ListFile: this.data1.ListFile,
               };
-              console.log('this is new data for diff');
-              console.log(this.dataForDiff);
             }
           },
           (error) => {

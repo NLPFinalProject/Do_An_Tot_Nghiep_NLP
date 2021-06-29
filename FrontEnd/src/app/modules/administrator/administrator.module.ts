@@ -8,7 +8,6 @@ import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { AdministratorRoutingModule } from './administrator-routing.module';
 import { AdministratorComponent } from './administrator.component';
 import { ListAccountComponent } from './list-account/list-account.component';
-import { ManageUserComponent } from './manage-user/manage-user.component';
 import { UploadDatabaseComponent } from './upload-database/upload-database.component';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 //import { NgHighlightModule } from 'ngx-text-highlight';
@@ -30,7 +29,7 @@ const MODULE = [
   MatDialogModule,
 ];
 @NgModule({
-  declarations: [AdministratorComponent, ListAccountComponent, ManageUserComponent, UploadDatabaseComponent],
+  declarations: [AdministratorComponent, ListAccountComponent, UploadDatabaseComponent],
   imports: [...MODULE],
 })
 export class AdministratorModule {}

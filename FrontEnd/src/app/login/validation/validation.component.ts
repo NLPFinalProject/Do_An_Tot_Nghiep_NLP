@@ -31,10 +31,8 @@ export class ValidationComponent extends AppComponentBase implements OnInit {
   constructor(
     injector: Injector,
     private router: Router,
-    private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private i18nService: I18nService,
-    private authenticationService: AuthenticationService,
     private UserService: UserService
   ) {
     super(injector);
@@ -42,15 +40,14 @@ export class ValidationComponent extends AppComponentBase implements OnInit {
     this.loading = true;
 
     if (this.router.getCurrentNavigation().extras.state != undefined) {
-      console.log(this.router.getCurrentNavigation());
       if (this.router.getCurrentNavigation().extras.state.active.validCode != null) {
         this.validCode = this.router.getCurrentNavigation().extras.state.active.validCode;
         this.userinfo = this.router.getCurrentNavigation().extras.state.active.data;
-      } else this.validCode = null;
-      console.log(this.validCode);
+      } else {
+        this.validCode = null;
+      }
       this.loading = true;
     } else {
-      console.log(this.router.getCurrentNavigation().extras.state != undefined);
       this.router.navigate(['login'], { replaceUrl: true });
     }
     setTimeout(() => {
@@ -66,12 +63,7 @@ export class ValidationComponent extends AppComponentBase implements OnInit {
   }
 
   validate() {
-    if (this.userinfo == null) {
-      console.log('there is nothing we can do');
-    } else {
-      console.log(data);
-      console.log(this.validateForm.value.username);
-      console.log(this.validateForm);
+    if (this.userinfo != null) {
       var data = {
         valicode: this.validCode,
         userinfo: this.userinfo,
@@ -80,21 +72,16 @@ export class ValidationComponent extends AppComponentBase implements OnInit {
       //data = this.userinfo;
 
       this.UserService.ActivateUser(data).subscribe(
-        //data=> {console.log(data)};
         (data: any) => {
-          console.log('we success');
-          console.log(data);
-          //this.notificationService.success(MessageConstant.RegisterSucssec);
           setTimeout(() => {
-            //this.router.navigate(['validate'], { replaceUrl: true })
             this.router.navigate(['login'], { replaceUrl: true });
           }, 1000);
-          //this.notificationService.warning(MessageConstant.LoginFailed);
         },
         (error) => {
           this.notificationService.error('Bạn đa nhập sai mã xác thực, vui lòng thử lại');
         }
       );
+    } else {
     }
   }
 

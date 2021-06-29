@@ -37,18 +37,12 @@ export class DiffContentComponent implements OnInit {
       ls3: [],
     };
 
-    console.log('here I came');
-    console.log(this.SessionData);
     this.DaoVanService.sendMessage.subscribe((data: any) => {
-      console.log('this is b');
       console.log(data);
-      console.log(this.SessionData);
     });
 
     this.doStep();
     this.DaoVanService.sendMessageNumber.subscribe((data: number) => {
-      console.log('this is b');
-      console.log(data);
       this.ShowResult(data);
     });
   }
@@ -75,25 +69,20 @@ export class DiffContentComponent implements OnInit {
       }
       this.answer.ls1 = tempdata;
     } else {
-      console.log('false now');
     }
   }
   ngOnChanges() {
     //this.childFunction()
-    console.log('I have change for now');
-    console.log(this.SessionData);
+
     this.doStep();
   }
   ShowResult(num: number) {
     this.sameline = [];
-    console.log('can we just stop');
-    console.log(this.SessionData);
+
     let data = this.SessionData;
     //console.log(this.data);
 
     if (this.SessionData != null) {
-      console.log("hey it's me");
-      console.log(this.SessionData);
       let temp: {
         id: number;
         data: string;
@@ -118,50 +107,19 @@ export class DiffContentComponent implements OnInit {
         };
         tempdata2.push(temp);
         index = index + 1;
-        //console.log(this.listchar[index].length);
       }
       this.answer.ls2 = tempdata2;
       this.answer.ls3 = data.ListFile[num].stt;
-      /*this.answer=
-      {
-        ls1:this.tempdata,
-        ls2:tempdata2,
-        ls3:data.ListFile[0].stt
-      }
-      console.log(this.answer.ls1);
-      console.log(this.answer.ls2);
-      console.log(this.answer.ls3);
-     */
-      console.log(data);
+
       this.displayData2 = this.answer.ls2;
     } else {
-      //this.forgodTest();
     }
-  }
-  shouldHighlightTest(id: any) {
-    //console.log("id is", id);
-    if (id == '1') {
-      return true;
-    }
-
-    return false;
-  }
-
-  triggerScrollToV1(id: any) {
-    const config: ScrollToConfigOptions = {
-      target: id,
-    };
-
-    this.scrollToService.scrollTo(config);
   }
 
   getData(): void {
     const number = Math.floor(Math.random() * 100);
     setTimeout(() => {
-      //this.displayData1 = [...this.SessionData.file1];
       this.displayData1 = [...this.answer.ls1];
-      //this.displayData2 = [...this.SessionData.ListFile[0].data];
-      console.log("now it's the time");
       console.log(this.answer);
       console.log(this.answer.ls2);
       this.displayData2 = [...this.answer.ls2];
@@ -188,7 +146,8 @@ export class DiffContentComponent implements OnInit {
       this.scrollToService.scrollTo(config);
     }
   }
-  triggerScrollToV2(id: number, datavalue: number) {
+  //for scale up purpose
+  /*triggerScrollToV2(id: number, datavalue: number) {
     console.log(id);
     if (id <= 0) {
       return;
@@ -226,18 +185,8 @@ export class DiffContentComponent implements OnInit {
   }
   scrollNext() {
     this.triggerScrollToV2(this.currentId, 1);
-  }
+  }*/
   shouldHighlight(id: number) {
-    /*if (this.answer.ls3[id].length > 0)
-     {
-       console.log(id);
-       
-       return true;
-     }
-
-    else 
-      return false;*/
-
     if (id <= this.answer.ls1.length) {
       if (this.answer.ls3[id - 1][1] > 0) {
         return true;

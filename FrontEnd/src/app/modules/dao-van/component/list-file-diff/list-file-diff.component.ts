@@ -14,24 +14,7 @@ export class ListFileDiffComponent implements OnInit {
   searchAddress: string;
   displayData: Array<object> = [];
   loading = true;
-  data = [
-    {
-      name: 'Hoàn thiện các giải pháp QLNN đối với các hoạt động tôn giáo ở Việt Nam trong thời kỳ đổi mới.docx',
-      count: 80,
-    },
-    {
-      name: 'Quản lý nhà nước đối với tập đoàn kinh tế tư nhân ở Việt Nam hiện nay.pdf',
-      count: 60,
-    },
-    {
-      name: 'Quản lý nhà nước về văn thư, lưu trữ.docx',
-      count: 40,
-    },
-    {
-      name: 'Quản lý nhà nước về quy hoạch xây dựng nông thôn mới.docx',
-      count: 6,
-    },
-  ];
+  data = [{}];
   fileList: Array<object> = [];
   constructor(private messageService: MessageService, private DaoVanService: DaovanServiceService) {}
   ngOnInit(): void {
@@ -39,8 +22,7 @@ export class ListFileDiffComponent implements OnInit {
   }
   ngOnChanges() {
     //this.childFunction()
-    console.log('I have change');
-    console.log(this.FileList2);
+
     this.getData();
   }
   getData(): void {
@@ -51,11 +33,7 @@ export class ListFileDiffComponent implements OnInit {
     }, number);
   }
   sendMessage(name: string) {
-    console.log('this is data', name);
     for (var i = 0; i < this.FileList2.length; i++) {
-      console.log('this is file name');
-      console.log(this.FileList2[i].name);
-
       if (this.FileList2[i].name == name) {
         this.DaoVanService.getSetting(i);
         break;
