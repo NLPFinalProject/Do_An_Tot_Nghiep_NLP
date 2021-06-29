@@ -67,8 +67,6 @@ export class DaoVanDetailComponent implements OnInit {
     };
     this.activatedRoute.queryParams.subscribe(
       (params) => {
-        //console.log(params);
-
         this.params = params;
         if (params.filename1 == undefined && params.File1Name == undefined) {
           if (this.router.getCurrentNavigation().extras.state != null) {
@@ -130,14 +128,17 @@ export class DaoVanDetailComponent implements OnInit {
               //this.ListAllFile =(this.data1.File1Name);
               //this.ListAllFile.push("");
             } else {
+              let tempFileList2 = [];
               for (var i = 0; i < this.data1.ListFileName.length; i++) {
                 let temp = {
                   name: this.data1.ListFileName[i],
                   ratio: this.data1.AllFileRatio[i],
                 };
-                this.FileList2.push(temp);
+                tempFileList2.push(temp);
               }
-
+              this.FileList2 = tempFileList2;
+              console.log(this.FileList2);
+              console.log('end');
               this.ListAllFile = this.data1.ListAllFile;
               this.file1 = this.data1.data;
               this.stt = this.data1.stt;
