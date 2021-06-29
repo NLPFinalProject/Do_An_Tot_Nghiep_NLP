@@ -38,7 +38,7 @@ def sendVerificationMail(email):
         'Hello',
         'this is a confirmnation mail, please enter the code below ' + str(number),
         # user.username
-        'ldthuan1907@gmail.com',
+        'kaitouthuan@gmail.com',
         [email],
         headers={'Message-ID': 'foo'}, )
     email.send()
@@ -50,7 +50,7 @@ def sendNewPasswordEmail(email):
         'Hello',
         'Your new password is ' + str(number),
         # user.username
-        'ldthuan1907@gmail.com',
+        'kaitouthuan@gmail.com',
         [email],
         headers={'Message-ID': 'foo'}, )
     email.send()
@@ -94,14 +94,7 @@ def sendExportMail(data):
     id = data['id']
     
     plain_message = strip_tags(html_message)
-    """email = EmailMessage(
-            'Hello',
-            plain_message,
-            'ldthuan1907@gmail.com',
-            ['kaitouthuan@gmail.com'], 
-            html_message=html_message,
-            headers={'Message-ID': 'foo'},)
-     """
+   
 
     mail.send_mail('Hello', plain_message, 'kaitouthuan@gmail.com', [user], html_message=html_message)
 
@@ -124,15 +117,8 @@ def sendExportMailV2(data,sessionId):
     id = data['id']
     user = User.objects.get(id=id)
     plain_message = strip_tags(html_message)
-    """email = EmailMessage(
-            'Hello',
-            plain_message,
-            'ldthuan1907@gmail.com',
-            ['kaitouthuan@gmail.com'], 
-            html_message=html_message,
-            headers={'Message-ID': 'foo'},)
-     """
+   
 
     #mail.send_mail('Hello', plain_message, 'kaitouthuan@gmail.com', [user], html_message=html_message)
-    mail.send_mail('Hello', plain_message, 'kaitouthuan@gmail.com', ['ldthuan1907@gmail.com'], html_message=html_message)
+    mail.send_mail('Hello', plain_message, 'kaitouthuan@gmail.com', [user], html_message=html_message)
 
