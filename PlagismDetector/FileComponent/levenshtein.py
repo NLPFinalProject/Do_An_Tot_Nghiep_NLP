@@ -1,6 +1,5 @@
-import time
 import Levenshtein as L
-from FileComponent.deep import *
+
 
 def String_insert(string, text, position):
     return string[:position] + text + string[position:]
@@ -14,21 +13,21 @@ def String_substitute(string, new_text, position):
     return string[:position] + new_text + string[(position + 1):]
 
 
-#---------------Thuật toán tính khoảng cách Levenshtein----------------#
+# ---------------Thuật toán tính khoảng cách Levenshtein----------------#
 
 def Create_Matrix(str1, str2):
     matrix = []
-    
+
     # Create matrix
     row = []
     for i in range(len(str2) + 1):
         row = []
         if i == 0:
-          for j in range(len(str1) + 1):
-            row.append(j)
+            for j in range(len(str1) + 1):
+                row.append(j)
         else:
             row.append(i)
-    
+
         matrix.append(row)
 
     # Find minimum edit distance
@@ -38,7 +37,7 @@ def Create_Matrix(str1, str2):
         current_row = previous_row + 1
         for j, c2 in enumerate(str1):
             value = 0
-        
+
             if c2 == c1:
                 value = matrix[previous_row][j]
             else:
@@ -46,7 +45,7 @@ def Create_Matrix(str1, str2):
                 deletions = matrix[previous_row + 1][j]
                 insertions = matrix[previous_row][j + 1]
                 value = min(substitutions, deletions, insertions) + 1
-        
+
             matrix[current_row].append(value)
 
         previous_row += 1
@@ -83,11 +82,11 @@ def Create_Backtrace_List(str1, str2, matrix):
             insertions = matrix[r_NextCell - 1][c_NextCell]
 
             value = min(substitutions, deletions, insertions)
-        
+
             if value == insertions:
                 backtrace_list.append(case_1 + '_' + str2[str2_char_index])
                 r_NextCell = r_NextCell - 1
-            else:         
+            else:
                 if value == deletions:
                     backtrace_list.append(case_2 + '_' + str1[str1_char_index])
                     c_NextCell = c_NextCell - 1
@@ -96,10 +95,11 @@ def Create_Backtrace_List(str1, str2, matrix):
                         backtrace_list.append(case_3 + '_' + str2[str2_char_index])
                         c_NextCell = c_NextCell - 1
                         r_NextCell = r_NextCell - 1
-    
+
     return backtrace_list
 
-# --------------------------------Phần trên là thuật toán, bắt đầu từ đây thôi-----------------------------------------#    
+
+# --------------------------------Phần trên là thuật toán, bắt đầu từ đây thôi-----------------------------------------#
 
 # Khoảng cách Levenshtein giữa 2 chuỗi
 # Input: 2 chuỗi (String)
@@ -107,13 +107,12 @@ def Create_Backtrace_List(str1, str2, matrix):
 #    + Str2 (String)
 # Output: Khoảng cách Levenshtein (kiểu Int)
 def Levenshtein_distance(str1, str2):
-    #time3=time.time()
+    # time3=time.time()
     matrix = Create_Matrix(str1, str2)
-    #print("line 315 create matrix mất %s seconds ---" % (time.time() - time3))
+    # print("line 315 create matrix mất %s seconds ---" % (time.time() - time3))
     rows = len(matrix)
     cols = len(matrix[0])
     return matrix[rows - 1][cols - 1]
-
 
 
 # Source: https://stackoverflow.com/questions/14260126/how-python-levenshtein-ratio-is-computed
@@ -131,7 +130,6 @@ def Matching_ratio(str1, str2):
     # if m < len(str2):
     #     m = len(str2)
     # return (1 - l/m) * 100
-
 
 
 # Tính tỉ lệ tương đồng của từng câu trong mảng 1 với từng câu trong mảng 2
@@ -160,7 +158,6 @@ def Matching_ratio_dict(lst_1, lst_2):
     return result
 
 
-
 # Xuất kết quả theo format: [thứ tự câu trong lst_1, số câu trùng với câu trong lst_1, [các câu trùng theo thứ tự]]
 # Ví dụ: [5, 3, [1, 6, 7]]: Ứng với câu thứ 5 trong lst_1, có 3 câu trùng, các câu trùng là 1, 6, 7
 # Input: 
@@ -171,158 +168,57 @@ def Matching_ratio_dict(lst_1, lst_2):
 # Ví dụ: [[5, 3, [1, 6, 7]], [6, 1, [6]] , [4, 0, []]]
 
 # them ham exportorder3 vao levenshtein
-def ExportOrder(lst_1, lst_2, ratio):
-    result = []
-    sum_ratio=0
-    for i in range(len(lst_1)):
-        export = []
-        similar_sent = []
-        similar_ratio = []
-        count = 0
-        for j in range(len(lst_2)):
-            CurrentRatio = L.ratio(lst_1[i], lst_2[j])*100
-            if CurrentRatio >= ratio:
-                count += 1
-                similar_sent.append(j + 1)
-                similar_ratio.append(CurrentRatio)
-        export.append(i + 1)
-        export.append(count)
-        export.append(similar_sent)
-        export.append(similar_ratio)
-        result.append(export)
-        if (len(similar_ratio) != 0):
-            sum_ratio += max(similar_ratio)
-
-    return result, sum_ratio/len(lst_1)
-
-#ham tinh toan co sử dụgn deep learning
-def ExportOrder2(lst_1, lst_2, ratio):
-    pre=ratio.ratio(lst_1,lst_2)
-    result = []
-    sum_ratio=0
-    for i in range(len(lst_1)):
-        export = []
-        similar_sent = []
-        similar_ratio = []
-        count = 0
-        for j in range(len(lst_2)):
-            CurrentRatio=pre[i*len(lst_2)+j]
-            if CurrentRatio >= ratio:
-                count += 1
-                similar_sent.append(j + 1)
-                similar_ratio.append(CurrentRatio)
-        export.append(i + 1)
-        export.append(count)
-        export.append(similar_sent)
-        export.append(similar_ratio)
-        result.append(export)
-        if(len(similar_ratio)!=0):
-            sum_ratio += max(similar_ratio)
-    return result, sum_ratio / len(lst_1)
-
-
-"""def ExportOrder(lst_1, lst_2, ratio):
-    result = []
-    sum_ratio=0
-    for i in range(len(lst_1)):
-        export = []
-        similar_sent = []
-        similar_ratio = []
-        count = 0
-        for j in range(len(lst_2)):
-            CurrentRatio = L.ratio(lst_1[i], lst_2[j])100
-            if CurrentRatio = ratio
-                count += 1
-                similar_sent.append(j + 1)
-                similar_ratio.append(CurrentRatio)
-        export.append(i + 1)
-        export.append(count)
-        export.append(similar_sent)
-        export.append(similar_ratio)
-        result.append(export)
-        if (len(similar_ratio) != 0)
-            sum_ratio += max(similar_ratio)
-
-    return result, sum_ratiolen(lst_1)
-
-
-#ham tinh toan co sử dụgn deep learning
-def ExportOrder2(lst_1, lst_2, ratio):
-    pre=ratio.ratio(lst_1,lst_2)
-    result = []
-    sum_ratio=0
-    for i in range(len(lst_1)):
-        export = []
-        similar_sent = []
-        similar_ratio = []
-        count = 0
-        for j in range(len(lst_2)):
-            CurrentRatio=pre[len(lst_2)+j]
-            if CurrentRatio = ratio:
-                count += 1
-                similar_sent.append(j + 1)
-                similar_ratio.append(CurrentRatio)
-        export.append(i + 1)
-        export.append(count)
-        export.append(similar_sent)
-        export.append(similar_ratio)
-        result.append(export)
-        if(len(similar_ratio)!=0):
-            sum_ratio += max(similar_ratio)
-    return result, sum_ratio  len(lst_1)
-"""
-"""def ExportOrder(lst_1, lst_2, ratio):
+def ExportOrder(lst1, lst2, ratio):
     result = []
     length = 0
-    for i in range(len(lst_1)):
+    sumRatio = 0
+    for i in range(len(lst1)):
         export = []
-        similar_sent = []
-        similar_ratio = []
+        similarSen = []
+        similarRatio = []
         count = 0
-        for j in range(len(lst_2)):
-            CurrentRatio = L.ratio(lst_1[i], lst_2[j])*100
+        for j in range(len(lst2)):
+            CurrentRatio = L.ratio(lst1[i], lst2[j]) * 100
             if CurrentRatio >= ratio:
                 count += 1
-                similar_sent.append(j + 1)
-                similar_ratio.append(CurrentRatio)
+                similarSen.append(j + 1)
+                similarRatio.append(CurrentRatio)
         if count != 0:
             length += 1
         export.append(i + 1)
         export.append(count)
-        export.append(similar_sent)
-        export.append(similar_ratio)
+        export.append(similarSen)
+        export.append(similarRatio)
         result.append(export)
-        sum_ratio=sum(similar_ratio)/(100*len(lst_1))
-    return result, length*sum_ratio/len(lst_1)*100
+        if (len(similarRatio) != 0):
+            sumRatio += max(similarRatio)
+        return result, sumRatio / len(lst1)
 
 
-#ham tinh toan co sử dụgn deep learning
-def ExportOrder2(lst_1, lst_2, ratio):
-    pre=ratio.ratio(lst_1,lst_2)
+# ham tinh toan co sử dụgn deep learning
+def ExportOrder2(lst1, lst2, ratio):
+    pre = ratio.ratio(lst1, lst2)
     result = []
     length = 0
-    for i in range(len(lst_1)):
+    sumRatio = 0
+    for i in range(len(lst1)):
         export = []
-        similar_sent = []
-        similar_ratio = []
+        similarSen = []
+        similarRatio = []
         count = 0
-        for j in range(len(lst_2)):
-            CurrentRatio=pre[i*len(lst_2)+j]
+        for j in range(len(lst2)):
+            CurrentRatio = pre[i * len(lst2) + j]
             if CurrentRatio >= ratio:
                 count += 1
-                similar_sent.append(j + 1)
-                similar_ratio.append(CurrentRatio)
+                similarSen.append(j + 1)
+                similarRatio.append(CurrentRatio)
         if count != 0:
             length += 1
         export.append(i + 1)
         export.append(count)
-        export.append(similar_sent)
-        export.append(similar_ratio)
+        export.append(similarSen)
+        export.append(similarRatio)
         result.append(export)
-        sum_ratio = sum(similar_ratio) / (100 * len(lst_1))
-    return result, length * sum_ratio / len(lst_1) * 100
-"""
-
-if __name__ == "__main__":
-    main()
-
+        if (len(similarRatio) != 0):
+            sumRatio += max(similarRatio)
+        return result, sumRatio / len(lst1)

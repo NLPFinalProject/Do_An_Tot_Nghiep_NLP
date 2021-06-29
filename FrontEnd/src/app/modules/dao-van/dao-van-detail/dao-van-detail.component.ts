@@ -137,8 +137,7 @@ export class DaoVanDetailComponent implements OnInit {
                 tempFileList2.push(temp);
               }
               this.FileList2 = tempFileList2;
-              console.log(this.FileList2);
-              console.log('end');
+
               this.ListAllFile = this.data1.ListAllFile;
               this.file1 = this.data1.data;
               this.stt = this.data1.stt;
