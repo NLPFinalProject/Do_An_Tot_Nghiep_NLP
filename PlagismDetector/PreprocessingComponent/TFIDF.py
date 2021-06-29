@@ -4,14 +4,24 @@ import time
 from django.conf import settings
 import os
 from underthesea import sent_tokenize, word_tokenize
+
 # import PreprocessingComponent.views as p
 import PreprocessingComponent.views as p
 from urllib.request import urlopen, Request
 from bs4 import BeautifulSoup
-from ScrapeSearchEngine.ScrapeSearchEngine import Google,Duckduckgo,Givewater,Bing,Yahoo
+from ScrapeSearchEngine.ScrapeSearchEngine import (
+    Google,
+    Duckduckgo,
+    Givewater,
+    Bing,
+    Yahoo,
+)
 import requests
-userAgent = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)'
-             ' Chrome/89.0.4389.114 Safari/537.36 Edg/89.0.774.68')
+
+userAgent = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)"
+    " Chrome/89.0.4389.114 Safari/537.36 Edg/89.0.774.68"
+)
 
 
 # search on google "my user agent"
@@ -24,15 +34,14 @@ def is_downloadable(url):
     try:
         h = requests.head(url, allow_redirects=True)
         header = h.headers
-        content_type = header.get('content-type')
-        if 'text' in content_type.lower():
+        content_type = header.get("content-type")
+        if "text" in content_type.lower():
             return False
-        if 'html' in content_type.lower():
+        if "html" in content_type.lower():
             return False
         return True
     except:
         return False
-
 
 
 def search_keyword(search):
@@ -60,23 +69,24 @@ def search_keyword(search):
     return list(dict.fromkeys(list_url))
 
 
-
 # download file downloadable such as: pdf, docx,...
 def download_document(url):
-    if (is_downloadable(url)):
+    if is_downloadable(url):
         name = os.path.basename(url)
         r = requests.get(url, allow_redirects=True)
-        f = open(settings.MEDIA_ROOT + '\\DocumentFile\\file_downloaded\\' + name, 'wb')
+        f = open(settings.MEDIA_ROOT + "\\DocumentFile\\file_downloaded\\" + name, "wb")
         f.write(r.content)
-        return settings.MEDIA_ROOT + '\\DocumentFile\\file_downloaded\\' + name
+        return settings.MEDIA_ROOT + "\\DocumentFile\\file_downloaded\\" + name
 
 
 # crawl text from html website then preprocess and give output: list sentence after preprocessing.
 def crawl_web(url):
     try:
-        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)'
-                 ' Chrome/89.0.4389.114 Safari/537.36 Edg/89.0.774.68'}
-        req=Request(url,headers=headers)
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)"
+            " Chrome/89.0.4389.114 Safari/537.36 Edg/89.0.774.68"
+        }
+        req = Request(url, headers=headers)
         html = urlopen(req).read()
         soup = BeautifulSoup(html, features="html.parser")
 
@@ -92,15 +102,16 @@ def crawl_web(url):
         chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
 
         # drop blank lines
-        text = '\n'.join(chunk for chunk in chunks if chunk)
+        text = "\n".join(chunk for chunk in chunks if chunk)
         temp = text.split("\n")
         for para in temp:
             list_sentence.extend(sent_tokenize(para))
-            temp1=p.split_sent_list(list_sentence,450)
+            temp1 = p.split_sent_list(list_sentence, 450)
             res = [sen.replace("\xa0", "") for sen in temp1]
-        return res #list sentence
+        return res  # list sentence
     except:
         return None
+
 
 # Lower tất cả các từ
 # Input: Danh sách các từ (list in list)
@@ -117,20 +128,18 @@ def tokenize_lower(tokenize):
     return lst
 
 
-
-
 # Cách chạy chương trình:
 # Sửa path của các file và thực thi chương trình
 
-STOPWORD_FILE_PATH = 'PreprocessingComponent/stopword'
-ALPHABET_FILE_PATH = 'PreprocessingComponent/alphabet'
+STOPWORD_FILE_PATH = "PreprocessingComponent/stopword"
+ALPHABET_FILE_PATH = "PreprocessingComponent/alphabet"
 
 
 # Tách dòng của text và lưu vào mảng
 # Input: file .txt
 # Output: danh sách các phần tử (list)
 def preprocess_text_file(txt_file):
-    f = open(txt_file, 'r', encoding='utf-8')
+    f = open(txt_file, "r", encoding="utf-8")
     elements = f.read().split("\n")
     f.close()
     return elements
@@ -201,6 +210,7 @@ def get_top(dic, n):
 # Input: Dictionary của tất cả các từ đã tính ở hàm total_word_and_len và tổng số từ của văn bản (đã loại bỏ stopword)
 # Output: Giá trị TF của từng từ (dict). VD: {hài_hước: 0.4, 'Bảo_Đại': 0.2}
 
+
 def TF(words):
     tf = dict()
 
@@ -209,6 +219,7 @@ def TF(words):
 
     return tf
 
+
 # Tính giá trị IDF của tất cả từ
 # Input: Dictionary của tất cả các từ đã tính ở hàm total_word_and_len và list đã tách từ tách câu
 # Output: Giá trị IDF của từng từ (dict). VD: {hài_hước: 0.01297742362, 'Bảo_Đại': 0.0643231124}
@@ -216,7 +227,9 @@ def IDF(words, tokenize_lower):
     idf = dict()
 
     for key, val in words.items():
-        idf[key] = math.log(len(tokenize_lower) / (1 + check_word_in_sent(key, tokenize_lower)))
+        idf[key] = math.log(
+            len(tokenize_lower) / (1 + check_word_in_sent(key, tokenize_lower))
+        )
 
     return idf
 
@@ -315,8 +328,8 @@ def get_link(sentence, tokenize):
     return link
 
 
-if __name__ == '__main__':
-    FILE_PATH = '.\\testfile\\test.pdf'
+if __name__ == "__main__":
+    FILE_PATH = ".\\testfile\\test.pdf"
     start = time.time()
     file_preprocessed = p.preprocess(FILE_PATH)
     link = get_link(file_preprocessed[1])

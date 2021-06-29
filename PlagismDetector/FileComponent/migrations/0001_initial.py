@@ -15,66 +15,140 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='DataDocument',
+            name="DataDocument",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('DataDocumentName', models.CharField(max_length=1000)),
-                ('DataDocumentType', models.CharField(max_length=20)),
-                ('DataDocumentFile', models.FileField(max_length=1000, upload_to='DocumentFile/')),
-                ('SessionId', models.IntegerField(default=0)),
-                ('DocumentStatus', models.BooleanField(default=False)),
-                ('DataDocumentAuthor', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("DataDocumentName", models.CharField(max_length=1000)),
+                ("DataDocumentType", models.CharField(max_length=20)),
+                (
+                    "DataDocumentFile",
+                    models.FileField(max_length=1000, upload_to="DocumentFile/"),
+                ),
+                ("SessionId", models.IntegerField(default=0)),
+                ("DocumentStatus", models.BooleanField(default=False)),
+                (
+                    "DataDocumentAuthor",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='DataDocumentFile',
+            name="DataDocumentFile",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('DataDocumentFile', models.FileField(upload_to='DocumentFile/')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("DataDocumentFile", models.FileField(upload_to="DocumentFile/")),
             ],
         ),
         migrations.CreateModel(
-            name='Document',
+            name="Document",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('description', models.CharField(blank=True, max_length=255)),
-                ('document', models.FileField(upload_to='documents/')),
-                ('uploaded_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("description", models.CharField(blank=True, max_length=255)),
+                ("document", models.FileField(upload_to="documents/")),
+                ("uploaded_at", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='DocumentSession',
+            name="DocumentSession",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('NumOfFile', models.IntegerField(default=0)),
-                ('Date', models.DateTimeField(auto_now_add=True)),
-                ('Status', models.BooleanField(default=False)),
-                ('SessionUser', models.IntegerField(default=0)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("NumOfFile", models.IntegerField(default=0)),
+                ("Date", models.DateTimeField(auto_now_add=True)),
+                ("Status", models.BooleanField(default=False)),
+                ("SessionUser", models.IntegerField(default=0)),
             ],
         ),
         migrations.CreateModel(
-            name='ReportDocument',
+            name="ReportDocument",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('JsonFile', models.TextField(max_length=700)),
-                ('DocumentJson', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='FileComponent.datadocument')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("JsonFile", models.TextField(max_length=700)),
+                (
+                    "DocumentJson",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="FileComponent.datadocument",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='DataDocumentContent',
+            name="DataDocumentContent",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('DataDocumentSentence', models.CharField(max_length=500)),
-                ('DataDocumentSentenceLength', models.IntegerField(default=0)),
-                ('DataDocumentNo', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='FileComponent.datadocument')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("DataDocumentSentence", models.CharField(max_length=500)),
+                ("DataDocumentSentenceLength", models.IntegerField(default=0)),
+                (
+                    "DataDocumentNo",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="FileComponent.datadocument",
+                    ),
+                ),
             ],
         ),
         migrations.AddIndex(
-            model_name='datadocumentcontent',
-            index=models.Index(fields=['DataDocumentNo', 'DataDocumentSentence'], name='DataDocumentNo_idx'),
+            model_name="datadocumentcontent",
+            index=models.Index(
+                fields=["DataDocumentNo", "DataDocumentSentence"],
+                name="DataDocumentNo_idx",
+            ),
         ),
         migrations.AddIndex(
-            model_name='datadocumentcontent',
-            index=models.Index(fields=['DataDocumentSentence'], name='DataDocumentSentence_idx'),
+            model_name="datadocumentcontent",
+            index=models.Index(
+                fields=["DataDocumentSentence"], name="DataDocumentSentence_idx"
+            ),
         ),
     ]

@@ -8,10 +8,11 @@ class CustomerSerializer(serializers.ModelSerializer):
         model = Customer
         fields = ('username','password')
         """
-from rest_framework import serializers 
-#from User.models import Customer
+from rest_framework import serializers
+
+# from User.models import Customer
 from UserComponent.models import User
- 
+
 """class CustomerSerializer(serializers.ModelSerializer):
  
     class Meta:
@@ -20,16 +21,18 @@ from UserComponent.models import User
                   'name',
                   'age',
                   'active')"""
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username',
-                  'password',
-                  'name',
-                  'EmailOrganization',
-                  'DateOfBirth',
-                  'is_active',
-                  'phone',
-                  'is_lock'
-                  
+        fields = [
+            "username",
+            "password",
+            "name",
+            "EmailOrganization",
+            "DateOfBirth",
+            "is_active",
+            "phone",
+            "is_lock",
         ]

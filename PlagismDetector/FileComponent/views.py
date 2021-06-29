@@ -7,12 +7,15 @@ import json
 from django.http.response import JsonResponse
 from django.http import HttpResponse
 from rest_framework import status
+
 # cần import cho db
 from .models import DataDocument, DataDocumentContent, DocumentSession, ReportDocument
 from django.db import connections, connection
+
 # can import cho levenshtein
 from .levenshtein import ExportOrder
 from PreprocessingComponent.views import *
+
 # cần import cho up file
 from django.core.files.storage import FileSystemStorage
 from .form import UploadOneFileForm, UploadManyFileForm
@@ -21,19 +24,21 @@ from PreprocessingComponent import views as p
 from PreprocessingComponent import TFIDF as internetKeywordSearch
 from UserComponent.models import User
 import MailComponent.views as mail
+
 # import cho tách câu
 import os
 from collections import Counter
 from func_timeout import func_timeout, FunctionTimedOut
 from UserComponent.models import User
 import time
+
 # import json
 
 numPageSearch = 5
 resultRatio = 50
 maxFile = 1
 rat = 50
-timeout=6 # 6 seconds
+timeout = 6  # 6 seconds
 
 # tinh trong exportorder cai phan tram lai
 # them try catch owr cac ham inport va test, makedatareadoc.
@@ -46,10 +51,8 @@ timeout=6 # 6 seconds
 # extension = extension
 def formatString(folder, fileName, extension):
     FileString = "{base}\\{folder}\\{fileName}.{extension}".format(
-        base=settings.MEDIA_ROOT,
-        folder=folder,
-        fileName=fileName,
-        extension=extension)
+        base=settings.MEDIA_ROOT, folder=folder, fileName=fileName, extension=extension
+    )
     return FileString
 
 
@@ -58,9 +61,8 @@ def formatString(folder, fileName, extension):
 # fileName = filename
 def formatQuery(folder, fileName):
     FileString = "{base}\\{folder}\\{fileName}".format(
-        base=settings.MEDIA_ROOT,
-        folder=folder,
-        fileName=fileName)
+        base=settings.MEDIA_ROOT, folder=folder, fileName=fileName
+    )
     return FileString
 
 
@@ -69,9 +71,12 @@ def formatQuery(folder, fileName):
 # fileName = filename
 # extension = extension
 def formatRaw(sentence):
-    queryString = "SELECT id FROM `filecomponent_datadocumentcontent`" + \
-                  "WHERE MATCH(DataDocumentSentence) AGAINST({sentence})".format(
-                      sentence=sentence)
+    queryString = (
+        "SELECT id FROM `filecomponent_datadocumentcontent`"
+        + "WHERE MATCH(DataDocumentSentence) AGAINST({sentence})".format(
+            sentence=sentence
+        )
+    )
     return queryString
 
 
@@ -79,7 +84,7 @@ def formatRaw(sentence):
 def databaseSearch(fileName1Sentence):
     documentName = []
     documentNameId = []
-    cursor = connections['default'].cursor()
+    cursor = connections["default"].cursor()
     for fileSentence in fileName1Sentence:
         sentence = chr(34) + fileSentence.replace(chr(34), "") + chr(34)
         queryRaw = formatRaw(sentence)
@@ -101,7 +106,7 @@ def makeDataReadDoc(internetPage, userId):
     successlink = []
     for link in internetPage:
         try:
-            if (internetKeywordSearch.is_downloadable(link)):
+            if internetKeywordSearch.is_downloadable(link):
                 # link_pdf.append(link)
                 file_pdf = internetKeywordSearch.download_document(link)
                 file_preprocessed = p.preprocess(file_pdf)
@@ -109,20 +114,23 @@ def makeDataReadDoc(internetPage, userId):
                     DataDocumentName=link,
                     DataDocumentAuthor_id=userId,
                     DataDocumentType="internetPdf",
-                    DataDocumentFile=file_preprocessed[2]
+                    DataDocumentFile=file_preprocessed[2],
                 )
                 data.save()
                 dataReadDoc.append(file_preprocessed[0])
                 successlink.append(link)
-                print("\nlink này thành công:=====\n",link)
+                print("\nlink này thành công:=====\n", link)
                 for sentence in file_preprocessed[0]:
                     data.datadocumentcontent_set.create(
                         DataDocumentSentence=sentence,
-                        DataDocumentSentenceLength=len(sentence))
+                        DataDocumentSentenceLength=len(sentence),
+                    )
                 os.remove(file_pdf)
             else:
                 try:
-                    lstSentence = func_timeout(timeout, internetKeywordSearch.crawl_web(link))
+                    lstSentence = func_timeout(
+                        timeout, internetKeywordSearch.crawl_web(link)
+                    )
                 except FunctionTimedOut:
                     continue
                 if lstSentence == None:
@@ -131,17 +139,18 @@ def makeDataReadDoc(internetPage, userId):
                     DataDocumentName=link,
                     DataDocumentAuthor_id=userId,
                     DataDocumentType="internet",
-                    DataDocumentFile=link
+                    DataDocumentFile=link,
                 )
                 data.save()
                 dataReadDoc.append(lstSentence)
                 successlink.append(link)
-                print("\nlink này thành công:=====\n",link)
+                print("\nlink này thành công:=====\n", link)
                 for sentence in lstSentence:
                     data.datadocumentcontent_set.create(
                         DataDocumentSentence=sentence,
-                        DataDocumentSentenceLength=len(sentence))
-            if(len(dataReadDoc) >= 5):
+                        DataDocumentSentenceLength=len(sentence),
+                    )
+            if len(dataReadDoc) >= 5:
                 break
         except:
             pass
@@ -160,28 +169,33 @@ def makeData(countReport, ReportFileName2Sentence, reportDataReadDoc):
 
 # result
 # systemSearch
-@api_view(('POST',))
+@api_view(("POST",))
 def documentimportDatabase(request):
-    query = User.objects.get(pk=request.data['id'])
-    if(query.is_lock==1):
+    query = User.objects.get(pk=request.data["id"])
+    if query.is_lock == 1:
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
     data1 = request.data
     try:
         data1["filenameA"], session = uploadDoc2(
-            request.POST, request.FILES, request.data['id'], request.data["agreeStatus"], request.data["sessionName"],
-            "Database")
+            request.POST,
+            request.FILES,
+            request.data["id"],
+            request.data["agreeStatus"],
+            request.data["sessionName"],
+            "Database",
+        )
     except:
         session = DocumentSession(NumOfFile=1, SessionUser=id, Status="Fail")
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
     myDict, fileName1, userId = test1(data1, session)
-    if(myDict == None and fileName1==None and userId==None):
+    if myDict == None and fileName1 == None and userId == None:
         session = DocumentSession(NumOfFile=1, SessionUser=id, Status="Fail")
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
     jsonFile(myDict, fileName1, userId, session)
     jsonData = readJson(session, userId)
     session1 = DocumentSession.objects.get(pk=session)
-    session1.Status = 'Success'
+    session1.Status = "Success"
     session1.save()
     # mail.sendExportMailV2(request.data)
     sessionId = session1.id
@@ -190,17 +204,22 @@ def documentimportDatabase(request):
 
 
 # kiểm vs internet
-@api_view(('POST',))
+@api_view(("POST",))
 def documentimportInternet(request):
-    query = User.objects.get(pk=request.data['id'])
-    if (query.is_lock == 1):
+    query = User.objects.get(pk=request.data["id"])
+    if query.is_lock == 1:
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
     data1 = request.data
 
     try:
         data1["filenameA"], session = uploadDoc2(
-            request.POST, request.FILES, request.data['id'], request.data["agreeStatus"], request.data["sessionName"],
-            "Internet")
+            request.POST,
+            request.FILES,
+            request.data["id"],
+            request.data["agreeStatus"],
+            request.data["sessionName"],
+            "Internet",
+        )
     except:
         session = DocumentSession(NumOfFile=1, SessionUser=id, Status="Fail")
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
@@ -216,17 +235,22 @@ def documentimportInternet(request):
     return Response(status=status.HTTP_200_OK)
 
 
-@api_view(('POST',))
+@api_view(("POST",))
 def documentimportDatabaseInternet(request):
-    query = User.objects.get(pk=request.data['id'])
-    if (query.is_lock == 1):
+    query = User.objects.get(pk=request.data["id"])
+    if query.is_lock == 1:
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
     data1 = request.data
     try:
         data1["filenameA"], session = uploadDoc2(
-            request.POST, request.FILES, request.data['id'], request.data["agreeStatus"], request.data["sessionName"],
-            "Database and internet")
+            request.POST,
+            request.FILES,
+            request.data["id"],
+            request.data["agreeStatus"],
+            request.data["sessionName"],
+            "Database and internet",
+        )
     except:
         session = DocumentSession(NumOfFile=1, SessionUser=id, Status="Fail")
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
@@ -247,7 +271,7 @@ def documentimportDatabaseInternet(request):
 
         jsonData = readJson(session, userId)
         session1 = DocumentSession.objects.get(pk=session)
-        session1.Status = 'Success'
+        session1.Status = "Success"
         # session1.Status = "Thành công"
         session1.save()
         sessionId = session1.id
@@ -264,29 +288,39 @@ def documentimportDatabaseInternet(request):
 
 # import mới
 # dùng kiểm với data ng dùng
-@api_view(('POST', 'GET'))
+@api_view(("POST", "GET"))
 def documentimport(request):
-    query = User.objects.get(pk=request.data['id'])
-    if(query.is_lock==1):
+    query = User.objects.get(pk=request.data["id"])
+    if query.is_lock == 1:
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
     data1 = request.data
     try:
         data1["filenameA"], session = uploadDoc2(
-            request.POST, request.FILES, request.data['id'], request.data["agreeStatus"], request.data["sessionName"],
-            "Multiple files")
+            request.POST,
+            request.FILES,
+            request.data["id"],
+            request.data["agreeStatus"],
+            request.data["sessionName"],
+            "Multiple files",
+        )
     except:
         session = DocumentSession(NumOfFile=1, SessionUser=id, Status="Fail")
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
     data1["filenameB"] = uploadDocList2(
-        request.POST, request.FILES, request.data['id'], session, request.data["agreeStatus"])
+        request.POST,
+        request.FILES,
+        request.data["id"],
+        session,
+        request.data["agreeStatus"],
+    )
 
     myDict, fileName1, userId = test3(data1, session)
     jsonFile(myDict, fileName1, userId, session)
     jsonData = readJson(session, userId)
     session1 = DocumentSession.objects.get(pk=session)
-    if(session1.ChildReport > 0):
-        session1.Status = 'Success'
+    if session1.ChildReport > 0:
+        session1.Status = "Success"
     else:
         session1.Status = "Fail"
     session1.save()
@@ -302,15 +336,17 @@ def test1(data, session):
     fileName2Sentence = []
     # cursor = connections['default'].cursor()
     # fileName1
-    querys = DataDocument.objects \
-        .filter(DataDocumentAuthor=str(userId)) \
-        .filter(DataDocumentName=fileName1.split(".")[0]) \
-        .filter(DataDocumentType=fileName1.split(".")[1]) \
+    querys = (
+        DataDocument.objects.filter(DataDocumentAuthor=str(userId))
+        .filter(DataDocumentName=fileName1.split(".")[0])
+        .filter(DataDocumentType=fileName1.split(".")[1])
         .filter(SessionId=session)
+    )
     fetchQuery = querys[0].DataDocumentFile
     try:
         file_preprocessed = p.preprocess(
-            formatQuery('DocumentFile', os.path.basename(str(fetchQuery))))
+            formatQuery("DocumentFile", os.path.basename(str(fetchQuery)))
+        )
         fileName1Sentence = file_preprocessed[0]
     except:
         return -1, -1, -1
@@ -327,15 +363,16 @@ def test1(data, session):
     fileName2 = []
     fileRatio = []
     for idFile in idStatistic.items():
-        if (countReport < maxFile):
+        if countReport < maxFile:
             querys = DataDocumentContent.objects.filter(
-                DataDocumentNo_id=int(idFile[0])).order_by('id')
+                DataDocumentNo_id=int(idFile[0])
+            ).order_by("id")
             fileName2Sentence = [
-                querys[i].DataDocumentSentence for i in range(len(querys))]
-            result = ExportOrder(
-                fileName1Sentence, fileName2Sentence, resultRatio)
+                querys[i].DataDocumentSentence for i in range(len(querys))
+            ]
+            result = ExportOrder(fileName1Sentence, fileName2Sentence, resultRatio)
 
-            if (result[1] >= resultRatio and countReport < maxFile):
+            if result[1] >= resultRatio and countReport < maxFile:
                 countReport += 1
                 reportIdFile.append(idFile[0])
                 reportDataReadDoc.append(result[0])
@@ -358,11 +395,12 @@ def test1(data, session):
     myDict["ListFileName"] = fileName2
     myDict["ListFile"] = myDict4
     myDict["file1"] = fileName1Sentence
-    querys = DataDocument.objects \
-        .filter(DataDocumentAuthor=str(userId)) \
-        .filter(DataDocumentName=fileName1.split(".")[0]) \
-        .filter(DataDocumentType=fileName1.split(".")[1]) \
+    querys = (
+        DataDocument.objects.filter(DataDocumentAuthor=str(userId))
+        .filter(DataDocumentName=fileName1.split(".")[0])
+        .filter(DataDocumentType=fileName1.split(".")[1])
         .filter(SessionId=session)
+    )
     resfileid = querys[0].id
     resfile = DataDocument.objects.get(pk=resfileid)
     resfile.DocumentStatus = True
@@ -371,26 +409,30 @@ def test1(data, session):
 
 
 def test2(data, session):
-    fileName1 = data['filenameA']
-    userId = int(data['id'])
+    fileName1 = data["filenameA"]
+    userId = int(data["id"])
     # cursor = connections['default'].cursor()
     # fileName1
-    querys = DataDocument.objects \
-        .filter(DataDocumentAuthor=str(userId)) \
-        .filter(DataDocumentName=fileName1.split(".")[0]) \
-        .filter(DataDocumentType=fileName1.split(".")[1]) \
+    querys = (
+        DataDocument.objects.filter(DataDocumentAuthor=str(userId))
+        .filter(DataDocumentName=fileName1.split(".")[0])
+        .filter(DataDocumentType=fileName1.split(".")[1])
         .filter(SessionId=session)
+    )
     fetchQuery = querys[0].DataDocumentFile
     # return tag preprocess
     try:
         file_preprocessed = p.preprocess(
-            formatQuery('DocumentFile', os.path.basename(str(fetchQuery))))
+            formatQuery("DocumentFile", os.path.basename(str(fetchQuery)))
+        )
         fileName1Sentence = file_preprocessed[0]
     except:
         return None, None, None
 
     # internet search
-    internetPage = internetKeywordSearch.get_link(file_preprocessed[0],file_preprocessed[1])
+    internetPage = internetKeywordSearch.get_link(
+        file_preprocessed[0], file_preprocessed[1]
+    )
     print("link tìm được là: ", internetPage)
     dataReadDoc, sucessLink = makeDataReadDoc(internetPage, userId)
     # B2 trả json
@@ -413,11 +455,12 @@ def test2(data, session):
     myDict["ListFileName"] = listFileName
     myDict["File1Name"] = fileName1
     myDict["ListFile"] = myDict4
-    querys = DataDocument.objects \
-        .filter(DataDocumentAuthor=str(userId)) \
-        .filter(DataDocumentName=fileName1.split(".")[0]) \
-        .filter(DataDocumentType=fileName1.split(".")[1]) \
+    querys = (
+        DataDocument.objects.filter(DataDocumentAuthor=str(userId))
+        .filter(DataDocumentName=fileName1.split(".")[0])
+        .filter(DataDocumentType=fileName1.split(".")[1])
         .filter(SessionId=session)
+    )
     resfileid = querys[0].id
     resfile = DataDocument.objects.get(pk=resfileid)
     resfile.DocumentStatus = True
@@ -427,7 +470,7 @@ def test2(data, session):
 
 def test3(data, session):
     fileName1 = data["filenameA"]
-    userId = int(data['id'])
+    userId = int(data["id"])
     fileName2 = data["filenameB"]
     # if request.method == 'POST':
     #     fileName1 = request.data["filename1"]
@@ -441,15 +484,17 @@ def test3(data, session):
     # B1 start đọc data từ database
     # fileName1
     # query trên database
-    querys = DataDocument.objects \
-        .filter(DataDocumentAuthor=str(userId)) \
-        .filter(DataDocumentName=fileName1.split(".")[0]) \
-        .filter(DataDocumentType=fileName1.split(".")[1]) \
+    querys = (
+        DataDocument.objects.filter(DataDocumentAuthor=str(userId))
+        .filter(DataDocumentName=fileName1.split(".")[0])
+        .filter(DataDocumentType=fileName1.split(".")[1])
         .filter(SessionId=session)
+    )
     fetchQuery = querys[0].DataDocumentFile
     try:
         file_preprocessed = p.preprocess(
-            formatQuery('DocumentFile', os.path.basename(str(fetchQuery))))
+            formatQuery("DocumentFile", os.path.basename(str(fetchQuery)))
+        )
         fileName1Sentence = file_preprocessed[0]
     except:
         return -1, -1, -1
@@ -461,14 +506,16 @@ def test3(data, session):
     for fileUName in fileName2:
         try:
             # query database
-            querys = DataDocument.objects.filter(
-                DataDocumentAuthor=str(userId)) \
-                .filter(DataDocumentName=fileUName.split(".")[0]) \
-                .filter(DataDocumentType=fileUName.split(".")[1]) \
+            querys = (
+                DataDocument.objects.filter(DataDocumentAuthor=str(userId))
+                .filter(DataDocumentName=fileUName.split(".")[0])
+                .filter(DataDocumentType=fileUName.split(".")[1])
                 .filter(SessionId=session)
+            )
             fetchQuery = querys[0].DataDocumentFile
             file_preprocessed = p.preprocess(
-                formatQuery('DocumentFile', os.path.basename(str(fetchQuery))))
+                formatQuery("DocumentFile", os.path.basename(str(fetchQuery)))
+            )
             lst2 = file_preprocessed[0]
             dataReadDoc.append(lst2)
             successFile.append(fileUName)
@@ -476,9 +523,9 @@ def test3(data, session):
             a.ChildReport = a.ChildReport + 1
             a.save()
         except Exception:
-            if(len(fileName2)==1):
+            if len(fileName2) == 1:
                 a = DocumentSession.objects.get(pk=session)
-                a.Status="Fail"
+                a.Status = "Fail"
                 a.save()
             pass
     fileName2 = successFile
@@ -502,11 +549,12 @@ def test3(data, session):
     myDict["ListAllFile"] = []
     myDict["ListAllFile"].append(fileName1)
     myDict["ListAllFile"].extend(fileName2)
-    querys = DataDocument.objects \
-        .filter(DataDocumentAuthor=str(userId)) \
-        .filter(DataDocumentName=fileName1.split(".")[0]) \
-        .filter(DataDocumentType=fileName1.split(".")[1]) \
+    querys = (
+        DataDocument.objects.filter(DataDocumentAuthor=str(userId))
+        .filter(DataDocumentName=fileName1.split(".")[0])
+        .filter(DataDocumentType=fileName1.split(".")[1])
         .filter(SessionId=session)
+    )
     resfileid = querys[0].id
     resfile = DataDocument.objects.get(pk=resfileid)
     resfile.DocumentStatus = True
@@ -514,24 +562,24 @@ def test3(data, session):
     return myDict, fileName1, userId
 
 
-@api_view(('POST', 'GET'))
+@api_view(("POST", "GET"))
 def FinalCheck(request):
-    choice = request.data['choice']
+    choice = request.data["choice"]
     # filename = request.data['id']
     if choice is not None:
         print(choice)
         print(type(choice))
         if choice == 1:
-            redirect('')
+            redirect("")
         elif choice == 2:
-            print('database')
+            print("database")
             res = documentimportDatabase()
-            print('res is ------------------', res)
+            print("res is ------------------", res)
             return Response(res, status.HTTP_200_OK)
         elif choice == 3:
-            print('internet')
+            print("internet")
             res = documentimportInternet(request.data)
-            print('res is ------------------', res)
+            print("res is ------------------", res)
             return Response(res, status.HTTP_200_OK)
         elif choice == 4:
             res = documentimportDatabaseInternet(request.data)
@@ -551,11 +599,16 @@ def uploadDoc2(PostData, FileData, ID, agreeStatus, sessionName, sessionType):
     if form1.is_valid():
         # save form người dùng gửi
         data = form1.cleaned_data
-        file1 = data['DataDocumentFile']  # abc.doc
+        file1 = data["DataDocumentFile"]  # abc.doc
         file_name = file1.name.split(".")[0]  # doc
         extension = file1.name.split(".")[-1]  # abc
         content = file_name
-        session = DocumentSession(NumOfFile=1, SessionUser=id, SessionName=sessionName, SessionType=sessionType)
+        session = DocumentSession(
+            NumOfFile=1,
+            SessionUser=id,
+            SessionName=sessionName,
+            SessionType=sessionType,
+        )
         session.save()
         data = DataDocument(
             DataDocumentName=file_name,
@@ -569,35 +622,36 @@ def uploadDoc2(PostData, FileData, ID, agreeStatus, sessionName, sessionType):
 
         # data= form1.save(commit = False)
         # agreeStatus = FileName if true, =0 if false
-        if (agreeStatus):
+        if agreeStatus:
 
             file_preprocessed = p.preprocess(
                 formatString(
-                    'DocumentFile',
-                    data.DataDocumentName,
-                    data.DataDocumentType))
+                    "DocumentFile", data.DataDocumentName, data.DataDocumentType
+                )
+            )
 
             # //save to db//
             length = len(file_preprocessed[0])
             for i in range(length):
                 a = data.datadocumentcontent_set.create(
                     DataDocumentSentence=file_preprocessed[0][i],
-                    DataDocumentSentenceLength=len(file_preprocessed[0][i]))
-        result = file_name + '.' + extension
-        content = {'filename': file1}
+                    DataDocumentSentenceLength=len(file_preprocessed[0][i]),
+                )
+        result = file_name + "." + extension
+        content = {"filename": file1}
         return result, session.id
 
 
-@api_view(('POST',))
+@api_view(("POST",))
 def uploadDocListRequest(request):
     # chuong trinh test
     content = None
     PostData = request.POST
     FileData = request.FILES
-    ID = request.data['id']
+    ID = request.data["id"]
 
     id = ID
-    listfile = FileData.getlist('DataDocumentFileList')
+    listfile = FileData.getlist("DataDocumentFileList")
     filenameList = []
     count = 0
     # session = DocumentSession.objects.get(pk=session)
@@ -615,24 +669,22 @@ def uploadDocListRequest(request):
             DataDocumentName=file_name,
             DataDocumentAuthor_id=id,
             DataDocumentType=extension,
-            DataDocumentFile=file1
-
+            DataDocumentFile=file1,
         )
 
         data.save()
 
         file_preprocessed = p.preprocess(
-            formatString(
-                'DocumentFile',
-                data.DataDocumentName,
-                data.DataDocumentType))
+            formatString("DocumentFile", data.DataDocumentName, data.DataDocumentType)
+        )
         # //save to db//
         length = len(file_preprocessed[0])
         for i in range(length):
             data.datadocumentcontent_set.create(
                 DataDocumentSentence=file_preprocessed[0][i],
-                DataDocumentSentenceLength=len(file_preprocessed[0][i]))
-    response = {'data': filenameList}
+                DataDocumentSentenceLength=len(file_preprocessed[0][i]),
+            )
+    response = {"data": filenameList}
     return Response(response, status=status.HTTP_200_OK)
 
 
@@ -641,7 +693,7 @@ def uploadDocList2(PostData, FileData, ID, session, agreeStatus):
     content = None
 
     id = ID
-    listfile = FileData.getlist('DataDocumentFileList')
+    listfile = FileData.getlist("DataDocumentFileList")
     filenameList = []
     count = 0
     session = DocumentSession.objects.get(pk=session)
@@ -649,7 +701,7 @@ def uploadDocList2(PostData, FileData, ID, session, agreeStatus):
     session.save()
     for f in listfile:
         try:
-        # name = listname[count]
+            # name = listname[count]
             count = count + 1
             file1: file
             file1 = f  # abc.doc
@@ -661,24 +713,25 @@ def uploadDocList2(PostData, FileData, ID, session, agreeStatus):
                 DataDocumentAuthor_id=id,
                 DataDocumentType=extension,
                 DataDocumentFile=file1,
-                SessionId=session.id
+                SessionId=session.id,
             )
             data.save()
-            if (agreeStatus):
+            if agreeStatus:
                 file_preprocessed = p.preprocess(
                     formatString(
-                        'DocumentFile',
-                        data.DataDocumentName,
-                        data.DataDocumentType))
+                        "DocumentFile", data.DataDocumentName, data.DataDocumentType
+                    )
+                )
                 # //save to db//
                 length = len(file_preprocessed[0])
                 for i in range(length):
                     data.datadocumentcontent_set.create(
                         DataDocumentSentence=file_preprocessed[0][i],
-                        DataDocumentSentenceLength=len(file_preprocessed[0][i]))
+                        DataDocumentSentenceLength=len(file_preprocessed[0][i]),
+                    )
         except:
             pass
-    response = {'data': filenameList}
+    response = {"data": filenameList}
     return filenameList
 
 
@@ -688,19 +741,17 @@ def uploadDocList2(PostData, FileData, ID, session, agreeStatus):
 #     content = {'please move along': 'have the same username'}
 #     return Response(content, status=status.HTTP_204_NO_CONTENT)
 
-@api_view(['GET'])
+
+@api_view(["GET"])
 def test(self):
-    content = {'please move along': 'have the same username222'}
+    content = {"please move along": "have the same username222"}
     return Response(content, status=status.HTTP_200_OK)
 
 
 # rút data từ cursor rồi chuyển về dạng dict
 def dictfetchall(cursor):
     desc = cursor.description
-    return [
-        dict(zip([col[0] for col in desc], row))
-        for row in cursor.fetchall()
-    ]
+    return [dict(zip([col[0] for col in desc], row)) for row in cursor.fetchall()]
 
 
 # result
@@ -710,14 +761,14 @@ def dictfetchall(cursor):
 # upload 1 file vo luu tru cau db cua he thong(khac userdb)
 def uploadDocumentSentenceToDatabase(request):
     content = None
-    if request.method == 'POST':
+    if request.method == "POST":
         id = request.data["id"]
         form1 = UploadOneFileForm(request.POST, request.FILES)
         if form1.is_valid():
 
             # save form người dùng gửi
             data = form1.cleaned_data
-            file1 = data['DataDocumentFile']  # abc.doc
+            file1 = data["DataDocumentFile"]  # abc.doc
 
             file_name = file1.name.split(".")[0]  # doc
             extension = file1.name.split(".")[-1]  # abc
@@ -726,24 +777,26 @@ def uploadDocumentSentenceToDatabase(request):
                 DataDocumentName=file_name,
                 DataDocumentAuthor_id=id,
                 DataDocumentType=extension,
-                DataDocumentFile=file1)
+                DataDocumentFile=file1,
+            )
             data.save()
             # data= form1.save(commit = False)
 
             file_preprocessed = p.preprocess(
                 formatString(
-                    'DocumentFile',
-                    data.DataDocumentName,
-                    data.DataDocumentType))
+                    "DocumentFile", data.DataDocumentName, data.DataDocumentType
+                )
+            )
             # //save to db//
             length = len(file_preprocessed[0])
             for i in range(length):
                 data.datadocumentcontent_set.create(
                     DataDocumentSentence=file_preprocessed[0][i],
-                    DataDocumentSentenceLength=len(file_preprocessed[0][i]))
-            result = file_name + '.' + extension
+                    DataDocumentSentenceLength=len(file_preprocessed[0][i]),
+                )
+            result = file_name + "." + extension
             res = result
-            content = {'filename': file1}
+            content = {"filename": file1}
             return Response(res, status=status.HTTP_200_OK)
             # fake mocking
         else:
@@ -751,11 +804,11 @@ def uploadDocumentSentenceToDatabase(request):
             return Response(content, status=status.HTTP_204_NO_CONTENT)
     else:
         # form = UploadOneFileForm()
-        content = {'please move along': 'have the same username'}
+        content = {"please move along": "have the same username"}
         return Response(content, status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def ff(self):
     p.docx2txt("D:/project_doc.docx")
 
@@ -763,9 +816,9 @@ def ff(self):
 # upload multiple file vo luu tru cau db cua he thong(khac userdb)
 def uploadMultipleDocumentSentenceToDatabase(request):
     content = None
-    if request.method == 'POST':
+    if request.method == "POST":
         id = request.data["id"]
-        listfile = request.FILES.getlist('DataDocumentFile')
+        listfile = request.FILES.getlist("DataDocumentFile")
         filenameList = []
         count = 0
         for f in listfile:
@@ -781,29 +834,29 @@ def uploadMultipleDocumentSentenceToDatabase(request):
                 DataDocumentName=file_name,
                 DataDocumentAuthor_id=id,
                 DataDocumentType=extension,
-                DataDocumentFile=file1
+                DataDocumentFile=file1,
             )
             data.save()
 
             file_preprocessed = p.preprocess(
                 formatString(
-                    'DocumentFile',
-                    data.DataDocumentName,
-                    data.DataDocumentType))
+                    "DocumentFile", data.DataDocumentName, data.DataDocumentType
+                )
+            )
             # //save to db//
             length = len(file_preprocessed[0])
             for i in range(length):
                 data.datadocumentcontent_set.create(
                     DataDocumentSentence=file_preprocessed[0][i],
-                    DataDocumentSentenceLength=len(file_preprocessed[0][i])
+                    DataDocumentSentenceLength=len(file_preprocessed[0][i]),
                 )
 
-        response = {'data': filenameList}
+        response = {"data": filenameList}
 
         return JsonResponse(response, status=status.HTTP_200_OK)
     else:
         # form = UploadManyFileForm()
-        content = {'please move along': 'have the same username'}
+        content = {"please move along": "have the same username"}
         return Response(content, status=status.HTTP_204_NO_CONTENT)
 
 
@@ -815,20 +868,22 @@ def jsonFile(request, file_name, userId, session):
         folder="result",
         filename=file_name,
         id=userId,
-        session=session)
+        session=session,
+    )
     # print("fullpath:          ", filename)
     mydict = request
     with open(filename, "w") as f:
         json.dump(mydict, f)
 
-    temp = DataDocument.objects.filter(DataDocumentAuthor=str(userId)) \
-        .filter(DataDocumentName=file_name.split(".")[0]) \
-        .filter(SessionId=str(session)) \
+    temp = (
+        DataDocument.objects.filter(DataDocumentAuthor=str(userId))
+        .filter(DataDocumentName=file_name.split(".")[0])
+        .filter(SessionId=str(session))
         .filter(DocumentStatus=True)
+    )
 
     idFile = temp[0].id
-    data = ReportDocument(DocumentJson_id=int(idFile),
-                          JsonFile=filename)
+    data = ReportDocument(DocumentJson_id=int(idFile), JsonFile=filename)
 
     data.save()
     # fileJson = open(filename, "r")
@@ -840,9 +895,11 @@ def jsonFile(request, file_name, userId, session):
 
 
 def readJson(session, userId):
-    temp = DataDocument.objects.filter(DataDocumentAuthor=str(userId)) \
-        .filter(SessionId=str(session)) \
+    temp = (
+        DataDocument.objects.filter(DataDocumentAuthor=str(userId))
+        .filter(SessionId=str(session))
         .filter(DocumentStatus=True)
+    )
     idFile = temp[0].id
     data = ReportDocument.objects.get(DocumentJson_id=idFile)
     fileJson = open(data.JsonFile, "r")
@@ -853,17 +910,19 @@ def readJson(session, userId):
     return reportData
 
 
-@api_view(('GET', 'POST'))
+@api_view(("GET", "POST"))
 def readJsonRequest(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         try:
-            #print(request.data['id'])
-            #print(request.data["sessionId"])
-            session = request.data['sessionId']
-            userId = request.data['id']
-            temp = DataDocument.objects.filter(DataDocumentAuthor=str(userId)) \
-                .filter(SessionId=str(session)) \
+            # print(request.data['id'])
+            # print(request.data["sessionId"])
+            session = request.data["sessionId"]
+            userId = request.data["id"]
+            temp = (
+                DataDocument.objects.filter(DataDocumentAuthor=str(userId))
+                .filter(SessionId=str(session))
                 .filter(DocumentStatus=True)
+            )
             idFile = temp[0].id
             data = ReportDocument.objects.get(DocumentJson_id=idFile)
             fileJson = open(data.JsonFile, "r")
@@ -875,14 +934,16 @@ def readJsonRequest(request):
             return Response(reportData, status=status.HTTP_200_OK)
         except:
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'GET':
+    elif request.method == "GET":
         print("what are thou")
         print(request.GET)
-        session = request.GET['sessionId']
-        userId = request.GET['id']
-        temp = DataDocument.objects.filter(DataDocumentAuthor=str(userId)) \
-            .filter(SessionId=str(session)) \
+        session = request.GET["sessionId"]
+        userId = request.GET["id"]
+        temp = (
+            DataDocument.objects.filter(DataDocumentAuthor=str(userId))
+            .filter(SessionId=str(session))
             .filter(DocumentStatus=True)
+        )
         idFile = temp[0].id
         data = ReportDocument.objects.get(DocumentJson_id=idFile)
         fileJson = open(data.JsonFile, "r")
@@ -891,10 +952,3 @@ def readJsonRequest(request):
         # os.remove(fileJson.name)
         print("report data là: ", reportData)
         return Response(reportData, status=status.HTTP_200_OK)
-
-
-
-
-
-
-

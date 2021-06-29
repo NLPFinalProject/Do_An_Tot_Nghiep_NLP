@@ -35,41 +35,50 @@ def CreateValidateCode():
 def sendVerificationMail(email):
     number = CreateValidateCode()
     email = EmailMessage(
-        'Hello',
-        'this is a confirmnation mail, please enter the code below ' + str(number),
+        "Hello",
+        "this is a confirmnation mail, please enter the code below " + str(number),
         # user.username
-        'ldthuan1907@gmail.com',
+        "ldthuan1907@gmail.com",
         [email],
-        headers={'Message-ID': 'foo'}, )
+        headers={"Message-ID": "foo"},
+    )
     email.send()
 
     return number
 
 
 def sendExportMail(data):
-    localsite = 'http://localhost:4200/checkresult/result'
+    localsite = "http://localhost:4200/checkresult/result"
     print(data)
-    linkfile = os.getcwd() + '/MailComponent/mail_template.html'
-    dataname = data['name']
-    datahitrate = data['HitRate']
-    dataid = data['id']
+    linkfile = os.getcwd() + "/MailComponent/mail_template.html"
+    dataname = data["name"]
+    datahitrate = data["HitRate"]
+    dataid = data["id"]
     user = User.objects.get(id=data["id"])
-    datacount = data['count']
-    File1Name = data['File1Name']
-    print('user is')
+    datacount = data["count"]
+    File1Name = data["File1Name"]
+    print("user is")
 
     print(user)
-    print('end')
+    print("end")
     linktoFile = []
     tmp = {}
     list = []
     for i in range(len(dataname)):
         dicttmp = {}
-        dicttmp['name'] = dataname[i]
-        dicttmp['HitRate'] = datahitrate[i]
-        dicttmp['count'] = datacount[i]
-        link = localsite + '?filename1=' + File1Name + '&listfile=' + dataname[i] + '&id=' + dataid
-        dicttmp['link'] = link
+        dicttmp["name"] = dataname[i]
+        dicttmp["HitRate"] = datahitrate[i]
+        dicttmp["count"] = datacount[i]
+        link = (
+            localsite
+            + "?filename1="
+            + File1Name
+            + "&listfile="
+            + dataname[i]
+            + "&id="
+            + dataid
+        )
+        dicttmp["link"] = link
         # dicttmp['link']='localhost:/4200/daovan'
         tmp = dicttmp
 
@@ -77,10 +86,10 @@ def sendExportMail(data):
     # list.append(tmp)
     # for i in list
     print(list)
-    html_message = render_to_string('mail_template.html', {'data': list})
+    html_message = render_to_string("mail_template.html", {"data": list})
     print(html_message)
-    id = data['id']
-    
+    id = data["id"]
+
     plain_message = strip_tags(html_message)
     """email = EmailMessage(
             'Hello',
@@ -91,25 +100,31 @@ def sendExportMail(data):
             headers={'Message-ID': 'foo'},)
      """
 
-    mail.send_mail('Hello', plain_message, 'kaitouthuan@gmail.com', [user], html_message=html_message)
+    mail.send_mail(
+        "Hello",
+        plain_message,
+        "kaitouthuan@gmail.com",
+        [user],
+        html_message=html_message,
+    )
 
-def sendExportMailV2(data,sessionId):
-    localsite = 'http://localhost:4200/daovan/'+str(sessionId)
+
+def sendExportMailV2(data, sessionId):
+    localsite = "http://localhost:4200/daovan/" + str(sessionId)
     print(data)
-    linkfile = os.getcwd() + '/MailComponent/mail_template2.html'
-    
-    print('user is')
+    linkfile = os.getcwd() + "/MailComponent/mail_template2.html"
 
-    
-    print('end')
-    link = localsite 
-    
+    print("user is")
+
+    print("end")
+    link = localsite
+
     # list.append(tmp)
     # for i in list
-    #print(list)
-    html_message = render_to_string('mail_template2.html', {'link': link})
+    # print(list)
+    html_message = render_to_string("mail_template2.html", {"link": link})
     print(html_message)
-    id = data['id']
+    id = data["id"]
     user = User.objects.get(id=id)
     plain_message = strip_tags(html_message)
     """email = EmailMessage(
@@ -121,6 +136,11 @@ def sendExportMailV2(data,sessionId):
             headers={'Message-ID': 'foo'},)
      """
 
-    #mail.send_mail('Hello', plain_message, 'kaitouthuan@gmail.com', [user], html_message=html_message)
-    mail.send_mail('Hello', plain_message, 'kaitouthuan@gmail.com', ['ldthuan1907@gmail.com'], html_message=html_message)
-
+    # mail.send_mail('Hello', plain_message, 'kaitouthuan@gmail.com', [user], html_message=html_message)
+    mail.send_mail(
+        "Hello",
+        plain_message,
+        "kaitouthuan@gmail.com",
+        ["ldthuan1907@gmail.com"],
+        html_message=html_message,
+    )

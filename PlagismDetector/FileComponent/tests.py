@@ -1,20 +1,21 @@
 import pandas as pd
 from deep import inputHandler
+
+
 def ratio(lst1, lst2):
-    df = pd.read_csv('data.csv')
-    sentences1 = list(df['sentences1'])
-    sentences2 = list(df['sentences2'])
-    is_similar = list(df['is_similar'])
+    df = pd.read_csv("data.csv")
+    sentences1 = list(df["sentences1"])
+    sentences2 = list(df["sentences2"])
+    is_similar = list(df["is_similar"])
     del df
 
-    tokenizer, embedding_matrix = word_embed_meta_data(sentences1 + sentences2,  siamese_config['EMBEDDING_DIM'])
+    tokenizer, embedding_matrix = word_embed_meta_data(
+        sentences1 + sentences2, siamese_config["EMBEDDING_DIM"]
+    )
 
-    embedding_meta_data = {
-    'tokenizer': tokenizer,
-    'embedding_matrix': embedding_matrix
-    }
+    embedding_meta_data = {"tokenizer": tokenizer, "embedding_matrix": embedding_matrix}
 
-    model_file = open('pretrained.model', 'rb')
+    model_file = open("pretrained.model", "rb")
     md = pickle.load(model_file)
     model = load_model(md)
 
@@ -23,7 +24,9 @@ def ratio(lst1, lst2):
         for str2 in lst2:
             test_sentence_pairs.append((str1, str2))
 
-    test_data_x1, test_data_x2, leaks_test = create_test_data(tokenizer, test_sentence_pairs,  siamese_config['MAX_SEQUENCE_LENGTH'])
+    test_data_x1, test_data_x2, leaks_test = create_test_data(
+        tokenizer, test_sentence_pairs, siamese_config["MAX_SEQUENCE_LENGTH"]
+    )
     preds = model.predict([test_data_x1, test_data_x2, leaks_test], verbose=1).ravel()
 
     return preds

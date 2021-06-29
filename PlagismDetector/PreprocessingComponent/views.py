@@ -11,6 +11,7 @@ import time
 import pythoncom
 import csv
 from underthesea import sent_tokenize, word_tokenize
+
 sys.path.insert(1, os.getcwd() + "/PreprocessingComponent")
 from PreprocessingComponent.pdfminer3 import Pdf_extract
 
@@ -19,24 +20,27 @@ from PreprocessingComponent.pdfminer3 import Pdf_extract
 def para_string(para):
     string = ""
     # if (str(para)[21:34] not in str(wp_tbl)):# and (str(para)[21:34] not in str(wp_txbx)):
-    wt = para.getElementsByTagName('w:t')
+    wt = para.getElementsByTagName("w:t")
     for i in range(len(wt)):
         string = string + wt[i].firstChild.data
 
     return string
 
+
 # Get table string. Input is table element
 def table_string(table):
     string = ""
-    wp = table.getElementsByTagName('w:p')
-    column = len(table.getElementsByTagName('w:tc')) / len(table.getElementsByTagName('w:tr'))
+    wp = table.getElementsByTagName("w:p")
+    column = len(table.getElementsByTagName("w:tc")) / len(
+        table.getElementsByTagName("w:tr")
+    )
     c = 1
     for i in range(len(wp)):
         string = string + para_string(wp[i])
         if c % column == 0 and c != len(wp):
-            string += '. '
+            string += ". "
         else:
-            string += '. '
+            string += ". "
         c += 1
     return string
 
@@ -52,7 +56,7 @@ def get_all_elements(lst, type_of_element):
 
 
 def para2text(p):
-    rs = p._element.xpath('.//w:t')
+    rs = p._element.xpath(".//w:t")
     return u" ".join([r.text for r in rs])
 
 
@@ -60,16 +64,16 @@ def para2text(p):
 # Docx
 def docx2txt(docx_file_name):
     # Parse xml file
-    xml_file_name = 'mydocx.xml'
+    xml_file_name = "mydocx.xml"
     opc_to_flat_opc(docx_file_name, xml_file_name)
     my_docx = minidom.parse(xml_file_name)
 
     # Get elements
-    paragraph = my_docx.getElementsByTagName('w:p')
-    table = my_docx.getElementsByTagName('w:tbl')
+    paragraph = my_docx.getElementsByTagName("w:p")
+    table = my_docx.getElementsByTagName("w:tbl")
 
     # Get all w:p elements in table elements. Output is two-dimensional list
-    wp_tbl = get_all_elements(table, 'w:p')
+    wp_tbl = get_all_elements(table, "w:p")
 
     # Get text and save to "string" variable
     para_index = 0
@@ -78,14 +82,14 @@ def docx2txt(docx_file_name):
     while para_index < len(paragraph):
         if paragraph[para_index] in wp_tbl:
             string = string + table_string(table[tbl_index])
-            para_index += len(table[tbl_index].getElementsByTagName('w:p'))
+            para_index += len(table[tbl_index].getElementsByTagName("w:p"))
             tbl_index += 1
 
         else:
-            string = string + para_string(paragraph[para_index]) + '\n'
+            string = string + para_string(paragraph[para_index]) + "\n"
             para_index += 1
 
-        string = string + '\n'
+        string = string + "\n"
     os.remove("mydocx.xml")
     return string
 
@@ -99,11 +103,14 @@ def doc2docx(filename, path=os.getcwd()):
     file_name, file_extension = os.path.splitext(file_path)
 
     if "~$" not in file_name:
-        if file_extension.lower() == '.doc':  #
+        if file_extension.lower() == ".doc":  #
             # docx_file = '{0}{1}'.format(file_path, 'x')
-            docx_file = file_name + str(uuid.uuid4().hex[:10]).format(file_path,
-                                                                      'x')  # tránh trương hợp có sẵn file .docx tước đó nên thêm phần random để tránh trùng tên
-            if not os.path.isfile(docx_file):  # Skip conversion where docx file already exists
+            docx_file = file_name + str(uuid.uuid4().hex[:10]).format(
+                file_path, "x"
+            )  # tránh trương hợp có sẵn file .docx tước đó nên thêm phần random để tránh trùng tên
+            if not os.path.isfile(
+                docx_file
+            ):  # Skip conversion where docx file already exists
 
                 file_path = os.path.abspath(file_path)
                 docx_file = os.path.abspath(docx_file)
@@ -113,7 +120,7 @@ def doc2docx(filename, path=os.getcwd()):
                     wordDoc.SaveAs2(docx_file, FileFormat=16)
                     wordDoc.Close()
                 except Exception as e:
-                    print('Failed to Convert: {0}'.format(file_path))
+                    print("Failed to Convert: {0}".format(file_path))
                     print(e)
             return docx_file + ".docx"  ## trả ra tên file đã chuyển từ doc -> docx
 
@@ -132,12 +139,12 @@ def ppt2txt(filename):
 # CSV
 def csv2txt(filename):
     string = ""
-    with open(filename, 'rt', encoding="utf-8") as f:
+    with open(filename, "rt", encoding="utf-8") as f:
         data = csv.reader(f)
         for row in data:
             for cell in row:
-                if cell != '':
-                    string += cell + '\n'
+                if cell != "":
+                    string += cell + "\n"
     return string
 
 
@@ -147,7 +154,7 @@ def xlsx2txt(filename):
     file_name, file_extension = os.path.splitext(filename)
     data = pd.read_excel(filename, index_col=0, keep_default_na=0)
     filename_csv = file_name + str(uuid.uuid4().hex[:10]) + ".csv"
-    data.to_csv(filename_csv, encoding='utf-8')
+    data.to_csv(filename_csv, encoding="utf-8")
     res = csv2txt(filename_csv)
     os.remove(filename_csv)
     return res
@@ -155,17 +162,18 @@ def xlsx2txt(filename):
 
 # Rich text
 def rtf2txt(filename):
-    res=[]
+    res = []
     with open(filename) as infile:
         for line in infile:
             res.append(line)
     return res
 
+
 # --------------------------------TÁCH ĐOẠN, TÁCH CÂU, TÁCH TỪ------------------------------------#
 
 # Tách đoạn
 def list_para(document):
-    return document.split('\n')
+    return document.split("\n")
 
 
 # Tách câu
@@ -188,7 +196,7 @@ def sentence2word_underscore(sentence):
     words = word_tokenize(sentence)
 
     for i in range(len(words)):
-        words[i] = words[i].replace(' ', '_')
+        words[i] = words[i].replace(" ", "_")
 
     return words
 
@@ -227,7 +235,7 @@ def join_word(word_list):
     for i in range(len(word_list) - 1):
         string += word_list[i]
         if word_list[i + 1] not in punctuation:
-            string += ' '
+            string += " "
     string += word_list[len(word_list) - 1]
 
     return string
@@ -250,12 +258,12 @@ def split_sent(sentence, max_len):
     start = 0
     end = new_len
     for i in range(x - 1):
-        string = new_sen[start: end]
+        string = new_sen[start:end]
 
         index = end - 1
-        if new_sen[index] != ' ':
+        if new_sen[index] != " ":
             for j in range(index + 1, len(new_sen)):
-                if new_sen[j] == ' ':
+                if new_sen[j] == " ":
                     break
                 string += new_sen[j]
             start = j + 1
@@ -265,10 +273,10 @@ def split_sent(sentence, max_len):
             start += new_len
             end = start + new_len
 
-        lst.append(string.strip().replace('_', ' '))
+        lst.append(string.strip().replace("_", " "))
         string = ""
 
-    lst.append(new_sen[start:].strip().replace('_', ' '))
+    lst.append(new_sen[start:].strip().replace("_", " "))
 
     return lst
 
@@ -320,7 +328,7 @@ def preprocess(filename):
             doc = ppt2txt(filename)
 
         if file_extension.lower() == ".txt":
-            f = open(filename, 'r', encoding='utf-8')
+            f = open(filename, "r", encoding="utf-8")
             doc = f.read()
             f.close()
 
@@ -334,8 +342,8 @@ def preprocess(filename):
     return list_sent, list_words, os.path.basename(filename)
 
 
-if __name__ == '__main__':
-    FILE_PATH = 'project_doc.docx'
+if __name__ == "__main__":
+    FILE_PATH = "project_doc.docx"
 
     start_time = time.time()
 

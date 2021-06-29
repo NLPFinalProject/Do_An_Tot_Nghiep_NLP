@@ -16,28 +16,28 @@ import json
 from django.http.response import JsonResponse
 from django.http import HttpResponse
 from rest_framework import status
-#cần import cho db
+# cần import cho db
 from .models import DataDocument , DataDocumentContent
 from django.db import connections,connection
 from django.db.models import Q
-#can import cho levenshtein
+# can import cho levenshtein
 from .Levenshtein import * 
 from PreprocessingComponent.views import *
-#cần import cho up file
+# cần import cho up file
 from django.core.files.storage import FileSystemStorage
-#lock command UploadOneFileForm lại trước khi migrations vì sửa dụng model DocumentFile
-#from .form import DocumentForm, UploadOneFileForm, UploadManyFileForm
+# lock command UploadOneFileForm lại trước khi migrations vì sửa dụng model DocumentFile
+# from .form import DocumentForm, UploadOneFileForm, UploadManyFileForm
 from .form import UploadFileFormListVersion,UploadOneFileForm,UploadManyFileForm
 from django.conf import settings
 from PreprocessingComponent import views as p
 from PreprocessingComponent import TFIDF as internetKeywordSearch
 from UserComponent.models import User
-#import cho tách câu
+# import cho tách câu
 import os
 import sys
 from collections import Counter
 sys.path.append(os.getcwd()+'\\polls\\preprocessing')
-#from .preprocessing import preprocessor as p
+# from .preprocessing import preprocessor as p
 # Create your views here.
 
 
@@ -51,14 +51,12 @@ sys.path.append(os.getcwd()+'\\polls\\preprocessing')
 @api_view(('POST',))
 def documentimportDatabase(request):
     print('------------------------------')
-    fileName1 = request.data["filename1"]
-        
+    fileName1 = request.data["filename1"]        
     userId=int(request.data["id"])
-    #fileName1 = data['fileName1']
-    #userId=data['id']
+    # fileName1 = data['fileName1']
+    # userId=data['id']
 
-    fileName2Sentence=[]
-
+    fileName2Sentence = []
     cursor = connections['default'].cursor()
     # queryRaw ="ALTER TABLE filecomponent_datadocumentcontent ADD FULLTEXT (DataDocumentSentence);"
     # cursor.execute(queryRaw)
@@ -289,6 +287,7 @@ def documentimportInternet2(data):
     return Response(myDict, status=status.HTTP_200_OK)
 def documentimport(request):
 #upload 1 file
+
 @api_view(('POST',))
 def uploadDoc(request):
     content = None
@@ -428,20 +427,17 @@ def uploadDocumentSentenceToDatabase(request):
                 c=data.datadocumentcontent_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=lstLength[i])
                 print(c)
             #lỗi zip file
-            fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile\\' + data.DataDocumentName+'.'+ data.DataDocumentType)
-            result = file_name +'.'+extension
+            fName, lstSentence, lstLength = p.preprocess(settings.MEDIA_ROOT + '\\DocumentFile\\' + data.DataDocumentName+'.'+ data.DataDocumentType)
+            result = file_name + '.' + extension
             res = result
             print(res)
             content = {'filename': file1}
-           
-            return Response(res, status=status.HTTP_200_OK)
-            
-            ####### fake mocking
+            return Response(res, status=status.HTTP_200_OK)            
+            # fake mocking
         else:
             #wrong form type
             print('fail')
-            return Response(content,status=status.HTTP_204_NO_CONTENT)
-            
+            return Response(content, status=status.HTTP_204_NO_CONTENT)            
     else:
         form = UploadOneFileForm()
         content = {'please move along': 'have the same username'}
@@ -449,61 +445,53 @@ def uploadDocumentSentenceToDatabase(request):
         return Response(content, status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
-def ff(self):
-    
+def ff(self):    
     p.docx2txt("D:/project_doc.docx")
 
-#upload multiple file vo luu tru cau db cua he thong(khac userdb)
+# upload multiple file vo luu tru cau db cua he thong(khac userdb)
 def uploadMultipleDocumentSentenceToDatabase(request):
-    #chuong trinh test
+    # chuong trinh test
     content = None
     if request.method=='POST':
         print(request.data)
         id = request.data["id"]
-        listfile =  request.FILES.getlist('DataDocumentFile')
-        filenameList =[]
+        listfile = request.FILES.getlist('DataDocumentFile')
+        filenameList = []
         count = 0
-        #listname = request.data.getlist('title')
-        print('-------------------listfile is',listfile)
+        # listname = request.data.getlist('title')
+        print('-------------------listfile is', listfile)
         for f in listfile:
-
-            #name = listname[count]
-            count = count+1
-            file1:file
+            # name = listname[count]
+            count = count + 1
+            file1: file
             file1 = f #abc.doc
-            print('-------------------f is',file1)
-            file_name = file1.name.split(".")[0]#doc
-            extension = file1.name.split(".")[-1]#abc
+            print('-------------------f is', file1)
+            file_name = file1.name.split(".")[0] # doc
+            extension = file1.name.split(".")[-1] # abc
             filenameList.append(file1.name)
             print(file1,type(file1))
             print('-------------------file name is '+file_name)
             
             print('-------------------extension is '+extension)
-            data = DataDocument(DataDocumentName=file_name, DataDocumentAuthor_id=id,DataDocumentType=extension, DataDocumentFile=file1)
+            data = DataDocument(DataDocumentName=file_name, DataDocumentAuthor_id=id, DataDocumentType=extension, DataDocumentFile=file1)
             data.save()
-            print('stop here right now')
-            
+            print('stop here right now')            
             # sử dụng preprocessor và lưu vào database
             cursor = connections['default'].cursor()
-            queryRaw ="SELECT DataDocumentFile FROM `filecomponent_datadocument` WHERE DataDocumentName='"+file_name+"' AND DataDocumentAuthor_id='"+str(3)+"';"
-            print("=====",queryRaw)
+            queryRaw = "SELECT DataDocumentFile FROM `filecomponent_datadocument` WHERE DataDocumentName='"+file_name+"' AND DataDocumentAuthor_id='"+str(3)+"';"
+            print("=====", queryRaw)
             cursor.execute(queryRaw)
             fetchQuery = dictfetchall(cursor)
             documentNameLink = [a_dict["DataDocumentFile"] for a_dict in fetchQuery]
-            print("=====filename1====",os.path.basename(documentNameLink[0]))
-            print(settings.MEDIA_ROOT +'\\DocumentFile\\' + os.path.basename(documentNameLink[0]))
-            fName,lstSentence,lstLength = p.preprocess(settings.MEDIA_ROOT +'\\DocumentFile/' + os.path.basename(documentNameLink[0]))
-            
-            #//save sentence to db//  
-            length= len(lstSentence)
+            print("=====filename1====", os.path.basename(documentNameLink[0]))
+            print(settings.MEDIA_ROOT + '\\DocumentFile\\' + os.path.basename(documentNameLink[0]))
+            fName, lstSentence, lstLength = p.preprocess(settings.MEDIA_ROOT + '\\DocumentFile/' + os.path.basename(documentNameLink[0]))
+            # //save sentence to db//  
+            length = len(lstSentence)
             for i in range(length):
-                c=data.datadocumentcontent_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=lstLength[i])
+                c = data.datadocumentcontent_set.create(DataDocumentSentence=lstSentence[i], DataDocumentSentenceLength=lstLength[i])
                 print(c)
-            
-       
-        
-        response = {'data' : filenameList}
-        
+        response = {'data': filenameList}        
         return JsonResponse(response, status=status.HTTP_200_OK)
     else:
         form = UploadManyFileForm()
@@ -511,11 +499,11 @@ def uploadMultipleDocumentSentenceToDatabase(request):
         print('fail')
         return Response(content, status=status.HTTP_204_NO_CONTENT)
 
-#up 1 file vao user db
+# up 1 file vao user db
 # uploadDoc3 old -> uploadOneDocUser (change name only)
 
 
-@api_view([ 'GET'])
+@api_view(['GET'])
 def test(self):
     main()
     print('done')
