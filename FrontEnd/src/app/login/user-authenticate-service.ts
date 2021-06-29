@@ -29,6 +29,10 @@ export class UserService {
     console.log(username);
     return this.http.get(`${this.baseUrl}/is-admin-user/`, { params: params });
   }
+  refreshToken(): Observable<Object> {
+    let token = localStorage.getItem('token');
+    return this.http.post(`${this.baseUrl}/refresh-token/`, token);
+  }
   lockUser(data: string): Observable<Object> {
     let params = new HttpParams().set('username', data);
     //params.set("isAdmin",localStorage.getItem('isAdmin'));

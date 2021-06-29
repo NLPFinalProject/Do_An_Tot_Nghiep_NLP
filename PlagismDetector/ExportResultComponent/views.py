@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render 
 from django.http import HttpResponse
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.parsers import JSONParser
+from rest_framework.parsers import JSONParser 
 from rest_framework import status
 from django.core.mail import EmailMessage
 from UserComponent.models import User
@@ -18,8 +18,10 @@ from MailComponent import views as mail
 import random as rand
 
 # Create your views here.
-@api_view(["POST"])
+@api_view([ 'POST'])
 def ExportResult(request):
     data = request.data
     mail.sendExportMail(data)
     return Response(status=status.HTTP_200_OK)
+
+    

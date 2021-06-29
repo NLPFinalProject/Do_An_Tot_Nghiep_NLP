@@ -9,7 +9,7 @@
         </span>
       </td>
       <td>
-        <div>{{ data.ratio | number: '.2-2' }} %</div>
+        <div *ngIf="data.ratio != -1">{{ data.ratio | number: '.2-2' }} %</div>
       </td>
     </tr>
   </tbody>

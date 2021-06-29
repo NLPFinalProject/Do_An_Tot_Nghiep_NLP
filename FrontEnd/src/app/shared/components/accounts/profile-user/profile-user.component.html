@@ -12,14 +12,25 @@
       <nz-input-group [nzAddOnBefore]="addOnBeforeTemplate">
         <ng-template #addOnBeforeTemplate>
           <nz-select formControlName="phoneNumber" style="width: 70px">
-            <nz-option nzLabel="+84" nzValue="+84"></nz-option>
+            <nz-option nzLabel="84" nzValue="84"></nz-option>
           </nz-select>
         </ng-template>
         <input formControlName="phoneNumber" id="'phoneNumber'" nz-input />
       </nz-input-group>
-      <nz-form-explain *ngIf="validateForm.get('phoneNumber').dirty && validateForm.get('phoneNumber').errors"
-        >Please input your phone number!</nz-form-explain
-      >
+      <div *ngIf="validateForm.get('phoneNumber')?.errors && validateForm.get('phoneNumber').touched">
+        <ng-container [ngSwitch]="true">
+          <div *ngSwitchCase="validateForm.get('phoneNumber').hasError('required')">Phone is required</div>
+          <div
+            *ngSwitchCase="
+              validateForm.get('phoneNumber').hasError('minlength') ||
+              validateForm.get('phoneNumber').hasError('maxlength')
+            "
+          >
+            phone length must be between 9 and 12
+          </div>
+          <div *ngSwitchCase="validateForm.get('phoneNumber').hasError('pattern')">Phone contains only number</div>
+        </ng-container>
+      </div>
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
@@ -27,7 +38,19 @@
     <nz-form-control [nzSm]="14" [nzXs]="24">
       <input nz-input formControlName="fullName" id="fullName" />
     </nz-form-control>
+    <div *ngIf="validateForm.get('fullName')?.errors && validateForm.get('fullName').touched">
+      <ng-container [ngSwitch]="true">
+        <div *ngSwitchCase="validateForm.get('fullName').hasError('required')">Fullname is required</div>
+        <div *ngSwitchCase="validateForm.get('fullName').hasError('maxlength')">
+          Full name can not be more than 30 characters
+        </div>
+        <div *ngSwitchCase="validateForm.get('fullName').hasError('confirm')">
+          Fullname must not contain special character
+        </div>
+      </ng-container>
+    </div>
   </nz-form-item>
+
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="emailOrganization">Email tổ chức</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
@@ -39,6 +62,13 @@
     <nz-form-control [nzSm]="14" [nzXs]="24">
       <nz-date-picker formControlName="ngaySinh" [nzFormat]="dateFormat"></nz-date-picker>
     </nz-form-control>
+    <div
+      [nzSm]="14"
+      [nzXs]="24"
+      *ngIf="validateForm.get('ngaySinh')?.hasError('confirm') && validateForm.get('ngaySinh').dirty"
+    >
+      <div>Your birthday can not be later than today</div>
+    </div>
   </nz-form-item>
 
   <nz-form-item nz-row style="margin-bottom: 8px">

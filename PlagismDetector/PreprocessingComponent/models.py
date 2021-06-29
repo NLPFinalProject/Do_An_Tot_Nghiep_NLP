@@ -4,9 +4,9 @@ from django.utils import timezone
 
 # Create your models here.
 
-# ---------model đồ án
+#---------model đồ án
 
-# file người dùng up post
+#file người dùng up post
 """class DataDocument(models.Model):
     DataDocumentName = models.CharField(max_length=200)
     DataDocumentType = models.CharField(max_length=10)

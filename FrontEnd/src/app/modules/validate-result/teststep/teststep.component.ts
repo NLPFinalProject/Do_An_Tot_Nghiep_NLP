@@ -20,6 +20,7 @@ export class TeststepComponent implements OnInit {
   requestData: any;
   agreeStatus: Boolean;
   isvalid: boolean = false;
+  public isFirstFileValid: boolean = false;
   public step: number;
   public UploadedFileConfirmed: false;
   public isSpinning: boolean = false;
@@ -33,7 +34,7 @@ export class TeststepComponent implements OnInit {
   public selectedOption: number;
   sessionName: string = '';
   option: string;
-
+  public validEndFile = ['.doc', '.docx', '.pdf', '.xlsx', '.csv', '.pptx', '.txt'];
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -128,7 +129,8 @@ export class TeststepComponent implements OnInit {
               console.log(data);
               this.SuccessDialog();
             });
-            this.openDialog();
+            this.router.navigate(['daovan'], { replaceUrl: true });
+            //this.openDialog();
           } else {
             //add warning here
           }
@@ -148,11 +150,12 @@ export class TeststepComponent implements OnInit {
           };
           this.fileService.checkPlagiasmUsingDatabase(tempdata).subscribe((data: any) => {
             console.log(data);
-            this.openDialog();
+            this.SuccessDialog();
           });
           console.log(tempdata);
-          this.SuccessDialog();
+          //this.SuccessDialog();
           //this.openDialog();
+          this.router.navigate(['daovan'], { replaceUrl: true });
           break;
         }
         case 3: {
@@ -166,8 +169,10 @@ export class TeststepComponent implements OnInit {
           this.fileService.checkPlagiasmUsingInternet(tempdata).subscribe((data: any) => {
             console.log(data);
             console.log('done my job');
+            this.SuccessDialog();
           });
-          this.openDialog();
+          //this.openDialog();
+          this.router.navigate(['daovan'], { replaceUrl: true });
 
           break;
         }
@@ -182,11 +187,10 @@ export class TeststepComponent implements OnInit {
           this.fileService.checkPlagiasmUsingAll(tempdata).subscribe((data: any) => {
             console.log(data);
             this.SuccessDialog();
-            //this.router.navigate(['checkresult/result'], { replaceUrl: true, state: { data: data } });
           });
 
-          console.log(tempdata);
-          this.openDialog();
+          //this.openDialog();
+          this.router.navigate(['daovan'], { replaceUrl: true });
           break;
         }
       }
@@ -236,6 +240,12 @@ export class TeststepComponent implements OnInit {
       //data: {name: this.name, animal: this.animal}
     });
   }
+  WarningInvalidFile() {
+    const dialogRef = this.dialog.open(WarningInvalidFileDialog, {
+      width: '250px',
+      //data: {name: this.name, animal: this.animal}
+    });
+  }
   SuccessDialog() {
     const dialogRef = this.dialog.open(SuccessTransition, {
       width: '250px',
@@ -248,19 +258,34 @@ export class TeststepComponent implements OnInit {
     //this.uploadFileList();
     //console.log('here');
   }
+  checkValidFile(name: string) {
+    console.log('in here');
+    var position = name.lastIndexOf('.');
+    if (position == -1) return false;
+    var endFile = name.substr(position, name.length - position);
+    console.log(endFile);
+    if (this.validEndFile.indexOf(endFile) == -1) return false;
+    return true;
+  }
   public droppedFile(files: NgxFileDropEntry[]) {
     //this.isvalid = true;
 
-    console.log('busted');
     if (files[0].fileEntry.isFile) {
       const fileEntry = files[0].fileEntry as FileSystemFileEntry;
       fileEntry.file((file: File) => {
         if (file.size > 10 * 1024 * 1024) {
+          this.isFirstFileValid = false;
           this.WarningSize();
           this.files.splice(0);
+        } else if (!this.checkValidFile(file.name)) {
+          this.isFirstFileValid = false;
+          this.WarningInvalidFile();
+          this.files.splice(0);
+          this.FileToUpload = null;
         }
         // Here you can access the real file
         else {
+          this.isFirstFileValid = true;
           this.FileToUpload = file;
         }
 
@@ -271,47 +296,56 @@ export class TeststepComponent implements OnInit {
 
   public dropped(files: NgxFileDropEntry[]) {
     //this.isvalid = true;
-
+    var flagValidFile = true;
     this.files = files;
     for (const droppedFile of files) {
       // Is it a file?
-      if (droppedFile.fileEntry.isFile) {
-        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
-        fileEntry.file((file: File) => {
-          console.log(1);
-          // Here you can access the real file
-          if (file.size <= 10 * 1024 * 1024) {
-            console.log(file);
+      if (flagValidFile) {
+        if (droppedFile.fileEntry.isFile) {
+          const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+          fileEntry.file((file: File) => {
+            console.log(1);
+            // Here you can access the real file
+            if (!this.checkValidFile(file.name)) {
+              this.WarningInvalidFile();
+              this.ListOfFile = [];
+              flagValidFile = false;
+            } else if (file.size <= 10 * 1024 * 1024) {
+              console.log(file);
 
-            this.ListOfFile.push(file);
-          } else {
-            this.ListOfFile = [];
-            //this.fi
-            this.WarningSize();
-          }
+              this.ListOfFile.push(file);
+            } else {
+              console.log('no problem');
+              this.ListOfFile = [];
+              //this.fi
+              this.WarningSize();
+            }
 
-          //this.handleChangeFile1(file);
-          //this.FileToUpload=null;
-          /**
-            // You could upload it like this:
-            const formData = new FormData()
-            formData.append('logo', file, relativePath)
-  
-            // Headers
-            const headers = new HttpHeaders({
-              'security-token': 'mytoken'
-            })
-  
-            this.http.post('https://mybackend.com/api/upload/sanitize-and-save-logo', formData, { headers: headers, responseType: 'blob' })
-            .subscribe(data => {
-              // Sanitized logo returned from backend
-            })
-            **/
-        });
+            //this.handleChangeFile1(file);
+            //this.FileToUpload=null;
+            /**
+              // You could upload it like this:
+              const formData = new FormData()
+              formData.append('logo', file, relativePath)
+    
+              // Headers
+              const headers = new HttpHeaders({
+                'security-token': 'mytoken'
+              })
+    
+              this.http.post('https://mybackend.com/api/upload/sanitize-and-save-logo', formData, { headers: headers, responseType: 'blob' })
+              .subscribe(data => {
+                // Sanitized logo returned from backend
+              })
+              **/
+          });
+        } else {
+          // It was a directory (empty directories are added, otherwise only files)
+          const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
+          console.log(droppedFile.relativePath, fileEntry);
+        }
       } else {
-        // It was a directory (empty directories are added, otherwise only files)
-        const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
-        console.log(droppedFile.relativePath, fileEntry);
+        break;
       }
     }
   }
@@ -364,6 +398,23 @@ export class SuccessUploadDialog {
 export class WarningFileSizeDialog {
   constructor(
     public dialogRef: MatDialogRef<WarningFileSizeDialog>,
+
+    @Inject(MAT_DIALOG_DATA) public data: DialogData
+  ) {}
+
+  ConfirmClick(): void {
+    this.dialogRef.close();
+    // let value = localStorage.getItem('username');
+    // this.router.navigate(['daovan'], { replaceUrl: true, state: { user: value } });
+  }
+}
+@Component({
+  selector: 'invalid-file-dialog',
+  templateUrl: 'invalid-file-dialog.html',
+})
+export class WarningInvalidFileDialog {
+  constructor(
+    public dialogRef: MatDialogRef<WarningInvalidFileDialog>,
 
     @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) {}

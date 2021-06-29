@@ -68,6 +68,71 @@ export class ProfileUserComponent implements OnInit {
     console.log('yeah here I clicked');
     this.router.navigate(['reset-password'], { replaceUrl: true });
   }
+  PhoneNumberValidator = (control: FormControl): { [s: string]: boolean } => {
+    if (!control.value) {
+      return { required: true };
+    } else if (!this.checkValidPhoneNumber(control.value)) {
+      return { confirm: true, error: true };
+    }
+
+    return {};
+  };
+  DateOfBirthValidator = (control: FormControl): { [s: string]: boolean } => {
+    if (!control.value) {
+      return { required: true };
+    } else if (!this.checkValidBirthDate(control.value)) {
+      console.log('die 1 million times you piece of shit');
+      return { confirm: true, error: true };
+    }
+    console.log('you fail???');
+    return {};
+  };
+  SpecialCharacterValidator = (control: FormControl): { [s: string]: boolean } => {
+    if (!control.value) {
+      return { error: true, required: true };
+    } else if (this.checkSpecialCharacter(control.value)) {
+      return { confirm: true };
+    }
+    console.log('you fail???');
+    return {};
+  };
+  checkSpecialCharacter(str: string) {
+    var format = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+
+    if (format.test(str)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  checkValidEmail(str: string) {
+    var format = /[ `!#$%^&*()_+\-=\[\]{};':"\\|,<>\/?~]/;
+
+    if (format.test(str)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  checkValidPhoneNumber(str: string) {
+    let isnum = /^\d+$/.test(str);
+    console.log(isnum);
+    if (isnum) {
+      if (str.length < 9 || str.length > 12) {
+        return false;
+      }
+      return true;
+    }
+  }
+  checkValidBirthDate(date: string) {
+    var currentDate = new Date();
+    var checkDate = new Date(date);
+    if (currentDate < checkDate) {
+      return false;
+    } else {
+      return true;
+    }
+  }
   updateConfirmValidator(): void {
     /** wait for refresh value */
     Promise.resolve().then(() => this.validateForm.controls.checkPassword.updateValueAndValidity());
@@ -106,21 +171,26 @@ export class ProfileUserComponent implements OnInit {
       console.log(this.data);
       this.validateForm = this.fb.group({
         email: [this.data.username, [Validators.email, Validators.required]],
-        phoneNumber: [this.data.phone, [Validators.required]],
+        phoneNumber: [
+          this.data.phone,
+          [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(9), Validators.maxLength(12)],
+        ],
         emailOrganization: [this.data.EmailOrganization, [Validators.email]],
-        phoneOrganization: [this.data.phonelOrganization],
-        fullName: [this.data.name, [Validators.required]],
-        ngaySinh: [this.data.DateOfBirth, [Validators.required]],
+        fullName: [this.data.name, [Validators.required, Validators.maxLength(32), this.SpecialCharacterValidator]],
+        ngaySinh: [this.data.DateOfBirth, [Validators.required, this.DateOfBirthValidator]],
       });
     } else {
       this.validateForm = this.fb.group({
         email: ['', [Validators.email, Validators.required]],
-        phoneNumber: ['', [Validators.required]],
-        emailOrganization: ['', [Validators.required]],
-        website: ['', [Validators.required]],
-        phoneOrganization: [''],
-        fullName: ['', [Validators.required]],
-        ngaySinh: ['', [Validators.required]],
+        phoneNumber: [
+          '',
+          [Validators.required, Validators.pattern('^+[0-9]*$'), Validators.minLength(9), Validators.maxLength(12)],
+        ],
+        emailOrganization: ['', []],
+        //website: ['', [Validators.required]],
+
+        fullName: ['', [Validators.required, Validators.maxLength(32), this.SpecialCharacterValidator]],
+        ngaySinh: ['', [Validators.required, this.DateOfBirthValidator]],
       });
     }
   }

@@ -6,11 +6,10 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("FileComponent", "0001_initial"),
+        ('FileComponent', '0001_initial'),
     ]
 
     operations = [
         migrations.RunSQL(
-            "CREATE FULLTEXT INDEX customer_fulltext_idx ON filecomponent_datadocumentcontent(DataDocumentSentence)",
-        )
+            'CREATE FULLTEXT INDEX customer_fulltext_idx ON filecomponent_datadocumentcontent(DataDocumentSentence)', )
     ]

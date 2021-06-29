@@ -42,7 +42,7 @@ def create_embedding_matrix(tokenizer, word_vectors, embedding_dim):
                 embedding_matrix[i] = embedding_vector
         except KeyError:
             print("vector not found for word - %s" % word)
-    print("Null word embeddings: %d" % np.sum(np.sum(embedding_matrix, axis=1) == 0))
+    print('Null word embeddings: %d' % np.sum(np.sum(embedding_matrix, axis=1) == 0))
     return embedding_matrix
 
 
@@ -66,9 +66,7 @@ def word_embed_meta_data(documents, embedding_dim):
     return tokenizer, embedding_matrix
 
 
-def create_train_dev_set(
-    tokenizer, sentences_pair, is_similar, max_sequence_length, validation_split_ratio
-):
+def create_train_dev_set(tokenizer, sentences_pair, is_similar, max_sequence_length, validation_split_ratio):
     """
     Create training and validation dataset
     Args:
@@ -94,10 +92,8 @@ def create_train_dev_set(
     sentences2 = [x[1].lower() for x in sentences_pair]
     train_sequences_1 = tokenizer.texts_to_sequences(sentences1)
     train_sequences_2 = tokenizer.texts_to_sequences(sentences2)
-    leaks = [
-        [len(set(x1)), len(set(x2)), len(set(x1).intersection(x2))]
-        for x1, x2 in zip(train_sequences_1, train_sequences_2)
-    ]
+    leaks = [[len(set(x1)), len(set(x2)), len(set(x1).intersection(x2))]
+             for x1, x2 in zip(train_sequences_1, train_sequences_2)]
 
     train_padded_data_1 = pad_sequences(train_sequences_1, maxlen=max_sequence_length)
     train_padded_data_2 = pad_sequences(train_sequences_2, maxlen=max_sequence_length)
@@ -116,30 +112,12 @@ def create_train_dev_set(
     del train_padded_data_2
     gc.collect()
 
-    train_data_1, val_data_1 = (
-        train_data_1_shuffled[:-dev_idx],
-        train_data_1_shuffled[-dev_idx:],
-    )
-    train_data_2, val_data_2 = (
-        train_data_2_shuffled[:-dev_idx],
-        train_data_2_shuffled[-dev_idx:],
-    )
-    labels_train, labels_val = (
-        train_labels_shuffled[:-dev_idx],
-        train_labels_shuffled[-dev_idx:],
-    )
+    train_data_1, val_data_1 = train_data_1_shuffled[:-dev_idx], train_data_1_shuffled[-dev_idx:]
+    train_data_2, val_data_2 = train_data_2_shuffled[:-dev_idx], train_data_2_shuffled[-dev_idx:]
+    labels_train, labels_val = train_labels_shuffled[:-dev_idx], train_labels_shuffled[-dev_idx:]
     leaks_train, leaks_val = leaks_shuffled[:-dev_idx], leaks_shuffled[-dev_idx:]
 
-    return (
-        train_data_1,
-        train_data_2,
-        labels_train,
-        leaks_train,
-        val_data_1,
-        val_data_2,
-        labels_val,
-        leaks_val,
-    )
+    return train_data_1, train_data_2, labels_train, leaks_train, val_data_1, val_data_2, labels_val, leaks_val
 
 
 def create_test_data(tokenizer, test_sentences_pair, max_sequence_length):
@@ -159,13 +137,15 @@ def create_test_data(tokenizer, test_sentences_pair, max_sequence_length):
 
     test_sequences_1 = tokenizer.texts_to_sequences(test_sentences1)
     test_sequences_2 = tokenizer.texts_to_sequences(test_sentences2)
-    leaks_test = [
-        [len(set(x1)), len(set(x2)), len(set(x1).intersection(x2))]
-        for x1, x2 in zip(test_sequences_1, test_sequences_2)
-    ]
+    leaks_test = [[len(set(x1)), len(set(x2)), len(set(x1).intersection(x2))]
+                  for x1, x2 in zip(test_sequences_1, test_sequences_2)]
 
     leaks_test = np.array(leaks_test)
     test_data_1 = pad_sequences(test_sequences_1, maxlen=max_sequence_length)
     test_data_2 = pad_sequences(test_sequences_2, maxlen=max_sequence_length)
 
+
+    
+
+    
     return test_data_1, test_data_2, leaks_test

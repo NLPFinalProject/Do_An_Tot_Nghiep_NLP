@@ -69,6 +69,15 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
     console.log('you fail???');
     return {};
   };
+  SpecialCharacterValidator = (control: FormControl): { [s: string]: boolean } => {
+    if (!control.value) {
+      return { error: true, required: true };
+    } else if (this.checkSpecialCharacter(control.value)) {
+      return { confirm: true };
+    }
+    console.log('you fail???');
+    return {};
+  };
   //#endregion
 
   ngOnInit() {
@@ -137,7 +146,7 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
     }
   }
   checkSpecialCharacter(str: string) {
-    var format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+    var format = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
 
     if (format.test(str)) {
       return true;
@@ -175,22 +184,29 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
   }
 
   createdFrom(): void {
+    var pattern = '/[~!@#$%^&<>]/';
+
     this.registerForm = this.formBuilder.group({
       emailOrganization: [null, [Validators.email]],
       //organization: [null],
       //address: [null],
       //phoneOrganization: [null],
+
       email: [null, [Validators.email, Validators.required]],
-      fullName: [null, [Validators.required]],
+      fullName: [null, [Validators.required, Validators.maxLength(32), this.SpecialCharacterValidator]],
       //userId: [null],
       password: [null, [Validators.required]],
       checkPassword: [null, [Validators.required, this.confirmationValidator]],
-      phoneNumber: [null, [Validators.required]],
+      phoneNumber: [
+        null,
+        [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(9), Validators.maxLength(12)],
+      ],
+      //phoneNumber: [null, [Validators.required,,Validators.pattern("^[0-9]*$")]],
       phoneNumberPrefix: ['+84'],
-      ngaySinh: [null, [Validators.required]],
+      ngaySinh: [null, [Validators.required, this.DateOfBirthValidator]],
       gioiTinh: [true],
-      captcha: [null, [Validators.required]],
-      agree: [false],
+      //captcha: [false, [Validators.required]],
+      agree: [false, [Validators.required]],
     });
   }
 }

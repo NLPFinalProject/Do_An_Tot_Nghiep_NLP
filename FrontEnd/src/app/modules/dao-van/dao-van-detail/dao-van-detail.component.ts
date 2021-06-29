@@ -68,7 +68,7 @@ export class DaoVanDetailComponent implements OnInit {
     },
   ];
   //public File1Name= this.data;
-  public FileList2: Array<any>;
+  public FileList2: Array<any> = [];
   public ListAllFile: any[];
 
   constructor(
@@ -102,6 +102,13 @@ export class DaoVanDetailComponent implements OnInit {
           if (this.router.getCurrentNavigation().extras.state != null) {
           } else {
             if (this.params.file1Name != undefined) {
+              if (this.params.fileList2 == null) {
+                console.log('die you bitch');
+              } else {
+                console.log('now you gay');
+                console.log(this.params.fileList2);
+              }
+
               console.log(this.params.File1Name);
               this.file1Name = this.params.File1Name;
               this.FileList2 = this.params.fileList2;
@@ -164,36 +171,53 @@ export class DaoVanDetailComponent implements OnInit {
         let data = Number(params['id']);
         this.fileService.getResult(data).subscribe(
           (data: any) => {
-            console.log('end loading');
-            console.log(data);
             this.data1 = data;
+
             this.file1Name = this.data1.File1Name;
-            this.FileList2 = [];
-            for (var i = 0; i < this.data1.ListFileName.length; i++) {
+            //this.FileList2 = [];
+
+            console.log(this.data1);
+            if (this.data1.ListFileName.length == 0) {
+              console.log('lọt lưới');
               let temp = {
-                name: this.data1.ListFileName[i],
-                ratio: this.data1.AllFileRatio[i],
+                name: 'Không có kết quả phù hợp với yêu cầu',
+                ratio: -1,
               };
               this.FileList2.push(temp);
+              this.dataForDiff = [];
+              this.ListAllFile = [];
+              this.ListAllFile.push(this.data1.File1Name);
+
+              //this.ListAllFile =(this.data1.File1Name);
+              //this.ListAllFile.push("");
+            } else {
+              for (var i = 0; i < this.data1.ListFileName.length; i++) {
+                let temp = {
+                  name: this.data1.ListFileName[i],
+                  ratio: this.data1.AllFileRatio[i],
+                };
+                this.FileList2.push(temp);
+              }
+
+              this.ListAllFile = this.data1.ListAllFile;
+              this.file1 = this.data1.data;
+              this.stt = this.data1.stt;
+
+              //this.data1 = this.params.data;
+
+              console.log(this.ListAllFile);
+              let temp = [];
+              this.dataForDiff = {
+                file1: this.data1.file1,
+
+                ListFile: this.data1.ListFile,
+              };
+              console.log('this is new data for diff');
+              console.log(this.dataForDiff);
             }
-
-            this.ListAllFile = this.data1.ListAllFile;
-            this.file1 = this.data1.data;
-            this.stt = this.data1.stt;
-
-            //this.data1 = this.params.data;
-
-            console.log(this.ListAllFile);
-            let temp = [];
-            this.dataForDiff = {
-              file1: this.data1.file1,
-
-              ListFile: this.data1.ListFile,
-            };
-            console.log('this is new data for diff');
-            console.log(this.dataForDiff);
           },
           (error) => {
+            console.log('error 404 not found');
             this.router.navigate(['daovan'], {});
           }
         );

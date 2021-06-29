@@ -20,7 +20,7 @@
     <tbody>
       <ng-template ngFor let-data [ngForOf]="filterTable.data">
         <tr (click)="Warning(data)">
-          <td></td>
+          <td nzShowExpand [(nzExpand)]="data.expand"></td>
           <td>
             <div *ngIf="data.SessionName">
               {{ data.SessionName }}
@@ -40,8 +40,7 @@
             ></nz-badge>
           </td>
           <td>
-            <div *ngIf="data.Status == true">Tải lên thành công</div>
-            <div *ngIf="data.Status == false">Đang tải</div>
+            {{ data.Status }}
           </td>
 
           <td>
@@ -49,6 +48,39 @@
             <div *ngIf="data.SessionType">
               {{ data.SessionType }}
             </div>
+          </td>
+        </tr>
+        <tr [nzExpand]="data.expand">
+          <td></td>
+          <td colspan="5">
+            <nz-table [nzData]="data.ChildReport" nzSize="middle" [nzShowPagination]="false">
+              <tbody>
+                <tr (click)="goToDetail(data)">
+                  <td>
+                    <b>success</b>
+                  </td>
+                  <td>
+                    <b>{{ data.ChildReport.success }}</b>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <b>loading</b>
+                  </td>
+                  <td>
+                    <b>{{ data.ChildReport.loading }}</b>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <b>Fail</b>
+                  </td>
+                  <td>
+                    <b>{{ data.ChildReport.fail }}</b>
+                  </td>
+                </tr>
+              </tbody>
+            </nz-table>
           </td>
         </tr>
       </ng-template>

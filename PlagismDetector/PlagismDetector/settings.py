@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -22,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "*3ft48w^)e9b5qjtdzxo$!&-jyk8tjau12w$d9a1tl3n@k5l*k"
+SECRET_KEY = '*3ft48w^)e9b5qjtdzxo$!&-jyk8tjau12w$d9a1tl3n@k5l*k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -33,109 +32,122 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-    "rest_framework",
-    "FileComponent.apps.FileComponentConfig",
-    "KeywordExtractor.apps.KeywordExtractorConfig",
-    "MailComponent.apps.MailComponentConfig",
-    "PaymentComponent.apps.PaymentComponentConfig",
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'rest_framework',
+    'FileComponent.apps.FileComponentConfig',
+    'KeywordExtractor.apps.KeywordExtractorConfig',
+    'MailComponent.apps.MailComponentConfig',
+    'PaymentComponent.apps.PaymentComponentConfig',
     #'User.apps.UsersConfig',
-    "PreprocessingComponent.apps.PreprocessingComponentConfig",
-    "ResultExecutionComponent.apps.ResultExecutionComponentConfig",
-    "UserComponent.apps.UserComponentConfig",
+    'PreprocessingComponent.apps.PreprocessingComponentConfig',
+    'ResultExecutionComponent.apps.ResultExecutionComponentConfig',
+    'UserComponent.apps.UserComponentConfig',
     # CORS
-    "corsheaders",
-    "django.contrib.sites",
-    "rest_framework.authtoken",
+    'corsheaders',
+    
+    'django.contrib.sites',
+    'rest_framework.authtoken',
+    
 ]
 CORS_ORIGIN_ALLOW_ALL = False
 
 CORS_ORIGIN_WHITELIST = (
-    "http://localhost:5000",
-    "http://localhost:4200",
-    "http://localhost:8000",
-)
-MEDIA_ROOT = os.path.join(BASE_DIR, "DEF")
-TEMPLATE_DIRS = (os.path.join(BASE_DIR),)
 
-MEDIA_URL = "/DEF/"
+       'http://localhost:5000',
+       'http://localhost:4200',
+       'http://localhost:8000',
+
+)
+MEDIA_ROOT = os.path.join(BASE_DIR, 'DEF')
+TEMPLATE_DIRS = (
+    os.path.join(BASE_DIR ),
+)
+
+MEDIA_URL = '/DEF/'
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_jwt.authentication.JSONWebTokenAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.BasicAuthentication",
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    
+    
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        
+        
         #'rest_framework.permissions.AllowAny',
         #'rest_framework.authentication.BasicAuthentication',
     ),
+    
 }
 
 CSRF_COOKIE_SECURE = False
 # JWT settings
-AUTH_USER_MODEL = "UserComponent.User"
+AUTH_USER_MODEL = 'UserComponent.User'
 JWT_AUTH = {
-    "JWT_ALLOW_REFRESH": True,
-    "JWT_EXPIRATION_DELTA": timedelta(days=2),
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_EXPIRATION_DELTA': timedelta(days=1),
 }
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
-    "django.middleware.security.SecurityMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'corsheaders.middleware.CorsMiddleware',  
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-ROOT_URLCONF = "PlagismDetector.urls"
+ROOT_URLCONF = 'PlagismDetector.urls'
 REST_USE_JWT = True
 SITE_ID = 1
 
-ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 """AUTHENTICATION_BACKENDS = (
 "django.contrib.auth.backends.ModelBackend",
 "allauth.account.auth_backends.AuthenticationBackend"
 )"""
-dir = os.getcwd() + "/MailComponent/"
+dir = os.getcwd()+'/MailComponent/'
 
 TEMPLATES = [
     {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [dir],
-        "APP_DIRS": True,
-        "OPTIONS": {
-            "context_processors": [
-                "django.template.context_processors.debug",
-                "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
-                "django.template.context_processors.request",
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [dir],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request'
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = "PlagismDetector.wsgi.application"
+WSGI_APPLICATION = 'PlagismDetector.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "test4",
-        "USER": "root",
-        "PASSWORD": "",
-        "HOST": "127.0.0.1",
-        "PORT": "3306",
-        "OPTIONS": {"init_command": "SET sql_mode='STRICT_TRANS_TABLES'"},
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'test4',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+        'OPTIONS': {
+        'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+}
     }
 }
 
@@ -145,16 +157,16 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
@@ -162,9 +174,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = "UTC"
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -176,11 +188,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = "/static/"
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
+STATIC_URL = '/static/'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = "kaitouthuan@gmail.com"
-EMAIL_HOST_PASSWORD = "kyonaruto"
+EMAIL_HOST_USER = 'kaitouthuan@gmail.com'
+EMAIL_HOST_PASSWORD = 'kyonaruto'
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False

@@ -16,26 +16,23 @@ import tika
 import re
 from tika import parser
 import logging
-
-annotator = VnCoreNLP(
-    "VnCoreNLP//VnCoreNLP-1.1.1.jar", annotators="wseg", max_heap_size="-Xmx500m"
-)
+annotator = VnCoreNLP("VnCoreNLP//VnCoreNLP-1.1.1.jar", annotators="wseg", max_heap_size='-Xmx500m')
 
 """
 link: https://stackoverflow.com/questions/22756344/how-do-i-extract-data-from-a-doc-docx-file-using-python
 """
 
-WORD_NAMESPACE = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
-PARA = WORD_NAMESPACE + "p"
-TEXT = WORD_NAMESPACE + "t"
-TABLE = WORD_NAMESPACE + "tbl"
-ROW = WORD_NAMESPACE + "tr"
-CELL = WORD_NAMESPACE + "tc"
+WORD_NAMESPACE = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
+PARA = WORD_NAMESPACE + 'p'
+TEXT = WORD_NAMESPACE + 't'
+TABLE = WORD_NAMESPACE + 'tbl'
+ROW = WORD_NAMESPACE + 'tr'
+CELL = WORD_NAMESPACE + 'tc'
 
 
 def docx2txt(filename):
-    with zipfile.ZipFile("wdoc.docx") as docx:
-        tree = xml.etree.ElementTree.XML(docx.read("word/document.xml"))
+    with zipfile.ZipFile('wdoc.docx') as docx:
+        tree = xml.etree.ElementTree.XML(docx.read('word/document.xml'))
     s = ""
     for p in tree.iter(PARA):
         # print(''.join(node.text for node in p.iter(TEXT)))
@@ -49,16 +46,15 @@ def docx2txt(filename):
 #     data = parsed["content"]
 #     return data
 
-
 def save_as_docx(path=os.getcwd()):  # convert .doc file to .docx file and read
     # Opening MS Word
-    word = win32.gencache.EnsureDispatch("Word.Application")
+    word = win32.gencache.EnsureDispatch('Word.Application')
     doc = word.Documents.Open(path)
     doc.Activate()
 
     # Rename path with .docx
     new_file_abs = os.path.abspath(path)
-    new_file_abs = re.sub(r"\.\w+$", ".docx", new_file_abs)
+    new_file_abs = re.sub(r'\.\w+$', '.docx', new_file_abs)
 
     # Save and Close
     word.ActiveDocument.SaveAs(new_file_abs, FileFormat=constants.wdFormatXMLDocument)
@@ -82,7 +78,6 @@ def doc2docx(filename, path=os.getcwd()):
         file_conv = os.path.join(path, filename)
         save_as_docx(file_conv)
         return filename + "x"
-
 
 def ppt2text(filename):
     ppt = Presentation(filename)
@@ -116,37 +111,31 @@ def xlsx2text(filename):
     # using the value attribute
     print(cell_obj.value)
 
-
 def pdf2text(file):
     tika.initVM()
     parsed = parser.from_file(file)
-    data = parsed["content"]
-    list_sen = data.split("\s{4,}")
-    for i in range(0, len(list_sen)):
+    data=parsed["content"]
+    list_sen = data.split('\s{4,}')
+    for i in range (0, len(list_sen)):
         list_sen[i] = " ".join(list_sen[i].split())
     return annotator.tokenize(list_sen[0])
 
-
-if __name__ == "__main__":
-    annotator = VnCoreNLP(
-        "VnCoreNLP/VnCoreNLP-1.1.1.jar",
-        annotators="wseg,pos,ner,parse",
-        max_heap_size="-Xmx2g",
-    )
+if __name__ == '__main__':
+    annotator = VnCoreNLP("VnCoreNLP/VnCoreNLP-1.1.1.jar", annotators="wseg,pos,ner,parse", max_heap_size='-Xmx2g')
 
     filename = "related.pdf"
 
     name, file_extension = os.path.splitext(filename)
 
-    if file_extension.lower() == ".doc":
+    if (file_extension.lower() == ".doc"):
         doc2docx(filename)
-        print(docx2txt(filename + "x"))
+        print(docx2txt(filename+"x"))
 
-    elif file_extension.lower() == ".docx":
+    elif (file_extension.lower() == ".docx"):
         print(docx2txt(filename))
-    elif file_extension.lower() == ".pdf":
+    elif(file_extension.lower() == ".pdf"):
         print(pdf2text(filename))
-    elif file_extension.lower() == ".xlxs":
+    elif (file_extension.lower() == ".xlxs"):
         pass
-    elif file_extension.lower() == ".pptx":
+    elif (file_extension.lower() == ".pptx"):
         pass

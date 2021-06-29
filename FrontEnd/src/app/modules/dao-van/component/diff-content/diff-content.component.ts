@@ -32,9 +32,9 @@ export class DiffContentComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.answer = {
-      ls1: null,
-      ls2: null,
-      ls3: null,
+      ls1: [],
+      ls2: [],
+      ls3: [],
     };
 
     console.log('here I came');
@@ -80,7 +80,7 @@ export class DiffContentComponent implements OnInit {
   }
   ngOnChanges() {
     //this.childFunction()
-    console.log('I have change');
+    console.log('I have change for now');
     console.log(this.SessionData);
     this.doStep();
   }

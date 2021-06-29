@@ -43,12 +43,16 @@
               id="fullName"
               formControlName="fullName"
             />
-            <div ngxErrors="fullName">
-              <div *ngFor="let error of errors" [ngxError]="error.name" [when]="error.rules">
-                <nz-form-explain translate class="errors">
-                  {{ 'FullName is required' | translate }}
-                </nz-form-explain>
-              </div>
+            <div *ngIf="registerForm.get('fullName')?.errors && registerForm.get('fullName').touched">
+              <ng-container [ngSwitch]="true">
+                <div *ngSwitchCase="registerForm.get('fullName').hasError('required')">Fullname is required</div>
+                <div *ngSwitchCase="registerForm.get('fullName').hasError('maxlength')">
+                  Full name can not be more than 30 characters
+                </div>
+                <div *ngSwitchCase="registerForm.get('fullName').hasError('confirm')">
+                  Fullname must not contain special character
+                </div>
+              </ng-container>
             </div>
           </div>
         </div>
@@ -67,6 +71,9 @@
             </label>
           </div>
         </div>
+        <div *ngIf="registerForm.get('ngaySinh')?.hasError('confirm') && registerForm.get('ngaySinh').dirty">
+          <div>Your birthday can not be later than today</div>
+        </div>
       </nz-form-control>
     </nz-form-item>
 
@@ -80,13 +87,19 @@
           </ng-template>
           <input formControlName="phoneNumber" [placeholder]="'Phone' | translate" id="'phoneNumber'" nz-input />
         </nz-input-group>
-
-        <div ngxErrors="phoneNumber">
-          <div *ngFor="let error of errors" [ngxError]="error.name" [when]="error.rules">
-            <nz-form-explain translate class="errors">
-              {{ 'Phone is required' | translate }}
-            </nz-form-explain>
-          </div>
+        <div *ngIf="registerForm.get('phoneNumber')?.errors && registerForm.get('phoneNumber').touched">
+          <ng-container [ngSwitch]="true">
+            <div *ngSwitchCase="registerForm.get('phoneNumber').hasError('required')">Phone is required]</div>
+            <div
+              *ngSwitchCase="
+                registerForm.get('phoneNumber').hasError('minlength') ||
+                registerForm.get('phoneNumber').hasError('maxlength')
+              "
+            >
+              phonelength must be between 9 and 12
+            </div>
+            <div *ngSwitchCase="registerForm.get('phoneNumber').hasError('pattern')">Phone contains only number</div>
+          </ng-container>
         </div>
       </nz-form-control>
     </nz-form-item>

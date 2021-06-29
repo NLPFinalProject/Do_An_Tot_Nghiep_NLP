@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("FileComponent", "0002_auto_20210526_2157"),
+        ('FileComponent', '0002_auto_20210526_2157'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="documentsession",
-            name="SessionName",
+            model_name='documentsession',
+            name='SessionName',
             field=models.CharField(max_length=50, null=True),
         ),
     ]

@@ -183,7 +183,7 @@ export class AuthenticationService {
   refreshToken() {
     if (moment().isBetween(this.getExpiration().subtract(1, 'days'), this.getExpiration())) {
       return this.httpClient
-        .post(this.baseUrl.concat('/token/refresh-token/'), { token: this.credentials })
+        .post(this.baseUrl.concat('/refresh-token/'), { token: localStorage.getItem('token') })
         .pipe(
           tap((response) => this.setSession(response)),
           shareReplay()
