@@ -134,7 +134,6 @@ export class ReportInputFileComponent implements OnInit {
   }
   // Routing
   goToDetail(event: any): void {
-    console.log(event);
     this.routingService.navigateToUpdate('/daovan/', event.id);
   }
 

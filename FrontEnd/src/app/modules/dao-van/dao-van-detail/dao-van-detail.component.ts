@@ -102,6 +102,13 @@ export class DaoVanDetailComponent implements OnInit {
           if (this.router.getCurrentNavigation().extras.state != null) {
           } else {
             if (this.params.file1Name != undefined) {
+              if (this.params.fileList2 == null) {
+                console.log('die you bitch');
+              } else {
+                console.log('now you gay');
+                console.log(this.params.fileList2);
+              }
+
               console.log(this.params.File1Name);
               this.file1Name = this.params.File1Name;
               this.FileList2 = this.params.fileList2;
@@ -169,6 +176,13 @@ export class DaoVanDetailComponent implements OnInit {
             this.data1 = data;
             this.file1Name = this.data1.File1Name;
             this.FileList2 = [];
+            i;
+            if (this.params.fileList2 == null) {
+              console.log('die you bitch');
+            } else {
+              console.log('now you gay');
+              console.log(this.params.fileList2);
+            }
             for (var i = 0; i < this.data1.ListFileName.length; i++) {
               let temp = {
                 name: this.data1.ListFileName[i],

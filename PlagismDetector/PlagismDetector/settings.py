@@ -90,7 +90,7 @@ CSRF_COOKIE_SECURE = False
 AUTH_USER_MODEL = 'UserComponent.User'
 JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True,
-    'JWT_EXPIRATION_DELTA': timedelta(seconds=60),
+    'JWT_EXPIRATION_DELTA': timedelta(days=1),
 }
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  

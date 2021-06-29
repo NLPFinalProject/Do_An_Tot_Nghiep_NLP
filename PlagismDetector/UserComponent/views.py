@@ -262,7 +262,7 @@ def Session(request):
     except ObjectDoesNotExist:
         return Response(None, status=status.HTTP_200_OK)
 
-def readSession(userId):
+"""def readSession(userId):
     sessionList = DocumentSession.objects.filter(SessionUser=str(userId))
     ResponseContent = []
     for i in range(len(sessionList)):
@@ -285,6 +285,48 @@ def readSession(userId):
         temp["filename"] = temp2
         ResponseContent.append(temp)
 
+
+    return ResponseContent"""
+def readSession(userId):
+    sessionList = DocumentSession.objects.filter(SessionUser=str(userId))
+    ResponseContent = []
+    for i in range(len(sessionList)):
+        temp = {}
+        query1 = DataDocument.objects.filter(
+            DataDocumentAuthor=str(sessionList[i].SessionUser)) \
+            .filter(SessionId=str(sessionList[i].id))
+        query2 = DocumentSession.objects.get(pk=sessionList[i].id)
+        if (query2.Status == "Loading"):
+            success = query2.ChildReport
+            loading = len(query1) - success
+            fail = 0
+        else:
+            success = query2.ChildReport
+            fail = len(query1) - success
+            loading = 0
+        #temp1 = [success, loading, fail]
+        temp1 = {}
+        temp1["success"]= success
+        temp1["loading"]=loading
+        temp1["fail"] = fail
+        temp["ChildReport"] = temp1
+        temp["Status"] = sessionList[i].Status
+        temp["id"] = sessionList[i].id
+        temp["NumOfFile"] = sessionList[i].NumOfFile
+        temp["Date"] = sessionList[i].Date
+        temp["SessionUser"] = sessionList[i].SessionUser
+        temp["SessionName"] = sessionList[i].SessionName
+        temp["SessionType"] = sessionList[i].SessionType
+        querys = DataDocument.objects.filter(
+            DataDocumentAuthor=str(sessionList[i].SessionUser)) \
+            .filter(SessionId=str(sessionList[i].id))
+        # temp['filename'] = querys[0].DataDocumentName
+        # ResponseContent.append(temp) 
+        temp2 = []
+        for j in range(len(querys)):
+            temp2.append(querys[j].DataDocumentName)
+        temp["filename"] = temp2
+        ResponseContent.append(temp)
 
     return ResponseContent
 @api_view(['GET'])
