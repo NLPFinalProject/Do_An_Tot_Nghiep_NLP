@@ -11,42 +11,38 @@ import time
 import pythoncom
 import csv
 from underthesea import sent_tokenize, word_tokenize
-
 sys.path.insert(1, os.getcwd() + "/PreprocessingComponent")
 from PreprocessingComponent.pdfminer3 import Pdf_extract
 
-# ------------------------------------các function hỗ trợ cho function DocxToText---------------------------
+# ------------------------------------các function hỗ trợ cho function docx2txt---------------------------
 # Get paragraph string. Input is paragraph element
-def ParaString(para):
+def para_string(para):
     string = ""
     # if (str(para)[21:34] not in str(wp_tbl)):# and (str(para)[21:34] not in str(wp_txbx)):
-    wt = para.getElementsByTagName("w:t")
+    wt = para.getElementsByTagName('w:t')
     for i in range(len(wt)):
         string = string + wt[i].firstChild.data
 
     return string
 
-
 # Get table string. Input is table element
-def TableString(table):
+def table_string(table):
     string = ""
-    wp = table.getElementsByTagName("w:p")
-    column = len(table.getElementsByTagName("w:tc")) / len(
-        table.getElementsByTagName("w:tr")
-    )
+    wp = table.getElementsByTagName('w:p')
+    column = len(table.getElementsByTagName('w:tc')) / len(table.getElementsByTagName('w:tr'))
     c = 1
     for i in range(len(wp)):
-        string = string + ParaString(wp[i])
+        string = string + para_string(wp[i])
         if c % column == 0 and c != len(wp):
-            string += ". "
+            string += '. '
         else:
-            string += ". "
+            string += '. '
         c += 1
     return string
 
 
 # Get all elements
-def getAllElements(lst, type_of_element):
+def get_all_elements(lst, type_of_element):
     elements_list = []
     for i in range(len(lst)):
         Elements = lst[i].getElementsByTagName(type_of_element)
@@ -55,25 +51,25 @@ def getAllElements(lst, type_of_element):
     return elements_list
 
 
-def ParaToText(p):
-    rs = p._element.xpath(".//w:t")
+def para2text(p):
+    rs = p._element.xpath('.//w:t')
     return u" ".join([r.text for r in rs])
 
 
 # --------------------------------RÚT TRÍCH TEXT TỪ FILE------------------------------------#
 # Docx
-def DocxToText(docx_file_name):
+def docx2txt(docx_file_name):
     # Parse xml file
-    xml_file_name = "mydocx.xml"
+    xml_file_name = 'mydocx.xml'
     opc_to_flat_opc(docx_file_name, xml_file_name)
     my_docx = minidom.parse(xml_file_name)
 
     # Get elements
-    paragraph = my_docx.getElementsByTagName("w:p")
-    table = my_docx.getElementsByTagName("w:tbl")
+    paragraph = my_docx.getElementsByTagName('w:p')
+    table = my_docx.getElementsByTagName('w:tbl')
 
     # Get all w:p elements in table elements. Output is two-dimensional list
-    wp_tbl = getAllElements(table, "w:p")
+    wp_tbl = get_all_elements(table, 'w:p')
 
     # Get text and save to "string" variable
     para_index = 0
@@ -81,21 +77,21 @@ def DocxToText(docx_file_name):
     string = ""
     while para_index < len(paragraph):
         if paragraph[para_index] in wp_tbl:
-            string = string + TableString(table[tbl_index])
-            para_index += len(table[tbl_index].getElementsByTagName("w:p"))
+            string = string + table_string(table[tbl_index])
+            para_index += len(table[tbl_index].getElementsByTagName('w:p'))
             tbl_index += 1
 
         else:
-            string = string + ParaString(paragraph[para_index]) + "\n"
+            string = string + para_string(paragraph[para_index]) + '\n'
             para_index += 1
 
-        string = string + "\n"
+        string = string + '\n'
     os.remove("mydocx.xml")
     return string
 
 
 # Doc
-def DocToDocx(filename, path=os.getcwd()):
+def doc2docx(filename, path=os.getcwd()):
     baseDir = os.path.abspath(os.getcwd())  # Starting directory for directory walk
     pythoncom.CoInitialize()
     word = win32com.client.Dispatch("Word.application")
@@ -103,14 +99,11 @@ def DocToDocx(filename, path=os.getcwd()):
     file_name, file_extension = os.path.splitext(file_path)
 
     if "~$" not in file_name:
-        if file_extension.lower() == ".doc":  #
+        if file_extension.lower() == '.doc':  #
             # docx_file = '{0}{1}'.format(file_path, 'x')
-            docx_file = file_name + str(uuid.uuid4().hex[:10]).format(
-                file_path, "x"
-            )  # tránh trương hợp có sẵn file .docx tước đó nên thêm phần random để tránh trùng tên
-            if not os.path.isfile(
-                docx_file
-            ):  # Skip conversion where docx file already exists
+            docx_file = file_name + str(uuid.uuid4().hex[:10]).format(file_path,
+                                                                      'x')  # tránh trương hợp có sẵn file .docx tước đó nên thêm phần random để tránh trùng tên
+            if not os.path.isfile(docx_file):  # Skip conversion where docx file already exists
 
                 file_path = os.path.abspath(file_path)
                 docx_file = os.path.abspath(docx_file)
@@ -120,13 +113,13 @@ def DocToDocx(filename, path=os.getcwd()):
                     wordDoc.SaveAs2(docx_file, FileFormat=16)
                     wordDoc.Close()
                 except Exception as e:
-                    print("Failed to Convert: {0}".format(file_path))
+                    print('Failed to Convert: {0}'.format(file_path))
                     print(e)
             return docx_file + ".docx"  ## trả ra tên file đã chuyển từ doc -> docx
 
 
 # Powerpoint
-def PptToText(filename):
+def ppt2txt(filename):
     ppt = Presentation(filename)
     string = ""
     for slide in ppt.slides:
@@ -137,78 +130,86 @@ def PptToText(filename):
 
 
 # CSV
-def CsvToText(filename):
+def csv2txt(filename):
     string = ""
-    with open(filename, "rt", encoding="utf-8") as f:
+    with open(filename, 'rt', encoding="utf-8") as f:
         data = csv.reader(f)
         for row in data:
             for cell in row:
-                if cell != "":
-                    string += cell + "\n"
+                if cell != '':
+                    string += cell + '\n'
     return string
 
 
 # Excel
 # hàm rút trich các câu từ file excel ### cần cập nhật thêm vì chưa hoàn thiện
-def XlsxToText(filename):
+def xlsx2txt(filename):
     file_name, file_extension = os.path.splitext(filename)
     data = pd.read_excel(filename, index_col=0, keep_default_na=0)
     filename_csv = file_name + str(uuid.uuid4().hex[:10]) + ".csv"
-    data.to_csv(filename_csv, encoding="utf-8")
-    res = CsvToText(filename_csv)
+    data.to_csv(filename_csv, encoding='utf-8')
+    res = csv2txt(filename_csv)
     os.remove(filename_csv)
     return res
 
 
+# Rich text
+def rtf2txt(filename):
+    res=[]
+    with open(filename) as infile:
+        for line in infile:
+            res.append(line)
+    return res
+
 # --------------------------------TÁCH ĐOẠN, TÁCH CÂU, TÁCH TỪ------------------------------------#
 
 # Tách đoạn
-def ListPara(document):
-    return document.split("\n")
+def list_para(document):
+    return document.split('\n')
 
 
 # Tách câu
-def ParaToSentence(para):
+def para2sentence(para):
     return sent_tokenize(para)
 
 
-def ListSentence(para_list):
+def list_sentence(para_list):
     sentences = []
 
     for p in para_list:
-        sentences.extend(ParaToSentence(p))
+        sentences.extend(para2sentence(p))
 
     return sentences
 
 
 # Tách từ
 # Giữa các chữ trong 1 từ CÓ dấu gạch dưới (underscore)
-def SentenceTowordUnderscore(sentence):
+def sentence2word_underscore(sentence):
     words = word_tokenize(sentence)
 
     for i in range(len(words)):
-        words[i] = words[i].replace(" ", "_")
+        words[i] = words[i].replace(' ', '_')
 
     return words
 
 
 # Giữa các chữ trong 1 từ KHÔNG CÓ dấu gạch dưới (underscore)
-def SentenceToWord(sentence):
+def sentence2word(sentence):
     return word_tokenize(sentence)
 
 
-def ListWord(para_list):
-    sentences = ListSentence(para_list)
+def list_word(para_list):
+    sentences = list_sentence(para_list)
 
     words = []
     for s in sentences:
-        words.append(SentenceToWord(s))
+        words.append(sentence2word(s))
 
     return words
 
 
 # Số từ của mỗi câu trong văn bản
-def NumOfWord(words_list):
+def num_of_word(words_list):
     lst = []
 
     for sent in words_list:
@@ -220,13 +221,13 @@ def NumOfWord(words_list):
 # Ghép các từ thành 1 câu
 # Input: word_list [word1, word2, word3,...]
 # Output: string
-def JoinWord(word_list):
+def join_word(word_list):
     string = ""
 
     for i in range(len(word_list) - 1):
         string += word_list[i]
         if word_list[i + 1] not in punctuation:
-            string += " "
+            string += ' '
     string += word_list[len(word_list) - 1]
 
     return string
@@ -237,11 +238,11 @@ def JoinWord(word_list):
 #   + sentence (string)
 #   + max_len: độ dài tối đa của 1 câu
 # Output: list các sentence mới (string)
-def SplitSent(sentence, max_len):
+def split_sent(sentence, max_len):
     lst = []
 
-    words = SentenceTowordUnderscore(sentence)
-    new_sen = JoinWord(words)
+    words = sentence2word_underscore(sentence)
+    new_sen = join_word(words)
 
     x = math.ceil(len(new_sen) / max_len)
     new_len = math.ceil(len(new_sen) / x)
@@ -249,12 +250,12 @@ def SplitSent(sentence, max_len):
     start = 0
     end = new_len
     for i in range(x - 1):
-        string = new_sen[start:end]
+        string = new_sen[start: end]
 
         index = end - 1
-        if new_sen[index] != " ":
+        if new_sen[index] != ' ':
             for j in range(index + 1, len(new_sen)):
-                if new_sen[j] == " ":
+                if new_sen[j] == ' ':
                     break
                 string += new_sen[j]
             start = j + 1
@@ -264,22 +265,22 @@ def SplitSent(sentence, max_len):
             start += new_len
             end = start + new_len
 
-        lst.append(string.strip().replace("_", " "))
+        lst.append(string.strip().replace('_', ' '))
         string = ""
 
-    lst.append(new_sen[start:].strip().replace("_", " "))
+    lst.append(new_sen[start:].strip().replace('_', ' '))
 
     return lst
 
 
 # Input: list sentences
 # Output: list các sentence mới thỏa điều kiện chia nhỏ và sentence cũ
-def SplitSentList(sent_list, max_len):
+def split_sent_list(sent_list, max_len):
     new_lst = []
     min_len = 5  # cas cau co it hon 5 tu
     for sent in sent_list:
         if len(sent) > max_len:
-            new_lst.extend(SplitSent(sent, max_len))
+            new_lst.extend(split_sent(sent, max_len))
         elif len(sent) > min_len:
             new_lst.append(sent)
 
@@ -300,41 +301,41 @@ def preprocess(filename):
 
     else:
         if file_extension.lower() == ".doc":
-            new_filename_docx = DocToDocx(filename)
-            doc = DocxToText(new_filename_docx)
+            new_filename_docx = doc2docx(filename)
+            doc = docx2txt(new_filename_docx)
 
         if file_extension.lower() == ".docx":
-            doc = DocxToText(filename)
+            doc = docx2txt(filename)
 
         if file_extension.lower() == ".pdf":
-            para = Pdf_extract.pdfToText(filename)
+            para = Pdf_extract.pdf2txt(filename)
 
         if file_extension.lower() == ".xlsx":
-            doc = XlsxToText(filename)
+            doc = xlsx2txt(filename)
 
         if file_extension.lower() == ".csv":
-            doc = CsvToText(filename)
+            doc = csv2txt(filename)
 
         if file_extension.lower() == ".pptx":
-            doc = PptToText(filename)
+            doc = ppt2txt(filename)
 
         if file_extension.lower() == ".txt":
-            f = open(filename, "r", encoding="utf-8")
+            f = open(filename, 'r', encoding='utf-8')
             doc = f.read()
             f.close()
 
     if file_extension.lower() != ".pdf":
-        para = ListPara(doc)
+        para = list_para(doc)
 
-    list_sent_1 = SplitSentList(ListSentence(para), 450)
+    list_sent_1 = split_sent_list(list_sentence(para), 450)
     list_sent = [sen.replace("\xa0", "") for sen in list_sent_1]
-    ListWords = ListWord(para)
+    list_words = list_word(para)
 
-    return list_sent, ListWords, os.path.basename(filename)
+    return list_sent, list_words, os.path.basename(filename)
 
 
-if __name__ == "__main__":
-    FILE_PATH = "project_doc.docx"
+if __name__ == '__main__':
+    FILE_PATH = 'project_doc.docx'
 
     start_time = time.time()
 

@@ -1,0 +1,14 @@
+- Đổi mật khẩu trùng với mật khẩu cũ vẫn được    x
+- Đổi mật khẩu không có nút quay lại trang chủ	 x
+- Đăng nhập sai thông chưa có thông báo cụ thể	 x
+- Sửa con mắt trong đổi mật khẩu				 x
+- Đổi tiêu đề khôi phục tài khoản thành đổi mật khẩu trong đổi mật khẩu	 x
+- Chưa kiểm tra nội dung nhập vào trong thay đổi thông tin tài khoản	
+- Chưa kiểm tra các trường trong đăng ký	Chưa kiểm tra nội dung nhập vào trong quên mật khẩu	
+- Nhập email chưa đăng ký trong quên mật khẩu không có thông báo	
+- Nhập email đã đăng ký trong quên mật khẩu không nhận đươc email
+- Tự động quay lại trang chủ sau khi hiện thông báo?
+- Sửa thông báo tải file <10MB		x
+- Chặn file sai định dạng như chặn file >10MB	x
+- Hiện thông báo chặn file >10MB ở bước so sánh với file của bạn nhưng file vẫn hiện trong danh sách up lên	    x
+- Trong tài khoản admin khi up file Hiện thông báo chặn file >10MB nhưng file vẫn hiện trong danh sách up lên   x

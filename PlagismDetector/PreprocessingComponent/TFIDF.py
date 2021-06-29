@@ -3,6 +3,7 @@ import math
 import time
 from django.conf import settings
 import os
+from underthesea import sent_tokenize, word_tokenize
 # import PreprocessingComponent.views as p
 import PreprocessingComponent.views as p
 from urllib.request import urlopen, Request
@@ -16,17 +17,17 @@ userAgent = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTM
 # search on google "my user agent"
 
 # check a url can be doawnloaded as a file?
-def isDownloadable(url):
+def is_downloadable(url):
     """
     Does the url contain a downloadable resource
     """
     try:
         h = requests.head(url, allow_redirects=True)
         header = h.headers
-        contentType = header.get('content-type')
-        if 'text' in contentType.lower():
+        content_type = header.get('content-type')
+        if 'text' in content_type.lower():
             return False
-        if 'html' in contentType.lower():
+        if 'html' in content_type.lower():
             return False
         return True
     except:
@@ -34,35 +35,35 @@ def isDownloadable(url):
 
 
 
-def searchKeyword(search):
-    listUrl = []
+def search_keyword(search):
+    list_url = []
     try:
-        listUrl.extend(Google(search, userAgent))
+        list_url.extend(Google(search, userAgent))
     except:
         pass
     try:
-        listUrl.extend(Bing(search, userAgent))
+        list_url.extend(Bing(search, userAgent))
     except:
         pass
     try:
-        listUrl.extend(Yahoo(search, userAgent))
+        list_url.extend(Yahoo(search, userAgent))
     except:
         pass
     try:
-        listUrl.extend(Duckduckgo(search, userAgent))
+        list_url.extend(Duckduckgo(search, userAgent))
     except:
         pass
     try:
-        listUrl.extend(Givewater(search, userAgent))
+        list_url.extend(Givewater(search, userAgent))
     except:
         pass
-    return list(dict.fromkeys(listUrl))
+    return list(dict.fromkeys(list_url))
 
 
 
 # download file downloadable such as: pdf, docx,...
-def downloadDocument(url):
-    if (isDownloadable(url)):
+def download_document(url):
+    if (is_downloadable(url)):
         name = os.path.basename(url)
         r = requests.get(url, allow_redirects=True)
         f = open(settings.MEDIA_ROOT + '\\DocumentFile\\file_downloaded\\' + name, 'wb')
@@ -71,7 +72,7 @@ def downloadDocument(url):
 
 
 # crawl text from html website then preprocess and give output: list sentence after preprocessing.
-def crawlWeb(url):
+def crawl_web(url):
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)'
                  ' Chrome/89.0.4389.114 Safari/537.36 Edg/89.0.774.68'}
@@ -93,9 +94,10 @@ def crawlWeb(url):
         # drop blank lines
         text = '\n'.join(chunk for chunk in chunks if chunk)
         temp = text.split("\n")
-        lstSentecne=p.ListSentence(temp)
-        temp1 = p.SplitSentList(lstSentecne,450)
-        res = [sen.replace("\xa0", "") for sen in temp1]
+        for para in temp:
+            list_sentence.extend(sent_tokenize(para))
+            temp1=p.split_sent_list(list_sentence,450)
+            res = [sen.replace("\xa0", "") for sen in temp1]
         return res #list sentence
     except:
         return None
@@ -103,7 +105,7 @@ def crawlWeb(url):
 # Lower tất cả các từ
 # Input: Danh sách các từ (list in list)
 # Output: Danh sách từ đã lower (list in list)
-def tokenizeLower(tokenize):
+def tokenize_lower(tokenize):
     lst = []
 
     for sent in tokenize:
@@ -127,7 +129,7 @@ ALPHABET_FILE_PATH = 'PreprocessingComponent/alphabet'
 # Tách dòng của text và lưu vào mảng
 # Input: file .txt
 # Output: danh sách các phần tử (list)
-def preprocessTextFile(txt_file):
+def preprocess_text_file(txt_file):
     f = open(txt_file, 'r', encoding='utf-8')
     elements = f.read().split("\n")
     f.close()
@@ -161,7 +163,7 @@ def check(string):
 #    + Dictionary của tất cả từ phân biệt không bao gồm stop word, dấu câu với
 #      key là từ A, value là số lượng từ A có trong văn bản (dict). VD: {hài_hước: 3, 'Bảo_Đại': 5}
 #    + Tổng số từ của văn bản (int)
-def totalWords(tokenize_lower):
+def total_words(tokenize_lower):
     words = dict()
 
     for s in tokenize_lower:
@@ -178,7 +180,7 @@ def totalWords(tokenize_lower):
 # Đếm số câu chứa từ cần check
 # Input: từ cần check và list câu. VD [[word1, word2], [word3, word4, word5]]
 # Output: số câu chứa từ cần check (int)
-def checkWordInSent(word, tokenize):
+def check_word_in_sent(word, tokenize):
     count = 0
     for s in tokenize:
         if word in s:
@@ -190,7 +192,7 @@ def checkWordInSent(word, tokenize):
 # Lấy n giá trị cao nhất sắp xếp theo thứ tự giảm dần của một dictionary
 # Input: Dictionary có chứa giá trị kiểu số để có thể so sánh
 # Output: n giá trị cao nhất đã được sắp giảm dần
-def getTop(dic, n):
+def get_top(dic, n):
     result = dict(sorted(dic.items(), key=itemgetter(1), reverse=True)[:n])
     return result
 
@@ -214,7 +216,7 @@ def IDF(words, tokenize_lower):
     idf = dict()
 
     for key, val in words.items():
-        idf[key] = math.log(len(tokenize_lower) / (1 + checkWordInSent(key, tokenize_lower)))
+        idf[key] = math.log(len(tokenize_lower) / (1 + check_word_in_sent(key, tokenize_lower)))
 
     return idf
 
@@ -235,7 +237,7 @@ def TFIDF(tf, idf):
 #   + TFIDF của tất cả các từ
 # Output:
 #   + Dictionary có format {Thứ tự câu có tfidf cao nhất: giá trị tfidf của câu, ...}
-def sentenceTfidfVal(total_words_dict, tokenize, tfidf):
+def sentence_tfidf_val(total_words_dict, tokenize, tfidf):
     val_dict = {}
 
     for i in range(len(tokenize)):
@@ -256,50 +258,50 @@ def sentenceTfidfVal(total_words_dict, tokenize, tfidf):
 #   + sentence = [word1, word2, word3,...]
 #   + tfidf: TFIDF của tất cả các từ
 #   + n_words: Số từ của phrase
-def maxValPhrase(total_words_dict, sentence, tfidf, n_words):
+def max_val_phrase(total_words_dict, sentence, tfidf, n_words):
     idx = 0
-    maxIdx = len(sentence) - n_words
+    max_idx = len(sentence) - n_words
 
     if n_words > len(sentence):
         return sentence
 
     phrase = []
-    maxVal = 0
-
-    while idx <= maxIdx:
+    max_val = 0
+    while idx <= max_idx:
         value = 0
-        phraseTemp = []
+        phrase_temp = []
         count = 0
-
         for i in range(idx, len(sentence)):
             if count == n_words:
                 break
             if sentence[i].lower() in total_words_dict:
                 value += tfidf[sentence[i].lower()]
                 count += 1
-            phraseTemp.append(sentence[i])
+            phrase_temp.append(sentence[i])
 
-        if value > maxVal:
+        if value > max_val:
             max_val = value
-            phrase = phraseTemp
+            phrase = phrase_temp
+
         idx += 1
+
     return phrase
 
 
 # stopwords: Danh sách các stop word. VD: và, là, các, trong, ngoài, của,........
 # alphabet: các ký tự hợp lệ như: à, á, ư, b, j, đ, A, Ê, Z, ...... và '_'
-stopwords = preprocessTextFile(STOPWORD_FILE_PATH)
-alphabet = preprocessTextFile(ALPHABET_FILE_PATH)
+stopwords = preprocess_text_file(STOPWORD_FILE_PATH)
+alphabet = preprocess_text_file(ALPHABET_FILE_PATH)
 
 
-def getLink(sentence, tokenize):
-    wordseg = tokenizeLower(tokenize)
-    words = totalWords(wordseg)
+def get_link(sentence, tokenize):
+    wordseg = tokenize_lower(tokenize)
+    words = total_words(wordseg)
     tf = TF(words)
     idf = IDF(words, wordseg)
     tfidf = TFIDF(tf, idf)
 
-    sen_tfidf_val = sentenceTfidfVal(words, wordseg, tfidf)
+    sen_tfidf_val = sentence_tfidf_val(words, wordseg, tfidf)
     key = list(sen_tfidf_val.keys())
 
     link = None
@@ -308,7 +310,7 @@ def getLink(sentence, tokenize):
             key[i] = int(key[i])
 
         sent = sentence[key[0]]
-        link = searchKeyword(sent)
+        link = search_keyword(sent)
 
     return link
 
@@ -317,7 +319,7 @@ if __name__ == '__main__':
     FILE_PATH = '.\\testfile\\test.pdf'
     start = time.time()
     file_preprocessed = p.preprocess(FILE_PATH)
-    link = getLink(file_preprocessed[1])
+    link = get_link(file_preprocessed[1])
     print(link)
 
     end = time.time()

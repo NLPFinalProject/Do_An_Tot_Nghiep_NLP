@@ -1,0 +1,62 @@
+{
+  "file1": [
+    "C\u00e0i \u0111\u1eb7t ph\u1ea7n m\u1ec1m xampp v\u00e0 k\u1ebft n\u1ed1i MySQL v\u1edbi Navicat",
+    "\u0110\u1ec3 k\u1ebft n\u1ed1i server v\u00e0 t\u1ea1o connection database c\u00f3 th\u1ec3 s\u1eed d\u1ee5ng MySQL workbench v\u00e0 phpAdmin, trong h\u01b0\u1edbng d\u1eabn n\u00e0y s\u1ebd h\u01b0\u1edbng d\u1eabn th\u1ef1c hi\u1ec7n v\u1edbi Xampp v\u00e0 Navicat",
+    "C\u00e0i \u0111\u1eb7t ph\u1ea7n m\u1ec1m Xampp",
+    "C\u00e0i \u0111\u1eb7t ph\u1ea7n m\u1ec1m Navicat",
+    "S\u1eed d\u1ee5ng xampp \u0111\u1ec3 setup port cho MySQL:",
+    "T\u1ea3i ph\u1ea7n m\u1ec1m XAMPP (mi\u1ec5n ph\u00ed) v\u00e0 ti\u1ebfn h\u00e0nh c\u00e0i \u0111\u1eb7t",
+    "Sau khi c\u00e0i \u0111\u1eb7t th\u00e0nh c\u00f4ng, m\u1edf ph\u1ea7n m\u1ec1m XAMPP v\u00e0 ch\u1ecdn n\u00fat start \u1edf c\u1ed9t actions t\u01b0\u01a1ng \u1ee9ng trong h\u00ecnh d\u01b0\u1edbi",
+    "\u0110\u00e3 ho\u00e0n t\u1ea5t k\u1ebft n\u1ed1i cho server MySQL",
+    "K\u1ebft n\u1ed1i MySQL v\u1edbi Navicat:",
+    "Navicat l\u00e0 ph\u1ea7n m\u1ec1m qu\u1ea3n l\u00fd database c\u1ee7a premium soft(c\u00f3 tr\u1ea3 ph\u00ed)",
+    "Sau khi c\u00e0i \u0111\u1eb7t, ti\u1ebfn h\u00e0nh m\u1edf ph\u1ea7n m\u1ec1m l\u00ean v\u00e0 b\u1eaft \u0111\u1ea7u t\u1ea1o Conection",
+    "Ch\u1ecdn n\u00fat Connection \u1edf ph\u00eda b\u00ean tr\u00ean, g\u00f3c tr\u00e1i c\u1ee7a giao di\u1ec7n v\u00e0 ch\u1ecdn MySQL",
+    "L\u00fac n\u00e0y giao di\u1ec7n thi\u1ebft l\u1eadp th\u00f4ng tin cho Connection s\u1ebd hi\u1ec7n ra",
+    "\u0110i\u1ec1n c\u00e1c th\u00f4ng tin v\u00e0o v\u00e0 ch\u1ecdn OK ( Password c\u00f3 th\u1ec3 \u0111\u1ec3 tr\u1ed1ng)",
+    "C\u00e1c th\u00f4ng tin n\u00e0y \u0111\u01b0\u1ee3c s\u1eed d\u1ee5ng \u0111\u1ec3 cung c\u1ea5p th\u00f4ng tin cho database trong file settings.py n\u1eb1m trong th\u01b0 m\u1ee5c c\u1ee7a \u0111\u1ed3 \u00e1n",
+    "Sau khi \u0111\u00e3 k\u1ebft n\u1ed1i MySQL v\u1edbi Xampp \u0111\u00e3 \u0111\u01b0\u1ee3c h\u01b0\u1edbng d\u1eabn \u1edf ban \u0111\u1ea7u, ti\u1ebfn h\u00e0nh m\u1edf connection",
+    "Sau \u0111\u00f3 click chu\u1ed9t ph\u1ea3i v\u00e0 ch\u1ecdn new Database",
+    "T\u1ea1i \u0111\u00e2y \u0111i\u1ec1n t\u00ean c\u1ee7a database s\u1ebd t\u1ea1o v\u00ed d\u1ee5 l\u00e0 test4 v\u00e0 ch\u1ecdn OK",
+    "Sau khi t\u1ea1o xong truy c\u1eadp \u0111\u01b0\u1eddng d\u1eabn d\u01b0\u1edbi \u0111\u00e2y v\u00e0 ti\u1ebfn h\u00e0nh \u0111i\u1ec1n th\u00f4ng tin database",
+    "Do_An_Tot_Nghiep_NLP\\PlagismDetector\\PlagismDetector\\PlagismDetector\\settings.py",
+    "V\u1edbi NAME l\u00e0 t\u00ean database \u0111\u00e3 t\u1ea1o",
+    "USER, PASSWORD, HOST, PORT l\u00e0 th\u00f4ng tin c\u1ee7a connection \u0111\u00e3 t\u1ea1o",
+    "Di chuy\u1ec3n v\u00e0 c\u00e0i \u0111\u1eb7t b\u1ea3ng v\u00e0o trong database:",
+    "Trong th\u01b0 m\u1ee5c \u0111\u1ed3 \u00e1n, t\u1ea1i \u0111\u01b0\u1eddng d\u1eabn:",
+    "Do_An_Tot_Nghiep_NLP\\PlagismDetector\\",
+    "Ch\u1ea1y l\u1ec7nh CMD:",
+    "python manage.py migrate",
+    "\u0111\u1ec3 ti\u1ebfn h\u00e0nh migrate c\u00e1c b\u1ea3ng theo c\u00e2u l\u1ec7nh c\u1ee7a django",
+    "sau khi \u0111\u00e3 ho\u00e0n t\u1ea5t c\u00e1c migration s\u1ebd hi\u1ec7n th\u00f4ng b\u00e1o",
+    "ch\u1ea1y l\u1ec7nh CMD:",
+    "python manage.py runserver 5000",
+    "Nh\u01b0 v\u1eady \u0111\u00e3 ho\u00e0n t\u1ea5t k\u1ebft n\u1ed1i v\u00e0 ch\u1ea1y server cho backend",
+    "L\u01b0u \u00fd : m\u1ed7i l\u1ea7n ch\u1ea1y server backend c\u1ea7n m\u1edf \u1ee9ng d\u1ee5ng Xampp v\u00e0 start k\u1ebft n\u1ed1i"
+  ],
+  "ListFileName": ["Document.txt"],
+  "ListFile": [
+    {
+      "data": [
+        "- \u0110\u1ed5i m\u1eadt kh\u1ea9u tr\u00f9ng v\u1edbi m\u1eadt kh\u1ea9u c\u0169 v\u1eabn \u0111\u01b0\u1ee3c    x",
+        "- \u0110\u1ed5i m\u1eadt kh\u1ea9u kh\u00f4ng c\u00f3 n\u00fat quay l\u1ea1i trang ch\u1ee7\t x",
+        "- \u0110\u0103ng nh\u1eadp sai th\u00f4ng ch\u01b0a c\u00f3 th\u00f4ng b\u00e1o c\u1ee5 th\u1ec3\t x",
+        "- S\u1eeda con m\u1eaft trong \u0111\u1ed5i m\u1eadt kh\u1ea9u\t\t\t\t x",
+        "- \u0110\u1ed5i ti\u00eau \u0111\u1ec1 kh\u00f4i ph\u1ee5c t\u00e0i kho\u1ea3n th\u00e0nh \u0111\u1ed5i m\u1eadt kh\u1ea9u trong \u0111\u1ed5i m\u1eadt kh\u1ea9u\t x",
+        "- Ch\u01b0a ki\u1ec3m tra n\u1ed9i dung nh\u1eadp v\u00e0o trong thay \u0111\u1ed5i th\u00f4ng tin t\u00e0i kho\u1ea3n",
+        "- Ch\u01b0a ki\u1ec3m tra c\u00e1c tr\u01b0\u1eddng trong \u0111\u0103ng k\u00fd\tCh\u01b0a ki\u1ec3m tra n\u1ed9i dung nh\u1eadp v\u00e0o trong qu\u00ean m\u1eadt kh\u1ea9u",
+        "- Nh\u1eadp email ch\u01b0a \u0111\u0103ng k\u00fd trong qu\u00ean m\u1eadt kh\u1ea9u kh\u00f4ng c\u00f3 th\u00f4ng b\u00e1o",
+        "- Nh\u1eadp email \u0111\u00e3 \u0111\u0103ng k\u00fd trong qu\u00ean m\u1eadt kh\u1ea9u kh\u00f4ng nh\u1eadn \u0111\u01b0\u01a1c email",
+        "- T\u1ef1 \u0111\u1ed9ng quay l\u1ea1i trang ch\u1ee7 sau khi hi\u1ec7n th\u00f4ng b\u00e1o?",
+        "- S\u1eeda th\u00f4ng b\u00e1o t\u1ea3i file <10MB\t\tx",
+        "- Ch\u1eb7n file sai \u0111\u1ecbnh d\u1ea1ng nh\u01b0 ch\u1eb7n file >10MB\tx",
+        "- Hi\u1ec7n th\u00f4ng b\u00e1o ch\u1eb7n file >10MB \u1edf b\u01b0\u1edbc so s\u00e1nh v\u1edbi file c\u1ee7a b\u1ea1n nh\u01b0ng file v\u1eabn hi\u1ec7n trong danh s\u00e1ch up l\u00ean\t    x",
+        "- Trong t\u00e0i kho\u1ea3n admin khi up file Hi\u1ec7n th\u00f4ng b\u00e1o ch\u1eb7n file >10MB nh\u01b0ng file v\u1eabn hi\u1ec7n trong danh s\u00e1ch up l\u00ean   x"
+      ],
+      "stt": [[1, 0, [], []]]
+    }
+  ],
+  "File1Name": "backend_Install_guide.docx",
+  "AllFileRatio": [0.0],
+  "ListAllFile": ["backend_Install_guide.docx", "Document.txt"]
+}
