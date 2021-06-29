@@ -14,20 +14,7 @@ export class SectionDiffComponent implements OnInit {
   searchAddress: string;
   displayData: Array<object> = [];
   loading = true;
-  data = [
-    {
-      name: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...',
-    },
-    {
-      name: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...',
-    },
-    {
-      name: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...',
-    },
-    {
-      name: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...',
-    },
-  ];
+  data = [{}];
   fileList: Array<object> = [];
   constructor(private messageService: MessageService) {}
   ngOnInit(): void {
@@ -35,6 +22,7 @@ export class SectionDiffComponent implements OnInit {
   }
   ngOnChanges() {
     //this.childFunction()
+    console.log(this.sessionData);
     this.getData();
   }
   getData(): void {

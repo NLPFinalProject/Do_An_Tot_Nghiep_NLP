@@ -39,11 +39,11 @@ export class ListFileDiffComponent implements OnInit {
   }
   ngOnChanges() {
     //this.childFunction()
+    console.log('I have change');
+    console.log(this.FileList2);
     this.getData();
   }
   getData(): void {
-    console.log('stupid');
-    console.log(this.FileList2);
     const number = Math.floor(Math.random() * 100);
     setTimeout(() => {
       this.displayData = [...this.FileList2];

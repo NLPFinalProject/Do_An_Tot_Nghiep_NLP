@@ -1,15 +1,15 @@
-import { Component, OnInit,Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { MessageService } from '@app/core/services/Utils/message.service';
 import { ScrollToService, ScrollToConfigOptions } from '@nicky-lenaers/ngx-scroll-to';
 import { ViewportScroller } from '@angular/common';
-import {DaovanServiceService} from '../../daovan-service.service'
+import { DaovanServiceService } from '../../daovan-service.service';
 @Component({
   selector: 'app-diff-content',
   templateUrl: './diff-content.component.html',
   styleUrls: ['./diff-content.component.scss'],
 })
 export class DiffContentComponent implements OnInit {
-  @Input() SessionData:any;
+  @Input() SessionData: any;
   sortValue: any = null;
   public currentId: number;
   public StoreNumber: number;
@@ -22,45 +22,44 @@ export class DiffContentComponent implements OnInit {
   displayData1: Array<any> = [];
   displayData2: Array<object> = [];
   loading = true;
-  // 
+  //
   fileList: Array<object> = [];
-  constructor(private messageService: MessageService,
+  constructor(
+    private messageService: MessageService,
     private viewportScroller: ViewportScroller,
     private scrollToService: ScrollToService,
-    private DaoVanService:DaovanServiceService) {
-      
-    }
+    private DaoVanService: DaovanServiceService
+  ) {}
   ngOnInit(): void {
     this.answer = {
-      ls1: null,
-      ls2: null,
-      ls3: null,
+      ls1: [],
+      ls2: [],
+      ls3: [],
     };
-    
-    console.log("here I came");
+
+    console.log('here I came');
     console.log(this.SessionData);
-    this.DaoVanService.sendMessage.subscribe((data:any)=>{
-      console.log("this is b");
+    this.DaoVanService.sendMessage.subscribe((data: any) => {
+      console.log('this is b');
       console.log(data);
       console.log(this.SessionData);
-    })
-    
+    });
+
     this.doStep();
-    this.DaoVanService.sendMessageNumber.subscribe((data:number)=>{
-      console.log("this is b");
+    this.DaoVanService.sendMessageNumber.subscribe((data: number) => {
+      console.log('this is b');
       console.log(data);
       this.ShowResult(data);
-    })
+    });
   }
-  doStep()
-  {
+  doStep() {
     this.getFirstSentences();
     this.ShowResult(0);
     this.getData();
   }
   getFirstSentences() {
     if (this.SessionData != null) {
-     // this.file1Name = this.data.File1Name;
+      // this.file1Name = this.data.File1Name;
       let tempdata = [];
       let temp: {
         id: number;
@@ -75,21 +74,19 @@ export class DiffContentComponent implements OnInit {
         tempdata.push(temp);
       }
       this.answer.ls1 = tempdata;
-    }
-    else
-    {
-      console.log("false now");
+    } else {
+      console.log('false now');
     }
   }
   ngOnChanges() {
     //this.childFunction()
-    console.log("I have change");
+    console.log('I have change for now');
     console.log(this.SessionData);
     this.doStep();
   }
   ShowResult(num: number) {
     this.sameline = [];
-    console.log("can we just stop");
+    console.log('can we just stop');
     console.log(this.SessionData);
     let data = this.SessionData;
     //console.log(this.data);
@@ -136,34 +133,28 @@ export class DiffContentComponent implements OnInit {
       console.log(this.answer.ls3);
      */
       console.log(data);
-      this.displayData2= this.answer.ls2;
+      this.displayData2 = this.answer.ls2;
     } else {
       //this.forgodTest();
     }
   }
-  shouldHighlightTest(id:any)
-  {
+  shouldHighlightTest(id: any) {
     //console.log("id is", id);
-    if(id=="1")
-    {
-     
+    if (id == '1') {
       return true;
     }
-     
-    return false;
-    
-  }
-  
-  triggerScrollToV1(id: any) {
-  
-      const config: ScrollToConfigOptions = {
-        target: id,
-      };
 
-      this.scrollToService.scrollTo(config);
-    
+    return false;
   }
-  
+
+  triggerScrollToV1(id: any) {
+    const config: ScrollToConfigOptions = {
+      target: id,
+    };
+
+    this.scrollToService.scrollTo(config);
+  }
+
   getData(): void {
     const number = Math.floor(Math.random() * 100);
     setTimeout(() => {
