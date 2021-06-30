@@ -1,0 +1,12 @@
+- sửa toàn bộ preprocessingcomponent: views, TFIDF
+- usercomponent sửa hàm readsession
+- file component thêm file deep
+- Sửa levenshtein, exportorder, exporeorder2
+- Views sửa các hàm sau đây:
+	+ Makedata readoc
+	+ Makedata
+	+ 4 hàm import
+	+ Test2
+	+ Sửa các cái exportorder4 thành exportorder
+	+ Thêm thông số trên đầu file về timeout
+- Cài thêm 2 thư viện underthesea, timeoutfunc

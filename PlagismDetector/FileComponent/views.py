@@ -164,7 +164,8 @@ def makeData(countReport, ReportFileName2Sentence, reportDataReadDoc):
 def documentimportDatabase(request):
     query = User.objects.get(pk=request.data['id'])
     if(query.is_lock==1):
-        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        content = "user_is_lock"
+        return Response(content,status=status.HTTP_400_BAD_REQUEST)
     data1 = request.data
     try:
         data1["filenameA"], session = uploadDoc2(
@@ -172,12 +173,15 @@ def documentimportDatabase(request):
             "Database")
     except:
         session = DocumentSession(NumOfFile=1, SessionUser=id, Status="Fail")
-        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        content = "fail status"
+        return Response(content,status=status.HTTP_400_BAD_REQUEST)
+        #return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
     myDict, fileName1, userId = test1(data1, session)
     if(myDict == None and fileName1==None and userId==None):
         session = DocumentSession(NumOfFile=1, SessionUser=id, Status="Fail")
-        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        content = "user_is_lock"
+        return Response(content,status=status.HTTP_400_BAD_REQUEST)
     jsonFile(myDict, fileName1, userId, session)
     jsonData = readJson(session, userId)
     session1 = DocumentSession.objects.get(pk=session)
@@ -195,7 +199,9 @@ def documentimportDatabase(request):
 def documentimportInternet(request):
     query = User.objects.get(pk=request.data['id'])
     if (query.is_lock == 1):
-        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        content = "user_is_lock"
+        return Response(content,status=status.HTTP_400_BAD_REQUEST)
+        #return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
     data1 = request.data
 
     try:
@@ -204,7 +210,9 @@ def documentimportInternet(request):
             "Internet")
     except:
         session = DocumentSession(NumOfFile=1, SessionUser=id, Status="Fail")
-        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        content = "fail status"
+        return Response(content,status=status.HTTP_400_BAD_REQUEST)
+        #return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
     myDict, fileName1, userId = test2(data1, session)
     jsonFile(myDict, fileName1, userId, session)
     jsonData = readJson(session, userId)
@@ -222,7 +230,9 @@ def documentimportInternet(request):
 def documentimportDatabaseInternet(request):
     query = User.objects.get(pk=request.data['id'])
     if (query.is_lock == 1):
-        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        content = "user_is_lock"
+        return Response(content,status=status.HTTP_400_BAD_REQUEST)
+        #return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
     data1 = request.data
     try:
@@ -231,7 +241,9 @@ def documentimportDatabaseInternet(request):
             "Database and internet")
     except:
         session = DocumentSession(NumOfFile=1, SessionUser=id, Status="Fail")
-        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        content = "fail status"
+        return Response(content,status=status.HTTP_400_BAD_REQUEST)
+        #return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
     # try catch status here here
     try:
@@ -272,7 +284,9 @@ def documentimportDatabaseInternet(request):
 def documentimport(request):
     query = User.objects.get(pk=request.data['id'])
     if(query.is_lock==1):
-        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        content = "user_is_lock"
+        return Response(content,status=status.HTTP_400_BAD_REQUEST)
+        #return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
     data1 = request.data
     try:
         data1["filenameA"], session = uploadDoc2(
@@ -280,7 +294,9 @@ def documentimport(request):
             "Multiple files")
     except:
         session = DocumentSession(NumOfFile=1, SessionUser=id, Status="Fail")
-        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        content = "fail status"
+        return Response(content,status=status.HTTP_400_BAD_REQUEST)
+        #return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
     data1["filenameB"] = uploadDocList2(
         request.POST, request.FILES, request.data['id'], session, request.data["agreeStatus"])

@@ -149,6 +149,7 @@ export class UploadDatabaseComponent implements OnInit {
       console.log(data);
       this.openDialog();
     });
+    this.router.navigate(['daovan'], { replaceUrl: true });
   }
   public dropped(files: NgxFileDropEntry[]) {
     //this.isvalid = true;
