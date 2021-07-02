@@ -13,7 +13,6 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { IndexLoginComponent } from './index-login/index-login.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ValidationComponent } from './validation/validation.component';
-import { TestComponent } from './test/test.component';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 
 @NgModule({
@@ -35,7 +34,6 @@ import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
     IndexLoginComponent,
     ResetPasswordComponent,
     ValidationComponent,
-    TestComponent,
   ],
 })
 export class LoginModule {}

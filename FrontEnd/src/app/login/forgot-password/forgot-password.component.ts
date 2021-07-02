@@ -22,7 +22,7 @@ export class ForgotPasswordComponent extends AppComponentBase implements OnInit 
     private formBuilder: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private UserService: UserService
+    private userService: UserService
   ) {
     super(injector);
   }
@@ -45,7 +45,7 @@ export class ForgotPasswordComponent extends AppComponentBase implements OnInit 
       this.forgotPasswordForm.controls[i].markAsDirty();
       this.forgotPasswordForm.controls[i].updateValueAndValidity();
     }
-    this.UserService.ForgotPassword(data).subscribe(
+    this.userService.ForgotPassword(data).subscribe(
       (data) => {
         this.notificationService.success('Đã gửi email thành công, vui lòng xác nhận email');
         this.isSend = true;

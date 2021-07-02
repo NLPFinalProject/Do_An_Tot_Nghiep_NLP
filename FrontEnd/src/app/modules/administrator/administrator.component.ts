@@ -13,12 +13,4 @@ export class AdministratorComponent implements OnInit {
       this.router.navigate(['login'], { replaceUrl: true });
     }
   }
-  gotoManageUser() {
-    console.log('F1');
-    this.router.navigate(['updatabase'], { replaceUrl: true });
-  }
-  gotoUploadDatabase() {
-    console.log('F2');
-    this.router.navigate(['updatabase'], { replaceUrl: true });
-  }
 }

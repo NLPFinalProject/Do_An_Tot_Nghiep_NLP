@@ -4,8 +4,10 @@ import { FileService } from '@../../../src/app/shell/shell-routing-service';
 import { FormControl } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AuthenticationService } from '../../../core/authentication/authentication.service';
 
 import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
+import { LockUserDialog } from '@app/modules/administrator/list-account/list-account.component';
 export interface DialogData {
   animal: string;
   name: string;
@@ -39,7 +41,8 @@ export class TeststepComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private fileService: FileService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private authenticationService: AuthenticationService
   ) {}
 
   ngOnInit() {
@@ -125,10 +128,19 @@ export class TeststepComponent implements OnInit {
               agreeStatus: this.agreeStatus,
             };
             console.log(tempdata);
-            this.fileService.checkPlagiasmNormal(tempdata).subscribe((data: any) => {
-              console.log(data);
-              this.SuccessDialog();
-            });
+            this.fileService.checkPlagiasmNormal(tempdata).subscribe(
+              (data: any) => {
+                console.log(data);
+                this.SuccessDialog();
+              },
+              (error) => {
+                if (error.error == 'user_is_lock') {
+                  this.UserIsLockedDialog();
+                } else if (error.error == 'fail status') {
+                  this.CommonProblemDialog();
+                }
+              }
+            );
             this.router.navigate(['daovan'], { replaceUrl: true });
             //this.openDialog();
           } else {
@@ -148,10 +160,19 @@ export class TeststepComponent implements OnInit {
             sessionName: this.sessionName,
             agreeStatus: this.agreeStatus,
           };
-          this.fileService.checkPlagiasmUsingDatabase(tempdata).subscribe((data: any) => {
-            console.log(data);
-            this.SuccessDialog();
-          });
+          this.fileService.checkPlagiasmUsingDatabase(tempdata).subscribe(
+            (data: any) => {
+              console.log(data);
+              this.SuccessDialog();
+            },
+            (error) => {
+              if (error.error == 'user_is_lock') {
+                this.UserIsLockedDialog();
+              } else if (error.error == 'fail status') {
+                this.CommonProblemDialog();
+              }
+            }
+          );
           console.log(tempdata);
           //this.SuccessDialog();
           //this.openDialog();
@@ -166,11 +187,18 @@ export class TeststepComponent implements OnInit {
             sessionName: this.sessionName,
             agreeStatus: this.agreeStatus,
           };
-          this.fileService.checkPlagiasmUsingInternet(tempdata).subscribe((data: any) => {
-            console.log(data);
-            console.log('done my job');
-            this.SuccessDialog();
-          });
+          this.fileService.checkPlagiasmUsingInternet(tempdata).subscribe(
+            (data: any) => {
+              console.log(data);
+              console.log('done my job');
+              this.SuccessDialog();
+            },
+            (error) => {
+              if (error.error == 'user_is_lock') {
+                this.UserIsLockedDialog();
+              }
+            }
+          );
           //this.openDialog();
           this.router.navigate(['daovan'], { replaceUrl: true });
 
@@ -184,10 +212,19 @@ export class TeststepComponent implements OnInit {
             sessionName: this.sessionName,
             agreeStatus: this.agreeStatus,
           };
-          this.fileService.checkPlagiasmUsingAll(tempdata).subscribe((data: any) => {
-            console.log(data);
-            this.SuccessDialog();
-          });
+          this.fileService.checkPlagiasmUsingAll(tempdata).subscribe(
+            (data: any) => {
+              console.log(data);
+              this.SuccessDialog();
+            },
+            (error) => {
+              if (error.error == 'user_is_lock') {
+                this.UserIsLockedDialog();
+              } else if (error.error == 'fail status') {
+                this.CommonProblemDialog();
+              }
+            }
+          );
 
           //this.openDialog();
           this.router.navigate(['daovan'], { replaceUrl: true });
@@ -248,6 +285,18 @@ export class TeststepComponent implements OnInit {
   }
   SuccessDialog() {
     const dialogRef = this.dialog.open(SuccessTransition, {
+      width: '250px',
+      //data: {name: this.name, animal: this.animal}
+    });
+  }
+  UserIsLockedDialog() {
+    const dialogRef = this.dialog.open(UserIsLockedDialog, {
+      width: '250px',
+      //data: {name: this.name, animal: this.animal}
+    });
+  }
+  CommonProblemDialog() {
+    const dialogRef = this.dialog.open(CommonProblemDialog, {
       width: '250px',
       //data: {name: this.name, animal: this.animal}
     });
@@ -421,6 +470,7 @@ export class WarningInvalidFileDialog {
 
   ConfirmClick(): void {
     this.dialogRef.close();
+
     // let value = localStorage.getItem('username');
     // this.router.navigate(['daovan'], { replaceUrl: true, state: { user: value } });
   }
@@ -432,6 +482,43 @@ export class WarningInvalidFileDialog {
 export class SuccessTransition {
   constructor(
     public dialogRef: MatDialogRef<WarningFileSizeDialog>,
+
+    @Inject(MAT_DIALOG_DATA) public data: DialogData
+  ) {}
+
+  ConfirmClick(): void {
+    this.dialogRef.close();
+    // let value = localStorage.getItem('username');
+    // this.router.navigate(['daovan'], { replaceUrl: true, state: { user: value } });
+  }
+}
+@Component({
+  selector: 'user-is-locked-dialog',
+  templateUrl: 'user-is-locked-dialog.html',
+})
+export class UserIsLockedDialog {
+  constructor(
+    public dialogRef: MatDialogRef<UserIsLockedDialog>,
+    private authenticationService: AuthenticationService,
+    private router: Router,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData
+  ) {}
+
+  ConfirmClick(): void {
+    this.dialogRef.close();
+    this.authenticationService.logout().subscribe(() => this.router.navigate(['/login'], { replaceUrl: true }));
+
+    // let value = localStorage.getItem('username');
+    // this.router.navigate(['daovan'], { replaceUrl: true, state: { user: value } });
+  }
+}
+@Component({
+  selector: 'common-problem-dialog',
+  templateUrl: 'common-problem-dialog.html',
+})
+export class CommonProblemDialog {
+  constructor(
+    public dialogRef: MatDialogRef<CommonProblemDialog>,
 
     @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) {}

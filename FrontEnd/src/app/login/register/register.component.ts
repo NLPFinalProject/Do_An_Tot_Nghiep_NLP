@@ -63,10 +63,9 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
     if (!control.value) {
       return { required: true };
     } else if (!this.checkValidBirthDate(control.value)) {
-      console.log('die 1 million times you piece of shit');
       return { confirm: true, error: true };
     }
-    console.log('you fail???');
+
     return {};
   };
   SpecialCharacterValidator = (control: FormControl): { [s: string]: boolean } => {
@@ -75,7 +74,7 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
     } else if (this.checkSpecialCharacter(control.value)) {
       return { confirm: true };
     }
-    console.log('you fail???');
+
     return {};
   };
   //#endregion
@@ -87,16 +86,7 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
     }, 1000);
   }
 
-  getCaptcha(e: MouseEvent): void {
-    e.preventDefault();
-  }
-
   submitForm(): void {
-    console.log(this.registerForm.controls);
-    console.log(this.registerForm.controls.email.value);
-    //console.log(this.registerForm.controls.username.value);
-    console.log(this.registerForm.controls.password.value);
-
     for (const i in this.registerForm.controls) {
       this.registerForm.controls[i].markAsDirty();
       this.registerForm.controls[i].updateValueAndValidity();
@@ -109,35 +99,19 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
       var data = {
         email: this.registerForm.controls.email.value,
         emailOrganization: this.registerForm.controls.emailOrganization.value,
-        //organization: this.registerForm.controls.organization.value,
-        //address: this.registerForm.controls.address.value,
-        //phoneOrganization: this.registerForm.controls.phoneOrganization.value,
-
         fullName: this.registerForm.controls.fullName.value,
-        //userId: this.registerForm.controls.userId.value,
         password: this.registerForm.controls.password.value,
-
         phoneNumber: this.registerForm.controls.phoneNumber.value,
-
         ngaySinh: this.registerForm.controls.ngaySinh.value,
         gioiTinh: this.registerForm.controls.gioiTinh.value,
-        //captcha: [null, [Validators.required]],
       };
 
-      console.log(data);
       this.UserService.register(data).subscribe(
-        //data=> {console.log(data)};
         (data: any) => {
-          console.log('we success');
-          if (data.data != 'username is existed') {
-          }
-          console.log(data);
           this.notificationService.success(MessageConstant.RegisterSucssec);
           setTimeout(() => {
-            //this.router.navigate(['validate'], { replaceUrl: true })
             this.router.navigate(['validate'], { replaceUrl: true, state: { active: data } });
           }, 1000);
-          //this.notificationService.warning(MessageConstant.LoginFailed);
         },
         (error) => {
           this.notificationService.error('Tài khoản đã được sử dụng');
@@ -165,7 +139,7 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
   }
   checkValidPhoneNumber(str: string) {
     let isnum = /^\d+$/.test(str);
-    console.log(isnum);
+
     if (isnum) {
       if (str.length < 9 || str.length > 12) {
         return false;
@@ -184,14 +158,8 @@ export class RegisterComponent extends AppComponentBase implements OnInit {
   }
 
   createdFrom(): void {
-    var pattern = '/[~!@#$%^&<>]/';
-
     this.registerForm = this.formBuilder.group({
       emailOrganization: [null, [Validators.email]],
-      //organization: [null],
-      //address: [null],
-      //phoneOrganization: [null],
-
       email: [null, [Validators.email, Validators.required]],
       fullName: [null, [Validators.required, Validators.maxLength(32), this.SpecialCharacterValidator]],
       //userId: [null],

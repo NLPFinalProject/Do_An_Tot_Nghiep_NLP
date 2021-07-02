@@ -11,3 +11,4 @@ auto-py-to-exe
 PyJWT==1.7.0
 pyvi
 python-Levenshtein
+pandas
