@@ -99,19 +99,24 @@ def databaseSearch(fileName1Sentence):
 def makeDataReadDoc(internetPage, userId):
     dataReadDoc = []
     successlink = []
+    print("internet page là",internetPage)
     for link in internetPage:
         try:
             if (internetKeywordSearch.is_downloadable(link)):
                 # link_pdf.append(link)
+                
                 file_pdf = internetKeywordSearch.download_document(link)
                 file_preprocessed = p.preprocess(file_pdf)
+               
                 data = DataDocument(
                     DataDocumentName=link,
                     DataDocumentAuthor_id=userId,
                     DataDocumentType="internetPdf",
                     DataDocumentFile=file_preprocessed[2]
                 )
+                
                 data.save()
+                
                 dataReadDoc.append(file_preprocessed[0])
                 successlink.append(link)
                 print("\nlink này thành công:=====\n",link)
@@ -122,11 +127,17 @@ def makeDataReadDoc(internetPage, userId):
                 os.remove(file_pdf)
             else:
                 try:
+                   
                     lstSentence = func_timeout(timeout, internetKeywordSearch.crawl_web(link))
                 except FunctionTimedOut:
+                    
                     continue
+                except Exception as e:
+                    print(e)
                 if lstSentence == None:
+                   
                     continue
+               
                 data = DataDocument(
                     DataDocumentName=link,
                     DataDocumentAuthor_id=userId,
@@ -394,6 +405,8 @@ def test1(data, session):
 def test2(data, session):
     fileName1 = data['filenameA']
     userId = int(data['id'])
+    print(fileName1)
+    print(userId)
     # cursor = connections['default'].cursor()
     # fileName1
     querys = DataDocument.objects \

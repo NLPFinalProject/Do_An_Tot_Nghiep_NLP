@@ -130,8 +130,14 @@ export class TeststepComponent implements OnInit {
             console.log(tempdata);
             this.fileService.checkPlagiasmNormal(tempdata).subscribe(
               (data: any) => {
-                console.log(data);
-                this.SuccessDialog();
+                if (data != null) {
+                  console.log(data);
+                  if (data == localStorage.getItem('id')) {
+                    this.SuccessDialog();
+                  } else {
+                    console.log('fail');
+                  }
+                }
               },
               (error) => {
                 if (error.error == 'user_is_lock') {
@@ -162,8 +168,14 @@ export class TeststepComponent implements OnInit {
           };
           this.fileService.checkPlagiasmUsingDatabase(tempdata).subscribe(
             (data: any) => {
-              console.log(data);
-              this.SuccessDialog();
+              if (data != null) {
+                console.log(data);
+                if (data == localStorage.getItem('id')) {
+                  this.SuccessDialog();
+                } else {
+                  console.log('fail');
+                }
+              }
             },
             (error) => {
               if (error.error == 'user_is_lock') {
@@ -189,9 +201,14 @@ export class TeststepComponent implements OnInit {
           };
           this.fileService.checkPlagiasmUsingInternet(tempdata).subscribe(
             (data: any) => {
-              console.log(data);
-              console.log('done my job');
-              this.SuccessDialog();
+              if (data != null) {
+                console.log(data);
+                if (data == localStorage.getItem('id')) {
+                  this.SuccessDialog();
+                } else {
+                  console.log('fail');
+                }
+              }
             },
             (error) => {
               if (error.error == 'user_is_lock') {
@@ -214,8 +231,14 @@ export class TeststepComponent implements OnInit {
           };
           this.fileService.checkPlagiasmUsingAll(tempdata).subscribe(
             (data: any) => {
-              console.log(data);
-              this.SuccessDialog();
+              if (data != null) {
+                console.log(data);
+                if (data == localStorage.getItem('id')) {
+                  this.SuccessDialog();
+                } else {
+                  console.log('fail');
+                }
+              }
             },
             (error) => {
               if (error.error == 'user_is_lock') {
