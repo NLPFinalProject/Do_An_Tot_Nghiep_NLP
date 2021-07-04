@@ -6,7 +6,8 @@ from .models import DataDocument, DataDocumentFile
 class DocumentForm(forms.ModelForm):
     class Meta:
         model = DataDocument
-        fields = ('DataDocumentName', 'DataDocumentAuthor', 'DataDocumentType', 'DataDocumentFile')
+        fields = ('DataDocumentName', 'DataDocumentAuthor',
+                  'DataDocumentType', 'DataDocumentFile')
 
 
 # form cho người dùng up 1 file update fix

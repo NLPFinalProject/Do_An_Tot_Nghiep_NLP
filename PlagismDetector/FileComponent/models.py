@@ -1,4 +1,5 @@
 from django.db import models
+
 from UserComponent.models import User
 
 
@@ -12,7 +13,8 @@ class DataDocument(models.Model):
     DataDocumentName = models.CharField(max_length=1000)
     DataDocumentType = models.CharField(max_length=20)
     DataDocumentAuthor = models.ForeignKey(User, on_delete=models.CASCADE)
-    DataDocumentFile = models.FileField(upload_to='DocumentFile/', max_length=1000)
+    DataDocumentFile = models.FileField(upload_to='DocumentFile/',
+                                        max_length=1000)
     SessionId = models.IntegerField(default=0)
     DocumentStatus = models.BooleanField(default=False)  # luu cau vao database
 
@@ -35,7 +37,8 @@ class DataDocumentFile(models.Model):
 
 # nội dung file được tách thành các câu
 # class ReportDocument(models.Model):
-#     DataDocumentName=models.ForeignKey(DataDocument, on_delete=models.CASCADE)
+#     DataDocumentName=models.ForeignKey(DataDocument,
+#     on_delete=models.CASCADE)
 #     DataDocumentReport = models.TextField(max_length=700)
 
 
@@ -52,15 +55,17 @@ class DataDocumentContent(models.Model):
 
     class Meta:
         indexes = [
-            models.Index(fields=['DataDocumentNo', 'DataDocumentSentence'], name='DataDocumentNo_idx'),
-            models.Index(fields=['DataDocumentSentence'], name='DataDocumentSentence_idx'),
+            models.Index(fields=['DataDocumentNo', 'DataDocumentSentence'],
+                         name='DataDocumentNo_idx'),
+            models.Index(fields=['DataDocumentSentence'],
+                         name='DataDocumentSentence_idx'),
         ]
 
 
 class DocumentSession(models.Model):
     NumOfFile = models.IntegerField(default=0)
     Date = models.DateTimeField(auto_now_add=True)
-    Status = models.CharField(max_length=20,default="Loading")
+    Status = models.CharField(max_length=20, default="Loading")
     SessionUser = models.IntegerField(default=0)
     SessionName = models.CharField(max_length=50, null=True)
     SessionType = models.CharField(max_length=30, null=True)

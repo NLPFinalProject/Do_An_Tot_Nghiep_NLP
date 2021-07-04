@@ -20,6 +20,12 @@
   </tbody>
 </nz-table>
 <br />
+<div class="autocenter">
+  <a id="previous" (click)="scrollPrevious()">Trước</a>
+  &nbsp;&nbsp;{{ storeNumber + 1 }}/{{ storeCurrentLength }}&nbsp;&nbsp;
+  <a id="next" (click)="scrollNext()">Sau</a>
+  <div *ngIf="ratio != '0' && ratio">Tỉ lệ {{ ratio }}%</div>
+</div>
 <nz-alert nzType="info" nzMessage="Context Diff"></nz-alert>
 <nz-table
   #diffTable

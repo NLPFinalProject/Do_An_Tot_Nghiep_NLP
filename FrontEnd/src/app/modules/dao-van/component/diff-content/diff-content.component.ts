@@ -12,16 +12,18 @@ export class DiffContentComponent implements OnInit {
   @Input() SessionData: any;
   sortValue: any = null;
   public currentId: number;
-  public StoreNumber: number;
+  public storeNumber: number = 0;
+  public storeCurrentLength: number = 0;
   sortName: any = null;
   private sameline: any[];
   public answer: any;
-  public ratio: any[];
+  public ratio: any;
   listOfSearchName: any = [];
   searchAddress: string;
   displayData1: Array<any> = [];
   displayData2: Array<object> = [];
   loading = true;
+  isChangeFlag: boolean = false;
   //
   fileList: Array<object> = [];
   constructor(
@@ -43,6 +45,9 @@ export class DiffContentComponent implements OnInit {
 
     this.doStep();
     this.DaoVanService.sendMessageNumber.subscribe((data: number) => {
+      this.ratio = 0;
+      this.isChangeFlag = false;
+
       this.ShowResult(data);
     });
   }
@@ -73,7 +78,7 @@ export class DiffContentComponent implements OnInit {
   }
   ngOnChanges() {
     //this.childFunction()
-
+    this.storeCurrentLength = 0;
     this.doStep();
   }
   ShowResult(num: number) {
@@ -127,13 +132,21 @@ export class DiffContentComponent implements OnInit {
     }, number);
   }
   triggerScrollTo(id: number) {
+    this.isChangeFlag = true;
     if (this.currentId != id) {
       this.currentId = id;
-      this.StoreNumber = 0;
+      this.storeCurrentLength = 0;
+      this.storeNumber = 0;
     }
+    this.storeCurrentLength = 0;
     id = id - 1;
     console.log(id);
     let element = this.answer.ls3[id];
+    if (element[1] != null) {
+      this.storeCurrentLength = element[1];
+      console.log('number of same line is');
+      console.log(this.storeCurrentLength);
+    }
 
     this.ratio = element[3][0].toFixed(2);
     console.log(this.ratio);
@@ -147,7 +160,7 @@ export class DiffContentComponent implements OnInit {
     }
   }
   //for scale up purpose
-  /*triggerScrollToV2(id: number, datavalue: number) {
+  triggerScrollToV2(id: number, datavalue: number) {
     console.log(id);
     if (id <= 0) {
       return;
@@ -156,23 +169,23 @@ export class DiffContentComponent implements OnInit {
       console.log(id);
 
       let element = this.answer.ls3[id];
-      if (datavalue > 0 && this.StoreNumber < element[3].length - 1) {
-        this.StoreNumber = this.StoreNumber + 1;
-      } else if (datavalue < 0 && this.StoreNumber > 0) {
-        this.StoreNumber = this.StoreNumber - 1;
+      if (datavalue > 0 && this.storeNumber < element[3].length - 1) {
+        this.storeNumber = this.storeNumber + 1;
+      } else if (datavalue < 0 && this.storeNumber > 0) {
+        this.storeNumber = this.storeNumber - 1;
       }
       console.log('store number is');
-      console.log(this.StoreNumber);
+      console.log(this.storeNumber);
       console.log(element);
-      if ((this.StoreNumber >= element[3].length && datavalue > 0) || (this.StoreNumber < 0 && datavalue < 0)) {
+      if ((this.storeNumber >= element[3].length && datavalue > 0) || (this.storeNumber < 0 && datavalue < 0)) {
         console.log('fail ver 2');
         return;
       } else {
-        this.ratio = element[3][this.StoreNumber].toFixed(2);
+        this.ratio = element[3][this.storeNumber].toFixed(2);
         console.log(this.ratio);
         if (element.length! > 0) {
           const config: ScrollToConfigOptions = {
-            target: element[2][this.StoreNumber],
+            target: element[2][this.storeNumber],
           };
 
           this.scrollToService.scrollTo(config);
@@ -185,7 +198,7 @@ export class DiffContentComponent implements OnInit {
   }
   scrollNext() {
     this.triggerScrollToV2(this.currentId, 1);
-  }*/
+  }
   shouldHighlight(id: number) {
     if (id <= this.answer.ls1.length) {
       if (this.answer.ls3[id - 1][1] > 0) {

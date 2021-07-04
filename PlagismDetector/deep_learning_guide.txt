@@ -1,0 +1,13 @@
+Folder deep trong Folder ExportResultComponent chua cac ham xua ly va predict cua mo hinh.
+Trong ExportResultComponent views.py với 2 hàm ExportOrder và ExportOrder2.
+ExportOrder dùng thư viện Levenshtein
+ExportOrder2 dùng pretrained đã huấn luyện để chạy.
+Cách dùng 2 hàm như nhau.
+input: listA và listB: 2 list câu cần so sánh
+output: tỉ lệ trùng của toàn văn bản được tính theo công thức.
+Nếu muốn dùng mạng học sâu thay cho thuật toán Levenshtein thì chỉ cần thay hàm
+ExportOrder thành ExportOrder2 là được.
+
+
+link github của mạng:[10] 	
+https://github.com/amansrivastava17/lstm-siamese-text-similarity

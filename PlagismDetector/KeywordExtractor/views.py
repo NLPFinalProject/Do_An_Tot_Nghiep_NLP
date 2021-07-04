@@ -1,29 +1,27 @@
 import math
 import time
 from operator import itemgetter
-import PreprocessingComponent.views as p
-from AccessInternet.views import *
+from AccessInternet import views
+from PreprocessingComponent import views as p
+
 
 # Lower tất cả các từ
 # Input: Danh sách các từ (list in list)
 # Output: Danh sách từ đã lower (list in list)
 def TokenizeLower(tokenize):
     lst = []
-
     for sent in tokenize:
         sen = []
         for word in sent:
             sen.append(word.lower())
         lst.append(sen)
-
     return lst
-
-
 # Cách chạy chương trình:
 # Sửa path của các file và thực thi chương trình
 
-STOPWORD_FILE_PATH = 'PreprocessingComponent/stopword'
-ALPHABET_FILE_PATH = 'PreprocessingComponent/alphabet'
+
+STOPWORD_FILE_PATH = 'KeywordExtractor/stopword'
+ALPHABET_FILE_PATH = 'KeywordExtractor/alphabet'
 
 
 # Tách dòng của text và lưu vào mảng
@@ -61,14 +59,15 @@ def check(string):
 # Input: list đã tách từ tách câu của vncore, stop word
 # Output:
 #    + Dictionary của tất cả từ phân biệt không bao gồm stop word, dấu câu với
-#      key là từ A, value là số lượng từ A có trong văn bản (dict). VD: {hài_hước: 3, 'Bảo_Đại': 5}
+#      key là từ A, value là số lượng từ A
+#      có trong văn bản (dict). VD: {hài_hước: 3, 'Bảo_Đại': 5}
 #    + Tổng số từ của văn bản (int)
 def TotalWords(TokenizeLower):
     words = dict()
 
     for s in TokenizeLower:
         for w in s:
-            if w not in stopwords and check(w) == True:
+            if w not in stopwords and check(w) is True:
                 if w in words:
                     words[w] += 1
                 else:
@@ -97,7 +96,8 @@ def GetTop(dic, n):
 
 
 # Tính giá trị TF của tất cả từ
-# Input: Dictionary của tất cả các từ đã tính ở hàm total_word_and_len và tổng số từ của văn bản (đã loại bỏ stopword)
+# Input: Dictionary của tất cả các từ đã tính
+# ở hàm total_word_and_len và tổng số từ của văn bản (đã loại bỏ stopword)
 # Output: Giá trị TF của từng từ (dict). VD: {hài_hước: 0.4, 'Bảo_Đại': 0.2}
 
 def TF(words):
@@ -110,13 +110,16 @@ def TF(words):
 
 
 # Tính giá trị IDF của tất cả từ
-# Input: Dictionary của tất cả các từ đã tính ở hàm total_word_and_len và list đã tách từ tách câu
-# Output: Giá trị IDF của từng từ (dict). VD: {hài_hước: 0.01297742362, 'Bảo_Đại': 0.0643231124}
+# Input: Dictionary của tất cả các từ đã tính ở hàm
+# total_word_and_len và list đã tách từ tách câu
+# Output: Giá trị IDF của từng từ (dict).
+# VD: {hài_hước: 0.01297742362, 'Bảo_Đại': 0.0643231124}
 def IDF(words, TokenizeLower):
     idf = dict()
 
     for key, val in words.items():
-        idf[key] = math.log(len(TokenizeLower) / (1 + CheckWordInSent(key, TokenizeLower)))
+        idf[key] = math.log(len(TokenizeLower) /
+                            (1 + CheckWordInSent(key, TokenizeLower)))
 
     return idf
 
@@ -132,11 +135,13 @@ def TFIDF(tf, idf):
 
 # Tính câu có tổng giá trị TFIDF cao nhất
 # Input:
-#   + TotalWords_dict: Dictionary của tất cả các từ đã tính ở hàm total_word_and_len
+#   + TotalWords_dict:
+#   Dictionary của tất cả các từ đã tính ở hàm total_word_and_len
 #   + Tokenize
 #   + TFIDF của tất cả các từ
 # Output:
-#   + Dictionary có format {Thứ tự câu có tfidf cao nhất: giá trị tfidf của câu, ...}
+#   + Dictionary có format
+#   {Thứ tự câu có tfidf cao nhất: giá trị tfidf của câu, ...}
 def SentenceTfIdfVal(TotalWords_dict, tokenize, tfidf):
     valDict = {}
 
@@ -154,7 +159,8 @@ def SentenceTfIdfVal(TotalWords_dict, tokenize, tfidf):
 # Rút trích cụm từ (gồm n_words từ) có giá trị tfidf cao nhất trong 1 câu
 # Số từ có thể lớn hơn n_words vì n_words là số từ hợp lệ trong lúc tính tfidf
 # Input:
-#   + TotalWords_dict: Dictionary của tất cả các từ đã tính ở hàm total_word_and_len
+#   + TotalWords_dict:
+#   Dictionary của tất cả các từ đã tính ở hàm total_word_and_len
 #   + sentence = [word1, word2, word3,...]
 #   + tfidf: TFIDF của tất cả các từ
 #   + n_words: Số từ của phrase
@@ -188,7 +194,8 @@ def MaxValPhrase(TotalWords_dict, sentence, tfidf, n_words):
     return phrase
 
 
-# stopwords: Danh sách các stop word. VD: và, là, các, trong, ngoài, của,........
+# stopwords: Danh sách các stop word.
+# VD: và, là, các, trong, ngoài, của,........
 # alphabet: các ký tự hợp lệ như: à, á, ư, b, j, đ, A, Ê, Z, ...... và '_'
 stopwords = PrerpocessTextFile(STOPWORD_FILE_PATH)
 alphabet = PrerpocessTextFile(ALPHABET_FILE_PATH)
@@ -210,7 +217,7 @@ def GetLink(sentence, tokenize):
             key[i] = int(key[i])
 
         sent = sentence[key[0]]
-        link = SearchKeyword(sent)
+        link = views.SearchKeyword(sent)
 
     return link
 

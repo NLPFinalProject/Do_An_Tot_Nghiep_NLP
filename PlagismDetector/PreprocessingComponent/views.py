@@ -1,35 +1,41 @@
-import math
-from string import punctuation
-import os, sys
-from pptx import Presentation
-import pandas as pd
-from docx_utils.flatten import opc_to_flat_opc
-from xml.dom import minidom
-import win32com.client
-import uuid
-import time
-import pythoncom
 import csv
+import math
+import os
+import sys
+import time
+import uuid
+from string import punctuation
+from xml.dom import minidom
+
+import pandas as pd
+import pythoncom
+import win32com.client
+from docx_utils.flatten import opc_to_flat_opc
+from pptx import Presentation
 from underthesea import sent_tokenize, word_tokenize
 sys.path.insert(1, os.getcwd() + "/PreprocessingComponent")
 from PreprocessingComponent.pdfminer3 import Pdf_extract
 
-# ------------------------------------các function hỗ trợ cho function DocxToText---------------------------
+
+# -----các function hỗ trợ cho function DocxToText-
 # Get paragraph string. Input is paragraph element
 def ParaString(para):
     string = ""
-    # if (str(para)[21:34] not in str(wpTbl)):# and (str(para)[21:34] not in str(wp_txbx)):
+    # if (str(para)[21:34] not in str(wpTbl)):
+    # and (str(para)[21:34] not in str(wp_txbx)):
     wt = para.getElementsByTagName('w:t')
     for i in range(len(wt)):
         string = string + wt[i].firstChild.data
-
     return string
+
 
 # Get table string. Input is table element
 def TableString(table):
     string = ""
     wp = table.getElementsByTagName('w:p')
-    column = len(table.getElementsByTagName('w:tc')) / len(table.getElementsByTagName('w:tr'))
+    temp1 = len(table.getElementsByTagName('w:tc'))
+    temp2 = len(table.getElementsByTagName('w:tr'))
+    column = temp1 / temp2
     c = 1
     for i in range(len(wp)):
         string = string + ParaString(wp[i])
@@ -56,7 +62,7 @@ def ParaToText(p):
     return u" ".join([r.text for r in rs])
 
 
-# --------------------------------RÚT TRÍCH TEXT TỪ FILE------------------------------------#
+# ------RÚT TRÍCH TEXT TỪ FILE----#
 # Docx
 def DocxToText(docxFileName):
     # Parse xml file
@@ -92,18 +98,17 @@ def DocxToText(docxFileName):
 
 # Doc
 def DocToDocx(filename, path=os.getcwd()):
-    baseDir = os.path.abspath(os.getcwd())  # Starting directory for directory walk
+    baseDir = os.path.abspath(os.getcwd())
     pythoncom.CoInitialize()
     word = win32com.client.Dispatch("Word.application")
     filePath = os.path.join(baseDir, filename)
     fileName, fileExtension = os.path.splitext(filePath)
 
     if "~$" not in fileName:
-        if fileExtension.lower() == '.doc':  #
-            # docxFile = '{0}{1}'.format(filePath, 'x')
-            docxFile = fileName + str(uuid.uuid4().hex[:10]).format(filePath,
-                                                                      'x')  # tránh trương hợp có sẵn file .docx tước đó nên thêm phần random để tránh trùng tên
-            if not os.path.isfile(docxFile):  # Skip conversion where docx file already exists
+        if fileExtension.lower() == '.doc':
+            extension = str(uuid.uuid4().hex[:10]).format(filePath, 'x')
+            docxFile = fileName + extension
+            if not os.path.isfile(docxFile):
 
                 filePath = os.path.abspath(filePath)
                 docxFile = os.path.abspath(docxFile)
@@ -115,7 +120,7 @@ def DocToDocx(filename, path=os.getcwd()):
                 except Exception as e:
                     print('Failed to Convert: {0}'.format(filePath))
                     print(e)
-            return docxFile + ".docx"  ## trả ra tên file đã chuyển từ doc -> docx
+            return docxFile + ".docx"
 
 
 # Powerpoint
@@ -152,9 +157,6 @@ def XlsxToText(filename):
     os.remove(filename_csv)
     return res
 
-
-
-# --------------------------------TÁCH ĐOẠN, TÁCH CÂU, TÁCH TỪ------------------------------------#
 
 # Tách đoạn
 def ListPara(document):
@@ -280,7 +282,7 @@ def SplitSenList(sent_list, max_len):
     return newLst
 
 
-# --------------------------------TIỀN XỬ LÝ------------------------------------#
+# ---------TIỀN XỬ LÝ--------#
 
 
 def Preprocess(filename):

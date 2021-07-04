@@ -61,10 +61,8 @@ def formatQuery(folder, fileName):
 def formatRaw(sentence):
     queryString = (
             "SELECT id FROM `filecomponent_datadocumentcontent`"
-            + "WHERE MATCH(DataDocumentSentence) AGAINST({sentence})".format(
-        sentence=sentence
-    )
-    )
+            + "WHERE MATCH(DataDocumentSentence) AGAINST({sentence})"
+            .format(sentence=sentence))
     return queryString
 
 
@@ -161,6 +159,7 @@ def documentQuery(userId, fileName1, session):
 @api_view(('POST',))
 def documentimportDatabase(request):
     query = User.objects.get(pk=request.data['id'])
+    id = request.data['id']
     if (query.is_lock == 1):
         content = "user_is_lock"
         return Response(content, status=status.HTTP_400_BAD_REQUEST)
@@ -180,9 +179,11 @@ def documentimportDatabase(request):
 
     myDict, fileName1, userId = processDB(data1, session)
     if (myDict is None and fileName1 is None and userId is None):
-        session = DocumentSession(NumOfFile=1, SessionUser=id, Status="Fail")
-        content = "user_is_lock"
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        session = DocumentSession.objects.get(pk=session)
+        content = "file corrupted"
+        session.Status = "Fail"
+        session.save()
+        return Response(content, status=status.HTTP_400_BAD_REQUEST)
     jsonFile(myDict, fileName1, userId, session)
     session1 = DocumentSession.objects.get(pk=session)
     session1.Status = 'Success'
@@ -198,6 +199,7 @@ def documentimportDatabase(request):
 @api_view(('POST',))
 def documentimportInternet(request):
     query = User.objects.get(pk=request.data['id'])
+    id = request.data["id"]
     if (query.is_lock == 1):
         content = "user_is_lock"
         return Response(content, status=status.HTTP_400_BAD_REQUEST)
@@ -214,8 +216,15 @@ def documentimportInternet(request):
     except Exception:
         session = DocumentSession(NumOfFile=1, SessionUser=id, Status="Fail")
         content = "fail status"
+        session.save()
         return Response(content, status=status.HTTP_400_BAD_REQUEST)
     myDict, fileName1, userId = processNet(data1, session)
+    if (myDict is None and fileName1 is None and userId is None):
+        session = DocumentSession.objects.get(pk=session)
+        content = "file corrupted"
+        session.Status = "Fail"
+        session.save()
+        return Response(content, status=status.HTTP_400_BAD_REQUEST)
     jsonFile(myDict, fileName1, userId, session)
     session1 = DocumentSession.objects.get(pk=session)
     session1.Status = "Success"
@@ -229,6 +238,7 @@ def documentimportInternet(request):
 @api_view(('POST',))
 def documentimportDatabaseInternet(request):
     query = User.objects.get(pk=request.data['id'])
+    id = request.data['id']
     if (query.is_lock == 1):
         content = "user_is_lock"
         return Response(content, status=status.HTTP_400_BAD_REQUEST)
@@ -244,11 +254,24 @@ def documentimportDatabaseInternet(request):
     except Exception:
         session = DocumentSession(NumOfFile=1, SessionUser=id, Status="Fail")
         content = "fail status"
+        session.save()
         return Response(content, status=status.HTTP_400_BAD_REQUEST)
     # try catch status here here
     try:
         myDict1, fileName1, userId = processDB(data1, session)
+        if (myDict1 is None and fileName1 is None and userId is None):
+            session = DocumentSession.objects.get(pk=session)
+            content = "file corrupted"
+            session.Status = "Fail"
+            session.save()
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
         myDict2, fileName1, userId = processNet(data1, session)
+        if (myDict2 is None and fileName1 is None and userId is None):
+            session = DocumentSession.objects.get(pk=session)
+            content = "file corrupted"
+            session.Status = "Fail"
+            session.save()
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
         myDict1["AllFileRatio"].extend(myDict2["AllFileRatio"])
         myDict2["ListAllFile"].pop(0)
         myDict1["ListAllFile"].extend(myDict2["ListAllFile"])
@@ -278,6 +301,7 @@ def documentimportDatabaseInternet(request):
 @api_view(('POST', 'GET'))
 def documentimport(request):
     query = User.objects.get(pk=request.data['id'])
+    id = request.data['id']
     if (query.is_lock == 1):
         content = "user_is_lock"
         return Response(content, status=status.HTTP_400_BAD_REQUEST)
@@ -293,6 +317,7 @@ def documentimport(request):
     except Exception:
         session = DocumentSession(NumOfFile=1, SessionUser=id, Status="Fail")
         content = "fail status"
+        session.save()
         return Response(content, status=status.HTTP_400_BAD_REQUEST)
     data1["filenameB"] = uploadDocList(
         request.POST,
@@ -302,6 +327,12 @@ def documentimport(request):
         request.data["agreeStatus"])
 
     myDict, fileName1, userId = process(data1, session)
+    if (myDict is None and fileName1 is None and userId is None):
+        session = DocumentSession.objects.get(pk=session)
+        content = "file corrupted"
+        session.Status = "Fail"
+        session.save()
+        return Response(content, status=status.HTTP_400_BAD_REQUEST)
     jsonFile(myDict, fileName1, userId, session)
     # jsonData = readJson(session, userId)
     session1 = DocumentSession.objects.get(pk=session)
@@ -313,7 +344,7 @@ def documentimport(request):
     sessionId = session1.id
     mail.sendExportMailV2(request.data, sessionId)
     content = userId
-    return Response(content,status=status.HTTP_200_OK)
+    return Response(content, status=status.HTTP_200_OK)
 
 
 # hệ thống
@@ -329,7 +360,7 @@ def processDB(data, session):
             formatQuery('DocumentFile', os.path.basename(str(fetchQuery))))
         fileName1Sentence = filePreprocessed[0]
     except Exception:
-        return -1, -1, -1
+        return None, None, None
     # database search
     documentName = databaseSearch(fileName1Sentence)
     # thong ke
@@ -385,6 +416,7 @@ def processNet(data, session):
             formatQuery('DocumentFile', os.path.basename(str(fetchQuery))))
         fileName1Sentence = filePreprocessed[0]
     except Exception:
+        print("fail")
         return None, None, None
     # internet search
     internetPage = keyWord.GetLink(
@@ -429,7 +461,7 @@ def process(data, session):
             formatQuery('DocumentFile', os.path.basename(str(fetchQuery))))
         fileName1Sentence = filePreprocessed[0]
     except Exception:
-        return -1, -1, -1
+        return None, None, None
     dataReadDoc = []
     successFile = []
     for fileUName in fileName2:
@@ -522,21 +554,22 @@ def uploadDoc(PostData, FileData, ID, agreeStatus, sessionName, sessionType):
             SessionId=session.id,
         )
         data.save()
+        if (agreeStatus == 'true'):
+            try:
+                filePreprocessed = p.Preprocess(
+                    formatString(
+                        'DocumentFile',
+                        data.DataDocumentName,
+                        data.DataDocumentType))
 
-        if (agreeStatus):
-            filePreprocessed = p.Preprocess(
-                formatString(
-                    'DocumentFile',
-                    data.DataDocumentName,
-                    data.DataDocumentType))
-
-            # //save to db//
-            length = len(filePreprocessed[0])
-            for i in range(length):
-                sentence = len(filePreprocessed[0][i])
-                data.datadocumentcontent_set.create(
-                    DataDocumentSentence=filePreprocessed[0][i],
-                    DataDocumentSentenceLength=sentence)
+                length = len(filePreprocessed[0])
+                for i in range(length):
+                    sentence = len(filePreprocessed[0][i])
+                    data.datadocumentcontent_set.create(
+                        DataDocumentSentence=filePreprocessed[0][i],
+                        DataDocumentSentenceLength=sentence)
+            except Exception:
+                pass
         result = file_name + '.' + extension
         return result, session.id
 
@@ -604,7 +637,7 @@ def uploadDocList(PostData, FileData, ID, session, agreeStatus):
                 SessionId=session.id
             )
             data.save()
-            if (agreeStatus):
+            if (agreeStatus == 'true'):
                 filePreprocessed = p.Preprocess(
                     formatString(
                         'DocumentFile',

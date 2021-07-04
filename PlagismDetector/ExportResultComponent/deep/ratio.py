@@ -1,6 +1,6 @@
-from model import SiameseBiLSTM
-from inputHandler import word_embed_meta_data, create_test_data
-from config import siamese_config
+from .model import SiameseBiLSTM
+from .inputHandler import word_embed_meta_data, create_test_data
+from .config import siamese_config
 import pandas as pd
 import pickle
 from operator import itemgetter
