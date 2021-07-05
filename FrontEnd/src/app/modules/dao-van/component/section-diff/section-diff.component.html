@@ -7,11 +7,6 @@
 <br />
 <nz-alert nzType="warning" nzMessage="Danh sách file trong phiên"></nz-alert>
 <nz-table #filterTable [nzData]="displayData" [nzLoading]="loading" nzSize="small">
-  <!-- <thead (nzSortChange)="sort($event)" nzSingleSort>
-    <tr>
-      <th nzShowSort nzSortKey="name">Danh sách file trong phiên</th>
-    </tr>
-  </thead> -->
   <tbody>
     <tr *ngFor="let data of filterTable.data">
       <td>

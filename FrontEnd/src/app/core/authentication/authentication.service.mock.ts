@@ -11,7 +11,6 @@ export class MockAuthenticationService {
   };
 
   login(context: LoginContext): Observable<Credentials> {
-    console.log('wwwwwww');
     return of({
       username: context.username,
       exp: 1,

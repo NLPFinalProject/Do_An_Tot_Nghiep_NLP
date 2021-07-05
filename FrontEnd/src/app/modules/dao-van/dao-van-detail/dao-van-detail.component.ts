@@ -107,14 +107,12 @@ export class DaoVanDetailComponent implements OnInit {
   ngOnInit() {
     if (!this.safetyFlag) {
       this.route.params.subscribe((params) => {
-        console.log(params); //log the entire params object
-        console.log(params['id']); //log the value of id
         let data = Number(params['id']);
         this.fileService.getResult(data).subscribe(
           (data: any) => {
             this.data1 = data;
             this.file1Name = this.data1.File1Name;
-            console.log(this.data1);
+
             if (this.data1.ListFileName.length == 0) {
               let temp = {
                 name: 'Không có kết quả phù hợp với yêu cầu',

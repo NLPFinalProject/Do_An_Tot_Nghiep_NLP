@@ -48,18 +48,14 @@ export class TeststepComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe((params) => {
       this.step = 1; // (+) converts string 'id' to a number
-      console.log(this.step);
     });
     this.ListOfFile = [];
     this.fileList = null;
     this.selectedOption = 1;
     this.option = '1';
   }
-  ngOnDestroy() {
-    console.log('now you die');
-  }
+  ngOnDestroy() {}
   HandleSelectionChange(id: any) {
-    console.log(id);
     this.step = 2;
     this.isvalid = true;
     this.selectedOption = parseInt(id);
@@ -93,30 +89,22 @@ export class TeststepComponent implements OnInit {
       //this.step1Unlock = true;
       this.isSpinning = true;
       this.step = this.step + 1;
-      console.log('data is');
+
       this.isSpinning = false;
-      console.log(this.isSpinning);
+
       localStorage.setItem('file', this.FileToUpload.name);
       this.isvalid = false;
       this.step = 2;
       localStorage.setItem('choice', this.selectedOption.toString());
-      console.log('now');
+
       if (this.selectedOption == 1) {
         this.step1Unlock = true;
       }
     } else if (this.step == 2) {
       this.isSpinning = true;
-      //this.fileService.UploadFileList(this.ListFileToUpload).subscribe((data: any) => {
-
-      console.log('hhhhh');
-
       let id = localStorage.getItem('id');
-      //let choice = parseInt(localStorage.getItem('choice'));
       let choice = this.selectedOption;
-      //let filename1 = localStorage.getItem('file');
       this.fileList = this.ListOfFile;
-      console.log('choice is', choice);
-      console.log(this.sessionName);
       switch (choice) {
         case 1: {
           if (this.ListOfFile != null) {
@@ -127,15 +115,12 @@ export class TeststepComponent implements OnInit {
               sessionName: this.sessionName,
               agreeStatus: this.agreeStatus,
             };
-            console.log(tempdata);
             this.fileService.checkPlagiasmNormal(tempdata).subscribe(
               (data: any) => {
                 if (data != null) {
-                  console.log(data);
                   if (data == localStorage.getItem('id')) {
                     this.SuccessDialog();
                   } else {
-                    console.log('fail');
                   }
                 }
               },
@@ -148,14 +133,10 @@ export class TeststepComponent implements OnInit {
               }
             );
             this.router.navigate(['daovan'], { replaceUrl: true });
-            //this.openDialog();
           } else {
             //add warning here
           }
 
-          //   console.log(data);
-          //   this.router.navigate(['checkresult/result'], { replaceUrl: true, state: { data: data } });
-          // })
           break;
         }
         case 2: {
@@ -169,11 +150,9 @@ export class TeststepComponent implements OnInit {
           this.fileService.checkPlagiasmUsingDatabase(tempdata).subscribe(
             (data: any) => {
               if (data != null) {
-                console.log(data);
                 if (data == localStorage.getItem('id')) {
                   this.SuccessDialog();
                 } else {
-                  console.log('fail');
                 }
               }
             },
@@ -185,9 +164,6 @@ export class TeststepComponent implements OnInit {
               }
             }
           );
-          console.log(tempdata);
-          //this.SuccessDialog();
-          //this.openDialog();
           this.router.navigate(['daovan'], { replaceUrl: true });
           break;
         }
@@ -202,11 +178,9 @@ export class TeststepComponent implements OnInit {
           this.fileService.checkPlagiasmUsingInternet(tempdata).subscribe(
             (data: any) => {
               if (data != null) {
-                console.log(data);
                 if (data == localStorage.getItem('id')) {
                   this.SuccessDialog();
                 } else {
-                  console.log('fail');
                 }
               }
             },
@@ -232,11 +206,9 @@ export class TeststepComponent implements OnInit {
           this.fileService.checkPlagiasmUsingAll(tempdata).subscribe(
             (data: any) => {
               if (data != null) {
-                console.log(data);
                 if (data == localStorage.getItem('id')) {
                   this.SuccessDialog();
                 } else {
-                  console.log('fail');
                 }
               }
             },
@@ -257,31 +229,19 @@ export class TeststepComponent implements OnInit {
     }
   }
   upload = (file: any) => {
-    console.log('welcome');
-    console.log(file.name);
-    console.log(file);
-
     // tslint:disable-next-line:semicolon
     this.fileService.UploadFile(file);
   };
   uploadFile = () => {
-    console.log('welcome');
-
     this.fileService.UploadFileList(this.ListFileToUpload).subscribe((data: any) => {
-      console.log('hhhhh');
-
       this.fileList = data.data;
     });
-    console.log('fail');
     // tslint:disable-next-line:semicolon
   };
   uploadFileV1 = () => {
-    console.log('welcome');
-
     this.fileService.UploadFile(this.FileToUpload).subscribe((data: any) => {
       this.fileList = data.data;
     });
-    console.log('fail');
     // tslint:disable-next-line:semicolon
   };
 
@@ -290,7 +250,6 @@ export class TeststepComponent implements OnInit {
     this.isvalid = true;
   }
   handleChangeFile1 = (item: File) => {
-    console.log('hi there');
     this.FileToUpload = item;
     this.uploadFile();
   };
@@ -321,21 +280,17 @@ export class TeststepComponent implements OnInit {
   CommonProblemDialog() {
     const dialogRef = this.dialog.open(CommonProblemDialog, {
       width: '250px',
-      //data: {name: this.name, animal: this.animal}
     });
   }
   handleChangeFileList(file: FileList): void {
     this.ListFileToUpload = file;
     this.isvalid = true;
-    //this.uploadFileList();
-    //console.log('here');
   }
   checkValidFile(name: string) {
-    console.log('in here');
     var position = name.lastIndexOf('.');
     if (position == -1) return false;
     var endFile = name.substr(position, name.length - position);
-    console.log(endFile);
+
     if (this.validEndFile.indexOf(endFile) == -1) return false;
     return true;
   }
@@ -376,18 +331,14 @@ export class TeststepComponent implements OnInit {
         if (droppedFile.fileEntry.isFile) {
           const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
           fileEntry.file((file: File) => {
-            console.log(1);
             // Here you can access the real file
             if (!this.checkValidFile(file.name)) {
               this.WarningInvalidFile();
               this.ListOfFile = [];
               flagValidFile = false;
             } else if (file.size <= 10 * 1024 * 1024) {
-              console.log(file);
-
               this.ListOfFile.push(file);
             } else {
-              console.log('no problem');
               this.ListOfFile = [];
               //this.fi
               this.WarningSize();
@@ -414,7 +365,6 @@ export class TeststepComponent implements OnInit {
         } else {
           // It was a directory (empty directories are added, otherwise only files)
           const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
-          console.log(droppedFile.relativePath, fileEntry);
         }
       } else {
         break;
@@ -427,23 +377,12 @@ export class TeststepComponent implements OnInit {
       //data: {name: this.name, animal: this.animal}
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-    });
+    dialogRef.afterClosed().subscribe((result) => {});
   }
-  public fileOver(event: any) {
-    console.log(3);
-    console.log(event);
-  }
-  openFileSelector() {
-    console.log(1);
-    console.log('wow');
-  }
+  public fileOver(event: any) {}
+  openFileSelector() {}
 
-  public fileLeave(event: any) {
-    console.log(2);
-    console.log(event);
-  }
+  public fileLeave(event: any) {}
 }
 @Component({
   selector: 'success-upload-dialog',

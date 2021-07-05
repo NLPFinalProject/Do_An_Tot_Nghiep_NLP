@@ -43,7 +43,6 @@ export class AppComponent implements OnInit {
     const onNavigationEnd = this.router.events.pipe(filter((event) => event instanceof NavigationEnd));
     this.translateService.setDefaultLang('en-US');
     this.translateService.use('en');
-    console.log('set successful');
     // Change page title on navigation or language change, based on route data
     merge(this.translateService.onLangChange, onNavigationEnd)
       .pipe(

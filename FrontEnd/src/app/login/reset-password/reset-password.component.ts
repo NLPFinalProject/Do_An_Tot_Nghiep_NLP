@@ -56,7 +56,6 @@ export class ResetPasswordComponent extends AppComponentBase implements OnInit {
   account() {
     let id = localStorage.getItem('username');
     return this.userService.profile(id).subscribe((data) => {
-      console.log(data);
       this.router.navigate(['account'], { replaceUrl: true, state: { data: data } });
     });
   }
@@ -65,8 +64,6 @@ export class ResetPasswordComponent extends AppComponentBase implements OnInit {
       this.resetPasswordForm.controls[i].markAsDirty();
       this.resetPasswordForm.controls[i].updateValueAndValidity();
     }
-    //this.notificationService.error(`Vui lòng kiểm tra Id người dùng `);
-    console.log(this.resetPasswordForm);
     if (this.resetPasswordForm.value.password == this.resetPasswordForm.value.checkPassword) {
       this.notificationService.error(`Mật khẩu cũ đã trùng với mật khẩu mới, xin thử lại `);
     } else {

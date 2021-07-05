@@ -40,7 +40,6 @@ export class ForgotPasswordComponent extends AppComponentBase implements OnInit 
       username: this.forgotPasswordForm.controls.email.value,
     };
 
-    console.log(data);
     for (const i in this.forgotPasswordForm.controls) {
       this.forgotPasswordForm.controls[i].markAsDirty();
       this.forgotPasswordForm.controls[i].updateValueAndValidity();

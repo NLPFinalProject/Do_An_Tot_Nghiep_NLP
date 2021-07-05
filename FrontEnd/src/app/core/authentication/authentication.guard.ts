@@ -14,7 +14,7 @@ export class AuthenticationGuard implements CanActivate {
     //if (this.authenticationService.isAuthenticated()) {
     if (this.authenticationService.isLoggedIn()) {
       this.authenticationService.refreshToken();
-      console.log(localStorage.getItem('token'));
+      //console.log(localStorage.getItem('token'));
       return true;
     }
 

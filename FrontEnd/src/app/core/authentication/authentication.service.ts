@@ -37,7 +37,6 @@ export class AuthInterceptor implements HttpInterceptor {
     const token = localStorage.getItem('token');
 
     if (token) {
-      console.log('come here');
       const cloned = req.clone({
         //headers: req.headers.set('Authorization', 'JWT '.concat(token)),
         headers: req.headers.set('Authorization', 'JWT ' + token),
@@ -67,14 +66,7 @@ export class AuthenticationService {
   public setSession(authResult: any) {
     const token = authResult.token;
     const payload = <Credentials>jwt_decode(token);
-    console.log(payload.username);
     const expiresAt = moment.unix(payload.exp);
-    console.log('payload is');
-    console.log(payload);
-    console.log('------------end---------');
-    console.log(payload.user_id);
-    console.log(expiresAt);
-    console.log(payload.user_id);
 
     localStorage.setItem('token', authResult.token);
     localStorage.setItem('id', payload.user_id);
@@ -99,12 +91,12 @@ export class AuthenticationService {
       headers: headers,
     };
     let temp;
-    console.log(context);
+
     const dataContext = {
       username: context.username,
       password: context.password,
     };
-    console.log(`${this.baseUrl}/api/user/login`);
+
     return this.httpClient.post(`${this.baseUrl}/login/`, JSON.stringify(dataContext), options);
 
     //return this.httpClient.post('/api/login/', JSON.stringify(dataContext), this.httpOptions)
@@ -135,7 +127,6 @@ export class AuthenticationService {
   }
 
   isLoggedIn() {
-    console.log(this.getExpiration());
     return moment().isBefore(this.getExpiration());
   }
 

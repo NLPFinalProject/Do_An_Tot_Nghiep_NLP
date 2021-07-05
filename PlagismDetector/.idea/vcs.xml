@@ -4,5 +4,7 @@
     <mapping directory="$PROJECT_DIR$/../.." vcs="Git" />
     <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
     <mapping directory="$PROJECT_DIR$/PreprocessingComponent/VnCoreNLP" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/underthesea" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/underthesea1" vcs="Git" />
   </component>
 </project>

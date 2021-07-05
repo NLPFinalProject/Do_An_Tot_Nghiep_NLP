@@ -1,0 +1,17 @@
+djangorestframework-simplejwt
+mysqlclient
+django-cors-headers
+djangorestframework-jwt
+python-pptx
+Cython
+docx_utils
+uuid
+sortedcontainers
+auto-py-to-exe
+PyJWT==1.7.0
+pandas
+func-timeout==4.3.5
+levenshtein
+scrape-search-engine
+BeautifulSoup4
+pywin32

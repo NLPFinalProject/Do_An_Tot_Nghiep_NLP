@@ -132,7 +132,6 @@ export class IndexLoginComponent extends AppComponentBase implements OnInit {
   //#region  Language
   setLanguage(language: string) {
     //this.i18nService.language = language;
-    console.log(language);
     this.translateService.use('vn');
   }
   setVNLanguage() {

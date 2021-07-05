@@ -22,8 +22,7 @@ export class ListFileDiffComponent implements OnInit {
   }
   ngOnChanges() {
     //this.childFunction()
-    console.log(this.FileList2);
-    console.log('we will win');
+
     this.getData();
   }
   getData(): void {

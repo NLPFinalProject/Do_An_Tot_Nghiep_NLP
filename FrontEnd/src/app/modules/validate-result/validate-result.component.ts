@@ -53,8 +53,6 @@ export class ValidateResultComponent implements OnInit {
     };
 
     if (this.params.filename1 != undefined) {
-      console.log(this.params.filename1);
-      console.log('true');
       let temp = [];
       temp.push(this.params.listfile);
       let data = {
@@ -63,8 +61,6 @@ export class ValidateResultComponent implements OnInit {
         listfile: temp,
         choice: 1,
       };
-      console.log('data is');
-      console.log(data);
       this.fileService.checkPlagiasm(data).subscribe(
         (data: any) => {
           this.data = data;
@@ -80,35 +76,12 @@ export class ValidateResultComponent implements OnInit {
     } else if (this.data != null) {
       this.getFirstSentences();
       this.ShowResult(0);
-      console.log('escape success');
       this.createOptionList();
-      console.log('this ls1 is');
-      console.log(this.answer.ls1);
     } else {
-      console.log('not really');
       this.ChangeOption();
     }
   }
-  ChangeOption() {
-    this.characterList2 = ['kurogane yaiba', 'kurosaki ichigo', 'monkey D luffy', 'uzumaki naruto'];
-    //console.log('escape fail');
-    let temp: {
-      id: number;
-      data: string;
-    };
-    console.log(this.characterList2.length);
-    console.log(this.characterList1);
-    this.characterList1 = [];
-    for (var i = 0; i < this.characterList2.length; i++) {
-      temp = {
-        id: i,
-        data: this.characterList2[i],
-      };
-      this.characterList1.push(temp);
-    }
-
-    console.log(this.characterList1);
-  }
+  ChangeOption() {}
   createOptionList() {
     let temp: {
       id: number;
@@ -129,8 +102,6 @@ export class ValidateResultComponent implements OnInit {
     this.SelectedOption = id;
   }
   confirmed(num: number) {
-    console.log('this is');
-    console.log(num);
     this.ShowResult(num);
   }
   getFirstSentences() {
@@ -161,15 +132,10 @@ export class ValidateResultComponent implements OnInit {
     private activatedRoute: ActivatedRoute //private matDialog: MatDialog
   ) {
     this.activatedRoute.queryParams.subscribe((params) => {
-      console.log('new file');
-      console.log(params);
       this.params = params;
       if (params.filename1 == undefined) {
-        console.log('false');
-        console.log(this.router.getCurrentNavigation());
         if (this.router.getCurrentNavigation().extras.state != null) {
           this.data = this.router.getCurrentNavigation().extras.state.data;
-          console.log(this.data);
         }
         this.trolling = false;
       }
@@ -205,12 +171,9 @@ export class ValidateResultComponent implements OnInit {
       this.StoreNumber = 0;
     }
     id = id - 1;
-    console.log(id);
     let element = this.answer.ls3[id];
 
     this.ratio = element[3][0].toFixed(2);
-    console.log(this.ratio);
-    //this.currentId=id;
     if (element.length! > 0) {
       const config: ScrollToConfigOptions = {
         target: element[2][0],
@@ -220,12 +183,10 @@ export class ValidateResultComponent implements OnInit {
     }
   }
   triggerScrollToV2(id: number, datavalue: number) {
-    console.log(id);
     if (id <= 0) {
       return;
     } else {
       id = id - 1;
-      console.log(id);
 
       let element = this.answer.ls3[id];
       if (datavalue > 0 && this.StoreNumber < element[3].length - 1) {
@@ -233,15 +194,10 @@ export class ValidateResultComponent implements OnInit {
       } else if (datavalue < 0 && this.StoreNumber > 0) {
         this.StoreNumber = this.StoreNumber - 1;
       }
-      console.log('store number is');
-      console.log(this.StoreNumber);
-      console.log(element);
       if ((this.StoreNumber >= element[3].length && datavalue > 0) || (this.StoreNumber < 0 && datavalue < 0)) {
-        console.log('fail ver 2');
         return;
       } else {
         this.ratio = element[3][this.StoreNumber].toFixed(2);
-        console.log(this.ratio);
         if (element.length! > 0) {
           const config: ScrollToConfigOptions = {
             target: element[2][this.StoreNumber],
@@ -266,16 +222,6 @@ export class ValidateResultComponent implements OnInit {
     this.router.navigate(['daovan'], { replaceUrl: true });
   }
   shouldHighlight(id: number) {
-    /*if (this.answer.ls3[id].length > 0)
-     {
-       console.log(id);
-       
-       return true;
-     }
-
-    else 
-      return false;*/
-
     if (id <= this.answer.ls1.length) {
       if (this.answer.ls3[id - 1][1] > 0) {
         return true;
@@ -284,7 +230,6 @@ export class ValidateResultComponent implements OnInit {
     return false;
   }
   settrue() {
-    console.log('pass');
     this.trolling = true;
   }
   shouldHighlight2(id: number) {
@@ -292,19 +237,13 @@ export class ValidateResultComponent implements OnInit {
       return false;
     } else return true;
   }
-  choose(choice: string) {
-    console.log(choice);
-  }
-  /*onClick3($element): void {
-    console.log($element);
-    $element.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
-  }*/
+  choose(choice: string) {}
   forgodTest() {
     this.listchar = [
       { line: 0, length: 2, list: [0, 7] },
       { line: 1, length: 0, list: null },
       {
-        line: 2,
+        liconne: 2,
         length: 1,
         list: [7],
       },
@@ -378,72 +317,8 @@ export class ValidateResultComponent implements OnInit {
     this.tdata;
     this.tdata = this.tempdata;
     this.answer = ans;
-    console.log(this.sameline);
   }
-  /*this.answer=
-      {
-        ls1:data.file1,
-        ls2:data.ListFile[0].data,
-        ls3:data.ListFile[0].stt
-      }*/
-  /*forgodlvlMax(num : number)
-{
-  this.sameline=[];
-      let data = this.data;
-      console.log(this.data);
 
-      
-      this.tempdata=[];
-      let temp: {
-        id: number;
-        data: string;
-      };
-      let index = 0;
-      for (var i = 0; i < this.data.file1.length; i++) {
-    
-        temp = {
-          id: index+1,
-          data: this.data.file1[i]
-        };
-        this.tempdata.push(temp);
-        
-        
-        
-        for(var j = 0; j < this.data.ListFile[num].stt[i][1]; j++)
-        {
-          console.log('begin');
-          console.log(this.data.ListFile[num].stt[i][2][j])
-          if (this.sameline.indexOf(this.data.ListFile[num].stt[i][2][j]) === -1) {
-            this.sameline.push(this.data.ListFile[num].stt[i][2][j]);
-        }
-      }
-        index = index + 1;
-      }
-      index = 0;
-      let tempdata2 = [];
-      for (var i = 0; i < this.data.ListFile[num].data.length; i++) {
-    
-        temp = {
-          id: index+1,
-          data: this.data.ListFile[num].data[i]
-        };
-        tempdata2.push(temp);
-        index = index + 1;
-        //console.log(this.listchar[index].length);
-       
-      }
-      this.answer=
-      {
-        ls1:this.tempdata,
-        ls2:tempdata2,
-        ls3:data.ListFile[0].stt
-      }
-      console.log(this.answer.ls1);
-      console.log(this.answer.ls2);
-      console.log(this.answer.ls3);
-     
-      console.log(data);
-}*/
   ShowResult(num: number) {
     this.sameline = [];
     let data = this.data;
@@ -458,7 +333,6 @@ export class ValidateResultComponent implements OnInit {
       for (var i = 0; i < this.data.file1.length; i++) {
         if (this.data.ListFile[num].stt[i] != undefined) {
           for (var j = 0; j < this.data.ListFile[num].stt[i][1]; j++) {
-            console.log(this.data.ListFile[num].stt[i][2][j]);
             if (this.sameline.indexOf(this.data.ListFile[num].stt[i][2][j]) === -1) {
               this.sameline.push(this.data.ListFile[num].stt[i][2][j]);
             }
@@ -478,17 +352,6 @@ export class ValidateResultComponent implements OnInit {
       }
       this.answer.ls2 = tempdata2;
       this.answer.ls3 = data.ListFile[num].stt;
-      /*this.answer=
-      {
-        ls1:this.tempdata,
-        ls2:tempdata2,
-        ls3:data.ListFile[0].stt
-      }
-      console.log(this.answer.ls1);
-      console.log(this.answer.ls2);
-      console.log(this.answer.ls3);
-     */
-      console.log(data);
     } else {
       this.forgodTest();
     }
@@ -497,8 +360,6 @@ export class ValidateResultComponent implements OnInit {
     let temp = 0;
     let countlist = [];
     this.hitrate = [];
-    console.log(this.answer.ls2.length);
-    console.log(this.answer);
     for (var i = 0; i < this.data.ListFile.length; i++) {
       temp = 0;
       for (var j = 0; j < this.data.ListFile[i].stt.length; j++) {
@@ -510,8 +371,6 @@ export class ValidateResultComponent implements OnInit {
       let totalrate = temp / this.answer.ls1.length;
       this.hitrate.push(totalrate * 100);
     }
-    console.log('final result is');
-    console.log(this.hitrate);
     let HighestHitRate = 0;
     for (var i = 0; i < this.hitrate.length; i++) {
       if (this.hitrate[i] >= this.hitrate[HighestHitRate]) {
@@ -528,8 +387,6 @@ export class ValidateResultComponent implements OnInit {
       id: localStorage.getItem('id'),
     };
 
-    this.fileService.ExportResultToEmail(result).subscribe((data: any) => {
-      console.log('success');
-    });
+    this.fileService.ExportResultToEmail(result).subscribe((data: any) => {});
   }
 }

@@ -19,15 +19,11 @@ export class ProfileUserComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private notification: NzNotificationService
-  ) {
-    console.log(this.data);
-    //console.log(this.userdata);
-  }
+  ) {}
 
   submitForm(): void {
     // tslint:disable-next-line:forin
-    console.log(this.validateForm);
-    console.log(this.validateForm.value);
+
     var data = {
       email: this.validateForm.value.email,
       emailOrganization: this.validateForm.value.emailOrganization,
@@ -42,13 +38,10 @@ export class ProfileUserComponent implements OnInit {
       gioiTinh: this.validateForm.value.gioiTinh,
       //captcha: [null, [Validators.required]],
     };
-    //console.log(data);
     for (const i in this.validateForm.controls) {
       this.validateForm.controls[i].markAsDirty();
       this.validateForm.controls[i].updateValueAndValidity();
     }
-    console.log('data is');
-    console.log(data);
     this.userService.updateUSer(data).subscribe(
       (data) => {
         console.log('sucess');
@@ -65,7 +58,6 @@ export class ProfileUserComponent implements OnInit {
     this.submitForm();
   }*/
   Clicked() {
-    console.log('yeah here I clicked');
     this.router.navigate(['reset-password'], { replaceUrl: true });
   }
   PhoneNumberValidator = (control: FormControl): { [s: string]: boolean } => {
@@ -81,10 +73,8 @@ export class ProfileUserComponent implements OnInit {
     if (!control.value) {
       return { required: true };
     } else if (!this.checkValidBirthDate(control.value)) {
-      console.log('die 1 million times you piece of shit');
       return { confirm: true, error: true };
     }
-    console.log('you fail???');
     return {};
   };
   SpecialCharacterValidator = (control: FormControl): { [s: string]: boolean } => {
@@ -93,7 +83,6 @@ export class ProfileUserComponent implements OnInit {
     } else if (this.checkSpecialCharacter(control.value)) {
       return { confirm: true };
     }
-    console.log('you fail???');
     return {};
   };
   checkSpecialCharacter(str: string) {
@@ -116,7 +105,6 @@ export class ProfileUserComponent implements OnInit {
   }
   checkValidPhoneNumber(str: string) {
     let isnum = /^\d+$/.test(str);
-    console.log(isnum);
     if (isnum) {
       if (str.length < 9 || str.length > 12) {
         return false;
@@ -138,10 +126,8 @@ export class ProfileUserComponent implements OnInit {
     Promise.resolve().then(() => this.validateForm.controls.checkPassword.updateValueAndValidity());
   }
   ngOnChanges() {
-    console.log(this.data.DateOfBirth);
     let momentVariable = moment(this.data.DateOfBirth, 'MM-DD-YYYY');
     let newDate = momentVariable.format('YYYY-MM-DD');
-    console.log(this.data);
     this.validateForm = this.fb.group({
       email: [this.data.username, [Validators.email, Validators.required]],
       phoneNumber: [this.data.phone, [Validators.required]],
@@ -165,10 +151,8 @@ export class ProfileUserComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data != undefined) {
-      console.log(this.data.DateOfBirth);
       let momentVariable = moment(this.data.DateOfBirth, 'MM-DD-YYYY');
       let newDate = momentVariable.format('YYYY-MM-DD');
-      console.log(this.data);
       this.validateForm = this.fb.group({
         email: [this.data.username, [Validators.email, Validators.required]],
         phoneNumber: [
