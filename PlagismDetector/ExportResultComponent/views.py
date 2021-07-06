@@ -6,7 +6,7 @@ from MailComponent import views as mail
 import sys
 import os
 sys.path.insert(1, os.getcwd() + "/ExportResultComponent")
-from ExportResultComponent.deep import ratio
+# from ExportResultComponent.deep import ratio
 
 # Create your views here.
 @api_view(['POST'])
@@ -52,26 +52,26 @@ def ExportOrder(lst_1, lst_2, ratio):
 
 
 # ham tinh toan co sử dụgn deep learning
-def ExportOrder2(lst_1, lst_2, ratio):
-    pre = ratio.ratio(lst_1, lst_2)
-    result = []
-    sum_ratio = 0
-    for i in range(len(lst_1)):
-        export = []
-        similar_sent = []
-        similar_ratio = []
-        count = 0
-        for j in range(len(lst_2)):
-            CurrentRatio = pre[i * len(lst_2) + j]
-            if CurrentRatio >= ratio:
-                count += 1
-                similar_sent.append(j + 1)
-                similar_ratio.append(CurrentRatio)
-        export.append(i + 1)
-        export.append(count)
-        export.append(similar_sent)
-        export.append(similar_ratio)
-        result.append(export)
-        if (len(similar_ratio) != 0):
-            sum_ratio += max(similar_ratio)
-    return result, sum_ratio / len(lst_1)
+# def ExportOrder2(lst_1, lst_2, ratio):
+#     pre = ratio.ratio(lst_1, lst_2)
+#     result = []
+#     sum_ratio = 0
+#     for i in range(len(lst_1)):
+#         export = []
+#         similar_sent = []
+#         similar_ratio = []
+#         count = 0
+#         for j in range(len(lst_2)):
+#             CurrentRatio = pre[i * len(lst_2) + j]
+#             if CurrentRatio >= ratio:
+#                 count += 1
+#                 similar_sent.append(j + 1)
+#                 similar_ratio.append(CurrentRatio)
+#         export.append(i + 1)
+#         export.append(count)
+#         export.append(similar_sent)
+#         export.append(similar_ratio)
+#         result.append(export)
+#         if (len(similar_ratio) != 0):
+#             sum_ratio += max(similar_ratio)
+#     return result, sum_ratio / len(lst_1)

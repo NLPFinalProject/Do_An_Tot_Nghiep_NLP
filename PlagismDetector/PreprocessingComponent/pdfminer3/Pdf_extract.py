@@ -5,8 +5,6 @@ from pdfminer3.pdfinterp import PDFPageInterpreter
 from pdfminer3.converter import PDFPageAggregator
 from pdfminer3.converter import TextConverter
 import io
-from vncorenlp import VnCoreNLP
-
 
 # Hàm xử lý, chia văn bản thành các đoạn
 # Input:
@@ -103,23 +101,3 @@ def pdf2txt(file_path, pages=None):
 
     return list_para
 
-# Đọc theo số trang
-# Input:
-#    + start_page: trang đầu tiên
-#    + end_page: trang cuối cùng
-#    + doc_file: file .pdf cần đọc
-# Output:
-#    + Tương tự output của vncorenlp.tokenize
-# Ví dụ:
-# Đọc từ trang 4 tới trang 7: read_pages(4, 7)
-# Đọc duy nhất trang 5: read_pages(5, 5)
-def read_pages(start_page, end_page, doc_file):
-    VNCORENLP_FILE_PATH = 'VnCoreNLP/VnCoreNLP-1.1.1.jar'
-    vncorenlp = VnCoreNLP(VNCORENLP_FILE_PATH)
-
-    words = []
-    doc = pdf2txt(doc_file, range(start_page - 1, end_page))
-    for para in doc:
-        words.extend(vncorenlp.tokenize(para))
-
-    return words

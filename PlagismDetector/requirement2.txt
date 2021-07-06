@@ -1,2 +1,6 @@
-Pillow
-underthesea
+numpy
+Keras
+tensorflow
+gensim
+Pillow==8.3.0
+underthesea==1.2.3
